@@ -1,0 +1,2477 @@
+[
+  {
+    "concept_name": "ifrs-full_ComprehensiveIncome",
+    "namespace_prefix": "ifrs-full",
+    "name": "ComprehensiveIncome",
+    "id": "ifrs-full_ComprehensiveIncome",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ComprehensiveIncome",
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ComprehensiveIncome",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ComprehensiveIncome"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-definition.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "ES",
+      "IFRST_2017-03-09",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "本期綜合損益總額",
+    "en": "Total comprehensive income",
+    "code": "D5",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Total comprehensive income",
+        "zh-tw": "本期綜合損益總額"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "D5"
+      },
+      "http://www.xbrl.org/2003/role/totalLabel": {
+        "en": "Total comprehensive income",
+        "zh-tw": "本期綜合損益總額"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "path": [
+          "ifrs-full_StatementOfChangesInEquityAbstract",
+          "ifrs-full_StatementOfChangesInEquityLineItems",
+          "ifrs-full_ComprehensiveIncome"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "parent_concept": "ifrs-full_StatementOfChangesInEquityLineItems",
+        "order": 8.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncome"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncome"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncome"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncome"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncome"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncome"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 9.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 10.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 12.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 16.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 16.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/totalLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 22.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "concept_name": "ifrs-full_OtherComprehensiveIncome",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_OtherComprehensiveIncome",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_OtherComprehensiveIncome",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_OtherComprehensiveIncome",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_OtherComprehensiveIncome",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_OtherComprehensiveIncome",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_OtherComprehensiveIncome",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-basi_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-ci_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-ins_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "concept_name": "ifrs-full_ChangesInEquity",
+        "order": 18.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "arcrole": "http://xbrl.org/int/dim/arcrole/domain-member",
+        "concept_name": "ifrs-full_StatementOfChangesInEquityLineItems",
+        "order": 8.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-definition.xml"
+      }
+    ],
+    "search_text": "ifrs-full_ComprehensiveIncome | ComprehensiveIncome | 本期綜合損益總額 | Total comprehensive income | D5 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI ES IFRST_2017-03-09 XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfChangesInEquityAbstract > ifrs-full_StatementOfChangesInEquityLineItems > ifrs-full_ComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ComprehensiveIncome"
+  },
+  {
+    "concept_name": "ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests",
+    "namespace_prefix": "ifrs-full",
+    "name": "ComprehensiveIncomeAttributableToNoncontrollingInterests",
+    "id": "ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests",
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "IFRST_2017-03-09",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "非控制股權",
+    "en": "Comprehensive income, attributable to non-controlling interests",
+    "code": "6920",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income, attributable to non-controlling interests",
+        "zh-tw": "非控制股權"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "6920"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests | ComprehensiveIncomeAttributableToNoncontrollingInterests | 非控制股權 | Comprehensive income, attributable to non-controlling interests | 6920 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI IFRST_2017-03-09 XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ComprehensiveIncomeAttributableToAbstract > ifrs-full_ComprehensiveIncomeAttributableToNoncontrollingInterests"
+  },
+  {
+    "concept_name": "ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent",
+    "namespace_prefix": "ifrs-full",
+    "name": "ComprehensiveIncomeAttributableToOwnersOfParent",
+    "id": "ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent",
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "IFRST_2017-03-09",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "母公司業主",
+    "en": "Comprehensive income, attributable to owners of parent",
+    "code": "6910",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income, attributable to owners of parent",
+        "zh-tw": "母公司業主"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "6910"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent | ComprehensiveIncomeAttributableToOwnersOfParent | 母公司業主 | Comprehensive income, attributable to owners of parent | 6910 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI IFRST_2017-03-09 XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ComprehensiveIncomeAttributableToAbstract > ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent"
+  },
+  {
+    "concept_name": "ifrs-full_ProfitLoss",
+    "namespace_prefix": "ifrs-full",
+    "name": "ProfitLoss",
+    "id": "ifrs-full_ProfitLoss",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLoss",
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLoss",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLoss"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-definition.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "ES",
+      "IFRST_2017-03-09",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "本期淨利（淨損）",
+    "en": null,
+    "code": "D1",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "zh-tw": "本期淨利（淨損）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "D1"
+      },
+      "http://www.xbrl.org/2003/role/totalLabel": {
+        "en": "Profit (loss)",
+        "zh-tw": "本期稅後淨利（淨損）"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "path": [
+          "ifrs-full_StatementOfChangesInEquityAbstract",
+          "ifrs-full_StatementOfChangesInEquityLineItems",
+          "ifrs-full_ProfitLoss"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "parent_concept": "ifrs-full_StatementOfChangesInEquityLineItems",
+        "order": 6.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLoss"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLoss"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLoss"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLoss"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLoss"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLoss"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 7.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 8.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 10.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 14.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 14.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/totalLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 17.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromDiscontinuedOperations",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromDiscontinuedOperations",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromDiscontinuedOperations",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromDiscontinuedOperations",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromDiscontinuedOperations",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromDiscontinuedOperations",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-basi_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-ci_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-ins_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "arcrole": "http://xbrl.org/int/dim/arcrole/domain-member",
+        "concept_name": "ifrs-full_StatementOfChangesInEquityLineItems",
+        "order": 6.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-definition.xml"
+      }
+    ],
+    "search_text": "ifrs-full_ProfitLoss | ProfitLoss | 本期淨利（淨損） | D1 | 本期稅後淨利（淨損） | Profit (loss) | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI ES IFRST_2017-03-09 XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfChangesInEquityAbstract > ifrs-full_StatementOfChangesInEquityLineItems > ifrs-full_ProfitLoss | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ProfitLoss"
+  },
+  {
+    "concept_name": "ifrs-full_ProfitLossAttributableToNoncontrollingInterests",
+    "namespace_prefix": "ifrs-full",
+    "name": "ProfitLossAttributableToNoncontrollingInterests",
+    "id": "ifrs-full_ProfitLossAttributableToNoncontrollingInterests",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLossAttributableToNoncontrollingInterests",
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLossAttributableToNoncontrollingInterests",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLossAttributableToNoncontrollingInterests"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "IFRST_2017-03-09",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "非控制股權",
+    "en": null,
+    "code": "6820",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "zh-tw": "非控制股權"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "6820"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToNoncontrollingInterests"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 2.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "ifrs-full_ProfitLossAttributableToNoncontrollingInterests | ProfitLossAttributableToNoncontrollingInterests | 非控制股權 | 6820 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI IFRST_2017-03-09 XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ProfitLossAttributableToAbstract > ifrs-full_ProfitLossAttributableToNoncontrollingInterests"
+  },
+  {
+    "concept_name": "ifrs-full_ProfitLossAttributableToOwnersOfParent",
+    "namespace_prefix": "ifrs-full",
+    "name": "ProfitLossAttributableToOwnersOfParent",
+    "id": "ifrs-full_ProfitLossAttributableToOwnersOfParent",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLossAttributableToOwnersOfParent",
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLossAttributableToOwnersOfParent",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLossAttributableToOwnersOfParent"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "IFRST_2017-03-09",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "母公司業主",
+    "en": null,
+    "code": "6810",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "zh-tw": "母公司業主"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "6810"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "ifrs-full_ProfitLossAttributableToOwnersOfParent"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "ifrs-full_ProfitLossAttributableToOwnersOfParent | ProfitLossAttributableToOwnersOfParent | 母公司業主 | 6810 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI IFRST_2017-03-09 XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ProfitLossAttributableToAbstract > ifrs-full_ProfitLossAttributableToOwnersOfParent"
+  },
+  {
+    "concept_name": "tifrs-bsci-basi_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-basi",
+    "name": "ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-basi_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "本期稅後綜合損益總額歸屬於共同控制下前手權益",
+    "en": "Comprehensive income, attributable to former owner of business combination under common control",
+    "code": "67305",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income, attributable to former owner of business combination under common control",
+        "zh-tw": "本期稅後綜合損益總額歸屬於共同控制下前手權益"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "67305"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "tifrs-bsci-basi_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-basi_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | 本期稅後綜合損益總額歸屬於共同控制下前手權益 | Comprehensive income, attributable to former owner of business combination under common control | 67305 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ComprehensiveIncomeAttributableToAbstract > tifrs-bsci-basi_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-basi_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-basi",
+    "name": "ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-basi_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": null,
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "合併前非屬共同控制股權綜合損益淨額",
+    "en": "Comprehensive income attributable to non-controlling interests before business combination under common control",
+    "code": "65900",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income attributable to non-controlling interests before business combination under common control",
+        "zh-tw": "合併前非屬共同控制股權綜合損益淨額"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "65900"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-basi_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 15.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-basi_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | 合併前非屬共同控制股權綜合損益淨額 | Comprehensive income attributable to non-controlling interests before business combination under common control | 65900 | duration | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > tifrs-bsci-basi_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-basi_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-basi",
+    "name": "ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-basi_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "本期稅後淨利（損）歸屬於共同控制下前手權益",
+    "en": "Profit (loss), attributable to former owner of business combination under common control",
+    "code": "67105",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Profit (loss), attributable to former owner of business combination under common control",
+        "zh-tw": "本期稅後淨利（損）歸屬於共同控制下前手權益"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "67105"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "tifrs-bsci-basi_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-basi_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | 本期稅後淨利（損）歸屬於共同控制下前手權益 | Profit (loss), attributable to former owner of business combination under common control | 67105 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ProfitLossAttributableToAbstract > tifrs-bsci-basi_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-basi_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-basi",
+    "name": "ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-basi_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": null,
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-basi-2020-06-30.xsd#tifrs-bsci-basi_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "合併前非屬共同控制股權損益",
+    "en": "Profit (loss) attributable to non-controlling interests before business combination under common control",
+    "code": "63500",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Profit (loss) attributable to non-controlling interests before business combination under common control",
+        "zh-tw": "合併前非屬共同控制股權損益"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "63500"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-basi_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 13.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-basi_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | 合併前非屬共同控制股權損益 | Profit (loss) attributable to non-controlling interests before business combination under common control | 63500 | duration | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > tifrs-bsci-basi_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-bd_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-bd",
+    "name": "ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-bd_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "共同控制下前手權益（綜合損益）",
+    "en": "Comprehensive income, attributable to former owner of business combination under common control",
+    "code": "914150",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income, attributable to former owner of business combination under common control",
+        "zh-tw": "共同控制下前手權益（綜合損益）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "914150"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "tifrs-bsci-bd_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-bd_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | 共同控制下前手權益（綜合損益） | Comprehensive income, attributable to former owner of business combination under common control | 914150 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ComprehensiveIncomeAttributableToAbstract > tifrs-bsci-bd_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-bd",
+    "name": "ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": null,
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "合併前非屬共同控制股權綜合損益淨額",
+    "en": "Comprehensive income attributable to non-controlling interests before business combination under common control",
+    "code": "806000",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income attributable to non-controlling interests before business combination under common control",
+        "zh-tw": "合併前非屬共同控制股權綜合損益淨額"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "806000"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 9.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 9.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | 合併前非屬共同控制股權綜合損益淨額 | Comprehensive income attributable to non-controlling interests before business combination under common control | 806000 | duration | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > tifrs-bsci-bd_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-bd_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-bd",
+    "name": "ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-bd_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "共同控制下前手權益（淨利／損）",
+    "en": "Profit (loss), attributable to former owner of business combination under common control",
+    "code": "913150",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Profit (loss), attributable to former owner of business combination under common control",
+        "zh-tw": "共同控制下前手權益（淨利／損）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "913150"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "tifrs-bsci-bd_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-bd_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | 共同控制下前手權益（淨利／損） | Profit (loss), attributable to former owner of business combination under common control | 913150 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ProfitLossAttributableToAbstract > tifrs-bsci-bd_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-bd",
+    "name": "ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": null,
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-bd-2020-06-30.xsd#tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "合併前非屬共同控制股權損益",
+    "en": "Profit (loss) attributable to non-controlling interests before business combination under common control",
+    "code": "705000",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Profit (loss) attributable to non-controlling interests before business combination under common control",
+        "zh-tw": "合併前非屬共同控制股權損益"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "705000"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 7.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 7.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | 合併前非屬共同控制股權損益 | Profit (loss) attributable to non-controlling interests before business combination under common control | 705000 | duration | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > tifrs-bsci-bd_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-ci_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-ci",
+    "name": "ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-ci_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "共同控制下前手權益（綜合損益）",
+    "en": "Comprehensive income, attributable to former owner of business combination under common control",
+    "code": "8715",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income, attributable to former owner of business combination under common control",
+        "zh-tw": "共同控制下前手權益（綜合損益）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "8715"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "tifrs-bsci-ci_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-ci_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | 共同控制下前手權益（綜合損益） | Comprehensive income, attributable to former owner of business combination under common control | 8715 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ComprehensiveIncomeAttributableToAbstract > tifrs-bsci-ci_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-ci_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-ci",
+    "name": "ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-ci_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": null,
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "合併前非屬共同控制股權綜合損益淨額",
+    "en": "Comprehensive income attributable to non-controlling interests before business combination under common control",
+    "code": "8400",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income attributable to non-controlling interests before business combination under common control",
+        "zh-tw": "合併前非屬共同控制股權綜合損益淨額"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "8400"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-ci_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 15.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-ci_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | 合併前非屬共同控制股權綜合損益淨額 | Comprehensive income attributable to non-controlling interests before business combination under common control | 8400 | duration | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > tifrs-bsci-ci_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-ci_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-ci",
+    "name": "ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-ci_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "共同控制下前手權益（淨利／損）",
+    "en": "Profit (loss), attributable to former owner of business combination under common control",
+    "code": "8615",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Profit (loss), attributable to former owner of business combination under common control",
+        "zh-tw": "共同控制下前手權益（淨利／損）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "8615"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "tifrs-bsci-ci_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-ci_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | 共同控制下前手權益（淨利／損） | Profit (loss), attributable to former owner of business combination under common control | 8615 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ProfitLossAttributableToAbstract > tifrs-bsci-ci_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-ci_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-ci",
+    "name": "ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-ci_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": null,
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-ci-2020-06-30.xsd#tifrs-bsci-ci_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "合併前非屬共同控制股權損益",
+    "en": "Profit (loss) attributable to non-controlling interests before business combination under common control",
+    "code": "8160",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Profit (loss) attributable to non-controlling interests before business combination under common control",
+        "zh-tw": "合併前非屬共同控制股權損益"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "8160"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-ci_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 13.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-ci_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | 合併前非屬共同控制股權損益 | Profit (loss) attributable to non-controlling interests before business combination under common control | 8160 | duration | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > tifrs-bsci-ci_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-ins_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-ins",
+    "name": "ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-ins_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "共同控制下前手權益（綜合損益）",
+    "en": "Comprehensive income, attributable to former owner of business combination under common control",
+    "code": "87150",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income, attributable to former owner of business combination under common control",
+        "zh-tw": "共同控制下前手權益（綜合損益）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "87150"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+          "tifrs-bsci-ins_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ComprehensiveIncomeAttributableToAbstract",
+        "order": 1.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-ins_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | 共同控制下前手權益（綜合損益） | Comprehensive income, attributable to former owner of business combination under common control | 87150 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ComprehensiveIncomeAttributableToAbstract > tifrs-bsci-ins_ComprehensiveIncomeAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-ins_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-ins",
+    "name": "ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-ins_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": null,
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "合併前非屬共同控制股權綜合損益淨額",
+    "en": "Comprehensive income attributable to non-controlling interests before business combination under common control",
+    "code": "84000",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Comprehensive income attributable to non-controlling interests before business combination under common control",
+        "zh-tw": "合併前非屬共同控制股權綜合損益淨額"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "84000"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-ins_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 11.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ComprehensiveIncome",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-ins_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | 合併前非屬共同控制股權綜合損益淨額 | Comprehensive income attributable to non-controlling interests before business combination under common control | 84000 | duration | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > tifrs-bsci-ins_ComprehensiveIncomeAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-ins_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-ins",
+    "name": "ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-ins_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "共同控制下前手權益（淨利／損）",
+    "en": "Profit (loss), attributable to former owner of business combination under common control",
+    "code": "86150",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Profit (loss), attributable to former owner of business combination under common control",
+        "zh-tw": "共同控制下前手權益（淨利／損）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "86150"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossAttributableToAbstract",
+          "tifrs-bsci-ins_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_ProfitLossAttributableToAbstract",
+        "order": 1.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-ins_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl | 共同控制下前手權益（淨利／損） | Profit (loss), attributable to former owner of business combination under common control | 86150 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ProfitLossAttributableToAbstract > tifrs-bsci-ins_ProfitLossAttributableToFormerOwnerOfBusinessCombinationUnderCommonControl"
+  },
+  {
+    "concept_name": "tifrs-bsci-ins_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "namespace_prefix": "tifrs-bsci-ins",
+    "name": "ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "id": "tifrs-bsci-ins_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": null,
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../BSCI/tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl",
+      "tifrs-bsci-ins-2020-06-30.xsd#tifrs-bsci-ins_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "合併前非屬共同控制股權損益",
+    "en": "Profit (loss) attributable to non-controlling interests before business combination under common control",
+    "code": "65700",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Profit (loss) attributable to non-controlling interests before business combination under common control",
+        "zh-tw": "合併前非屬共同控制股權損益"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "65700"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "tifrs-bsci-ins_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 9.1,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLoss",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "tifrs-bsci-ins_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl | 合併前非屬共同控制股權損益 | Profit (loss) attributable to non-controlling interests before business combination under common control | 65700 | duration | xbrli:monetaryItemType | xbrli:item | BSCI XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfComprehensiveIncomeAbstract > tifrs-bsci-ins_ProfitLossAttributableToNoncontrollingInterestsBeforeBusinessCombinationUnderCommonControl"
+  }
+]

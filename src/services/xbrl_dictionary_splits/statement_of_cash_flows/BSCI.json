@@ -1,0 +1,1022 @@
+[
+  {
+    "concept_name": "ifrs-full_CashAndCashEquivalents",
+    "namespace_prefix": "ifrs-full",
+    "name": "CashAndCashEquivalents",
+    "id": "ifrs-full_CashAndCashEquivalents",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "instant",
+    "balance": "debit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_CashAndCashEquivalents",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_CashAndCashEquivalents"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "IFRST_2017-03-09",
+      "SCF"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows"
+    ],
+    "zh_tw": null,
+    "en": null,
+    "code": "1100",
+    "labels": {
+      "http://www.xbrl.org/2003/role/periodEndLabel": {
+        "en": "Cash and cash equivalents reported in the statement of financial position",
+        "zh-tw": "資產負債表帳列之現金及約當現金"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "1100"
+      },
+      "http://www.xbrl.org/2003/role/totalLabel": {
+        "zh-tw": "現金及約當現金合計"
+      },
+      "http://www.xbrl.org/2009/role/negatedPeriodEndLabel": {
+        "en": "E00210"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-basi_BalanceSheetAbstract",
+          "ifrs-full_AssetsAbstract",
+          "ifrs-full_CashAndCashEquivalents"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-bd_BalanceSheetAbstract",
+          "ifrs-full_AssetsAbstract",
+          "ifrs-full_CurrentAssetsAbstract",
+          "ifrs-full_CashAndCashEquivalents"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-ci_BalanceSheetAbstract",
+          "ifrs-full_AssetsAbstract",
+          "ifrs-full_CurrentAssetsAbstract",
+          "ifrs-full_CashAndCashEquivalents"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-fh_BalanceSheet",
+          "ifrs-full_AssetsAbstract",
+          "ifrs-full_CashAndCashEquivalents"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-ins_BalanceSheetAbstract",
+          "ifrs-full_AssetsAbstract",
+          "ifrs-full_CashAndCashEquivalents"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-mim_BalanceSheetAbstract",
+          "ifrs-full_AssetsAbstract",
+          "ifrs-full_CurrentAssetsAbstract",
+          "ifrs-full_CashAndCashEquivalents"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_AssetsAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_AssetsAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_AssetsAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_CurrentAssetsAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_CurrentAssetsAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_CurrentAssetsAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "path": [
+          "ifrs-full_StatementOfCashFlowsAbstract",
+          "tifrs-SCF_CashAndCashEquivalentsAtEndOfPeriod",
+          "ifrs-full_CashAndCashEquivalents"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "parent_concept": "tifrs-SCF_CashAndCashEquivalentsAtEndOfPeriod",
+        "order": 1.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/periodEndLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_BalancesWithBanks",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_BalancesWithBanks",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_BalancesWithBanks",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_BankOverdraftsClassifiedAsCashEquivalents",
+        "order": 4.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_Cash",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CashEquivalents",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CashEquivalents",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CashEquivalents",
+        "order": 7.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CashOnHand",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CashOnHand",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CashOnHand",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_AllowanceForBadDebtsDueFromBanks",
+        "order": 7.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_CashInTransit",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_ChecksForClearing",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_DueFromBanks-Debit",
+        "order": 6.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_ForeignCurrenciesOnHand",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_PettyCashAndRevolvingFunds",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-bd_PettyCash",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ci_CashInTransit",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ci_PettyCashRevolvingFunds",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_CashInRemittance",
+        "order": 8.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_ChecksForClearing",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_ForeignCurrenciesOnHand",
+        "order": 6.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_ForeignCurrencyDeposits",
+        "order": 9.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_NegotiableCertificatesOfDeposit",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_PettyCash",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      }
+    ],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_Assets",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_Assets",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_Assets",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CurrentAssets",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CurrentAssets",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CurrentAssets",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "concept_name": "tifrs-SCF_CashAndCashEquivalentsAtEndOfPeriod",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "ifrs-full_CashAndCashEquivalents | CashAndCashEquivalents | 1100 | 現金及約當現金合計 | instant | debit | xbrli:monetaryItemType | xbrli:item | BSCI IFRST_2017-03-09 SCF | http://www.xbrl.org/tifrs/fr/role/BalanceSheet http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows | tifrs-bsci-basi_BalanceSheetAbstract > ifrs-full_AssetsAbstract > ifrs-full_CashAndCashEquivalents | tifrs-bsci-bd_BalanceSheetAbstract > ifrs-full_AssetsAbstract > ifrs-full_CurrentAssetsAbstract > ifrs-full_CashAndCashEquivalents | tifrs-bsci-ci_BalanceSheetAbstract > ifrs-full_AssetsAbstract > ifrs-full_CurrentAssetsAbstract > ifrs-full_CashAndCashEquivalents | tifrs-bsci-fh_BalanceSheet > ifrs-full_AssetsAbstract > ifrs-full_CashAndCashEquivalents | tifrs-bsci-ins_BalanceSheetAbstract > ifrs-full_AssetsAbstract > ifrs-full_CashAndCashEquivalents | tifrs-bsci-mim_BalanceSheetAbstract > ifrs-full_AssetsAbstract > ifrs-full_CurrentAssetsAbstract > ifrs-full_CashAndCashEquivalents | ifrs-full_StatementOfCashFlowsAbstract > tifrs-SCF_CashAndCashEquivalentsAtEndOfPeriod > ifrs-full_CashAndCashEquivalents"
+  },
+  {
+    "concept_name": "ifrs-full_CashFlowsFromUsedInFinancingActivities",
+    "namespace_prefix": "ifrs-full",
+    "name": "CashFlowsFromUsedInFinancingActivities",
+    "id": "ifrs-full_CashFlowsFromUsedInFinancingActivities",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "debit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_CashFlowsFromUsedInFinancingActivities",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_CashFlowsFromUsedInFinancingActivities"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-label.xml"
+    ],
+    "families": [
+      "BSCI",
+      "IFRST_2017-03-09",
+      "SCF"
+    ],
+    "roles": [],
+    "zh_tw": "籌資活動之淨現金流入（流出）",
+    "en": "Net cash flows from (used in) financing activities",
+    "code": "CCCC",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Net cash flows from (used in) financing activities",
+        "zh-tw": "籌資活動之淨現金流入（流出）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "CCCC"
+      }
+    },
+    "presentation": [],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "ifrs-full_CashFlowsFromUsedInFinancingActivities | CashFlowsFromUsedInFinancingActivities | 籌資活動之淨現金流入（流出） | Net cash flows from (used in) financing activities | CCCC | duration | debit | xbrli:monetaryItemType | xbrli:item | BSCI IFRST_2017-03-09 SCF"
+  },
+  {
+    "concept_name": "ifrs-full_CashFlowsFromUsedInInvestingActivities",
+    "namespace_prefix": "ifrs-full",
+    "name": "CashFlowsFromUsedInInvestingActivities",
+    "id": "ifrs-full_CashFlowsFromUsedInInvestingActivities",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "debit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_CashFlowsFromUsedInInvestingActivities",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_CashFlowsFromUsedInInvestingActivities"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-label.xml"
+    ],
+    "families": [
+      "BSCI",
+      "IFRST_2017-03-09",
+      "SCF"
+    ],
+    "roles": [],
+    "zh_tw": "投資活動之淨現金流入（流出）",
+    "en": "Net cash flows from (used in) investing activities",
+    "code": "BBBB",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Net cash flows from (used in) investing activities",
+        "zh-tw": "投資活動之淨現金流入（流出）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "BBBB"
+      }
+    },
+    "presentation": [],
+    "calculation_children": [],
+    "calculation_parents": [],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "ifrs-full_CashFlowsFromUsedInInvestingActivities | CashFlowsFromUsedInInvestingActivities | 投資活動之淨現金流入（流出） | Net cash flows from (used in) investing activities | BBBB | duration | debit | xbrli:monetaryItemType | xbrli:item | BSCI IFRST_2017-03-09 SCF"
+  },
+  {
+    "concept_name": "ifrs-full_CashFlowsFromUsedInOperatingActivities",
+    "namespace_prefix": "ifrs-full",
+    "name": "CashFlowsFromUsedInOperatingActivities",
+    "id": "ifrs-full_CashFlowsFromUsedInOperatingActivities",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": null,
+    "source_kind": "local",
+    "source_hrefs": [
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_CashFlowsFromUsedInOperatingActivities",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_CashFlowsFromUsedInOperatingActivities"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "IFRST_2017-03-09",
+      "SCF"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod"
+    ],
+    "zh_tw": "營業活動之淨現金流入（流出）",
+    "en": "Net cash flows from (used in) operating activities",
+    "code": "AAAA",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Net cash flows from (used in) operating activities",
+        "zh-tw": "營業活動之淨現金流入（流出）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "AAAA"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "path": [
+          "ifrs-full_StatementOfCashFlowsAbstract",
+          "ifrs-full_CashFlowsFromUsedInOperatingActivities"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "parent_concept": "ifrs-full_StatementOfCashFlowsAbstract",
+        "order": 3.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "concept_name": "ifrs-full_CashFlowsFromUsedInOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "concept_name": "ifrs-full_DividendsPaidClassifiedAsOperatingActivities",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "concept_name": "ifrs-full_DividendsReceivedClassifiedAsOperatingActivities",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "concept_name": "ifrs-full_IncomeTaxesPaidRefundClassifiedAsOperatingActivities",
+        "order": 6.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "concept_name": "ifrs-full_InterestPaidClassifiedAsOperatingActivities",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "concept_name": "ifrs-full_InterestReceivedClassifiedAsOperatingActivities",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod",
+        "concept_name": "ifrs-full_OtherInflowsOutflowsOfCashClassifiedAsOperatingActivities",
+        "order": 8.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod",
+        "concept_name": "tifrs-SCF_ClassesOfCashPaymentsFromOperatingActivities",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod",
+        "concept_name": "tifrs-SCF_ClassesOfCashReceiptsFromOperatingActivities",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod",
+        "concept_name": "tifrs-SCF_DividendsPaid-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod",
+        "concept_name": "tifrs-SCF_DividendsReceived-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod",
+        "concept_name": "tifrs-SCF_IncomeTaxesRefundPaid-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "order": 7.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod",
+        "concept_name": "tifrs-SCF_InterestPaid-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod",
+        "concept_name": "tifrs-SCF_InterestReceived-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "order": 6.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      }
+    ],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "concept_name": "ifrs-full_IncreaseDecreaseInCashAndCashEquivalents",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "ifrs-full_CashFlowsFromUsedInOperatingActivities | CashFlowsFromUsedInOperatingActivities | 營業活動之淨現金流入（流出） | Net cash flows from (used in) operating activities | AAAA | duration | xbrli:monetaryItemType | xbrli:item | BSCI IFRST_2017-03-09 SCF | http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows-DirectMethod | ifrs-full_StatementOfCashFlowsAbstract > ifrs-full_CashFlowsFromUsedInOperatingActivities"
+  },
+  {
+    "concept_name": "ifrs-full_ProfitLossBeforeTax",
+    "namespace_prefix": "ifrs-full",
+    "name": "ProfitLossBeforeTax",
+    "id": "ifrs-full_ProfitLossBeforeTax",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "duration",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLossBeforeTax",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_ProfitLossBeforeTax"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-presentation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "IFRST_2017-03-09",
+      "SCF"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome"
+    ],
+    "zh_tw": "繼續營業單位稅前淨利（淨損）",
+    "en": "Profit (loss) from continuing operations before tax",
+    "code": "A00010",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Profit (loss) from continuing operations before tax",
+        "zh-tw": "繼續營業單位稅前淨利（淨損）"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "A00010"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "path": [
+          "ifrs-full_StatementOfCashFlowsAbstract",
+          "ifrs-full_CashFlowsFromUsedInOperatingActivitiesAbstract",
+          "ifrs-full_ProfitLossBeforeTax"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "parent_concept": "ifrs-full_CashFlowsFromUsedInOperatingActivitiesAbstract",
+        "order": 1.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossBeforeTax"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossBeforeTax"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossBeforeTax"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossBeforeTax"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossBeforeTax"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "path": [
+          "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+          "ifrs-full_ProfitLossBeforeTax"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 3.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 4.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 6.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 10.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 10.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/label",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "parent_concept": "ifrs-full_StatementOfComprehensiveIncomeAbstract",
+        "order": 13.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_OperatingExpense",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_OperatingExpense",
+        "order": 4.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromOperatingActivities",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromOperatingActivities",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_Revenue",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-basi_BadDebtExpensesAndGuaranteeLiabilityProvision",
+        "order": 2.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-basi_NetIncome",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-bd_TotalNonoperatingIncomeAndExpenses",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-ci_NonoperatingIncomeAndExpenses",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-fh_BadDebtExpensesAndGuaranteeLiabilityProvisions",
+        "order": 2.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-fh_NetChangeInProvisionsForInsuranceLiabilities",
+        "order": 3.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-fh_NetIncomeLoss",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-ins_NetOperatingIncomeLoss",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-ins_NonoperatingIncomeAndExpenses",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "tifrs-bsci-mim_Expenses",
+        "order": 2.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      }
+    ],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows",
+        "concept_name": "tifrs-SCF_ProfitLossBeforeTax",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/SCF/tifrs-scf-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome",
+        "concept_name": "ifrs-full_ProfitLossFromContinuingOperations",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [],
+    "search_text": "ifrs-full_ProfitLossBeforeTax | ProfitLossBeforeTax | 繼續營業單位稅前淨利（淨損） | Profit (loss) from continuing operations before tax | A00010 | duration | credit | xbrli:monetaryItemType | xbrli:item | BSCI IFRST_2017-03-09 SCF | http://www.xbrl.org/tifrs/fr/role/StatementOfCashFlows http://www.xbrl.org/tifrs/fr/role/StatementOfComprehensiveIncome | ifrs-full_StatementOfCashFlowsAbstract > ifrs-full_CashFlowsFromUsedInOperatingActivitiesAbstract > ifrs-full_ProfitLossBeforeTax | ifrs-full_StatementOfComprehensiveIncomeAbstract > ifrs-full_ProfitLossBeforeTax"
+  }
+]

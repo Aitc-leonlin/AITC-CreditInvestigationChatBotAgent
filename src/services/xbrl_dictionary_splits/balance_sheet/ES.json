@@ -1,0 +1,688 @@
+[
+  {
+    "concept_name": "ifrs-full_Equity",
+    "namespace_prefix": "ifrs-full",
+    "name": "Equity",
+    "id": "ifrs-full_Equity",
+    "type": "xbrli:monetaryItemType",
+    "substitution_group": "xbrli:item",
+    "abstract": false,
+    "nillable": true,
+    "period_type": "instant",
+    "balance": "credit",
+    "source_kind": "local",
+    "source_hrefs": [
+      "../../../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_Equity",
+      "../IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_Equity",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd#ifrs-full_Equity"
+    ],
+    "source_files": [
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-definition.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-label.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/IFRST_2017-03-09/full_ifrs/full_ifrs-cor_2017-03-09.xsd",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-calculation.xml",
+      "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+    ],
+    "families": [
+      "BSCI",
+      "ES",
+      "IFRST_2017-03-09",
+      "XBRL_TW_Entry_Points"
+    ],
+    "roles": [
+      "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+      "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity"
+    ],
+    "zh_tw": "權益總計",
+    "en": "Stockholders' equity",
+    "code": "3XXX",
+    "labels": {
+      "http://www.xbrl.org/2003/role/label": {
+        "en": "Stockholders' equity",
+        "zh-tw": "權益總計"
+      },
+      "http://www.xbrl.org/2003/role/periodEndLabel": {
+        "zh-tw": "期末餘額"
+      },
+      "http://www.xbrl.org/2003/role/periodStartLabel": {
+        "zh-tw": "期初餘額"
+      },
+      "http://www.xbrl.org/2003/role/terseLabel": {
+        "en": "3XXX"
+      },
+      "http://www.xbrl.org/2003/role/totalLabel": {
+        "en": "Total stockholders' equity",
+        "zh-tw": "權益總計"
+      },
+      "http://www.xbrl.org/2009/role/negatedPeriodEndLabel": {
+        "en": "Z1"
+      },
+      "http://www.xbrl.org/2009/role/negatedPeriodStartLabel": {
+        "en": "A1"
+      }
+    },
+    "presentation": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-basi_BalanceSheetAbstract",
+          "ifrs-full_EquityAndLiabilitiesAbstract",
+          "ifrs-full_EquityAbstract",
+          "ifrs-full_Equity"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-bd_BalanceSheetAbstract",
+          "ifrs-full_EquityAndLiabilitiesAbstract",
+          "ifrs-full_EquityAbstract",
+          "ifrs-full_Equity"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-ci_BalanceSheetAbstract",
+          "ifrs-full_EquityAndLiabilitiesAbstract",
+          "ifrs-full_EquityAbstract",
+          "ifrs-full_Equity"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-fh_BalanceSheet",
+          "ifrs-full_EquityAndLiabilitiesAbstract",
+          "ifrs-full_EquityAbstract",
+          "ifrs-full_Equity"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-ins_BalanceSheetAbstract",
+          "ifrs-full_EquityAndLiabilitiesAbstract",
+          "ifrs-full_EquityAbstract",
+          "ifrs-full_Equity"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "path": [
+          "tifrs-bsci-mim_BalanceSheetAbstract",
+          "ifrs-full_EquityAndLiabilitiesAbstract",
+          "ifrs-full_EquityAbstract",
+          "ifrs-full_Equity"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_EquityAbstract",
+        "order": 3.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/totalLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_EquityAbstract",
+        "order": 3.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/totalLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_EquityAbstract",
+        "order": 5.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/totalLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_EquityAbstract",
+        "order": 5.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/totalLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_EquityAbstract",
+        "order": 6.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/totalLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "parent_concept": "ifrs-full_EquityAbstract",
+        "order": 9.0,
+        "preferred_label": null,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "path": [
+          "ifrs-full_StatementOfChangesInEquityAbstract",
+          "ifrs-full_StatementOfChangesInEquityLineItems",
+          "ifrs-full_Equity"
+        ],
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "parent_concept": "ifrs-full_StatementOfChangesInEquityLineItems",
+        "order": 1.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/periodStartLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "parent_concept": "ifrs-full_StatementOfChangesInEquityLineItems",
+        "order": 34.0,
+        "preferred_label": "http://www.xbrl.org/2003/role/periodEndLabel",
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-presentation.xml"
+      }
+    ],
+    "calculation_children": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CapitalReserve",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CapitalReserve",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CapitalReserve",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CapitalReserve",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_CapitalReserve",
+        "order": 3.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAttributableToOwnersOfParent",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAttributableToOwnersOfParent",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAttributableToOwnersOfParent",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAttributableToOwnersOfParent",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAttributableToOwnersOfParent",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAttributableToOwnersOfParent",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_IssuedCapital",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_IssuedCapital",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_IssuedCapital",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_IssuedCapital",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_IssuedCapital",
+        "order": 1.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_NoncontrollingInterests",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_NoncontrollingInterests",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_NoncontrollingInterests",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_NoncontrollingInterests",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_NoncontrollingInterests",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_NoncontrollingInterests",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_OtherEquityInterest",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_OtherEquityInterest",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_OtherEquityInterest",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_OtherEquityInterest",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_OtherEquityInterest",
+        "order": 5.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_RetainedEarnings",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_RetainedEarnings",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_RetainedEarnings",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_RetainedEarnings",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_RetainedEarnings",
+        "order": 4.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_TreasuryShares",
+        "order": 6.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_TreasuryShares",
+        "order": 6.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_TreasuryShares",
+        "order": 6.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_TreasuryShares",
+        "order": 6.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_TreasuryShares",
+        "order": 6.0,
+        "weight": -1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_EquityAttributableToFomerOwnerOfBusinessCombinationUnderCommonControl",
+        "order": 1.1,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/CR/tifrs-basi-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_EquityAttributableToFomerOwnerOfBusinessCombinationUnderCommonControl",
+        "order": 7.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_EquityAttributableToNoncontrollingInterestBeforeBusinessCombinationUnderCommonControl",
+        "order": 8.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-basi_EquitySecurityTokenOffer",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BASI/IR/tifrs-basi-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-bd_EquityAttributableToFomerOwnerOofBusinessCombinationUnderCommonControl",
+        "order": 1.1,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/CR/tifrs-bd-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-bd_EquityAttributableToFomerOwnerOofBusinessCombinationUnderCommonControl",
+        "order": 7.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-bd_EquityAttributableToFomerOwnerOofBusinessCombinationUnderCommonControl",
+        "order": 7.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-bd_EquityAttributableToNoncontrollingInterestBeforeBusinessCombinationUnderCommonControl",
+        "order": 8.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-bd_EquityAttributableToNoncontrollingInterestBeforeBusinessCombinationUnderCommonControl",
+        "order": 8.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-bd_EquitySecurityTokenOffer",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/ER/tifrs-bd-er-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-bd_EquitySecurityTokenOffer",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/BD/IR/tifrs-bd-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ci_EquityAttributableToFomerOwnerOfBusinessCombinationUnderCommonControl",
+        "order": 1.1,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/CR/tifrs-ci-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ci_EquityAttributableToFomerOwnerOfBusinessCombinationUnderCommonControl",
+        "order": 7.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ci_EquityAttributableToNoncontrollingInterestBeforeBusinessCombinationUnderCommonControl",
+        "order": 8.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ci_EquitySecurityTokenOffer",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/CI/IR/tifrs-ci-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-fh_EquityAttributableToFomerOwnerOfBusinessCombinationUnderCommonControl",
+        "order": 1.1,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_EquityAttributableToFomerOwnerOfBusinessCombinationUnderCommonControl",
+        "order": 1.1,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/CR/tifrs-ins-cr-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_EquityAttributableToFomerOwnerOfBusinessCombinationUnderCommonControl",
+        "order": 7.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_EquityAttributableToNoncontrollingInterestBeforeBusinessCombinationUnderCommonControl",
+        "order": 8.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-ins_EquitySecurityTokenOffer",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/XBRL_TW_Entry_Points/INS/IR/tifrs-ins-ir-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "tifrs-bsci-mim_EquityAttributableToFomerOwnerOfBusinessCombinationUnderCommonControl",
+        "order": 1.1,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      }
+    ],
+    "calculation_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAndLiabilities",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-basi-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAndLiabilities",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-bd-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAndLiabilities",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ci-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAndLiabilities",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-fh-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAndLiabilities",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-ins-2020-06-30-calculation.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/BalanceSheet",
+        "concept_name": "ifrs-full_EquityAndLiabilities",
+        "order": 2.0,
+        "weight": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/BSCI/tifrs-bsci-mim-2020-06-30-calculation.xml"
+      }
+    ],
+    "definition_children": [],
+    "definition_parents": [
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "arcrole": "http://xbrl.org/int/dim/arcrole/domain-member",
+        "concept_name": "ifrs-full_StatementOfChangesInEquityLineItems",
+        "order": 1.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-definition.xml"
+      },
+      {
+        "role": "http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity",
+        "arcrole": "http://xbrl.org/int/dim/arcrole/domain-member",
+        "concept_name": "ifrs-full_StatementOfChangesInEquityLineItems",
+        "order": 34.0,
+        "source_file": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630/ES/tifrs-es-2020-06-30-definition.xml"
+      }
+    ],
+    "search_text": "ifrs-full_Equity | Equity | 權益總計 | Stockholders' equity | 3XXX | Total stockholders' equity | instant | credit | xbrli:monetaryItemType | xbrli:item | BSCI ES IFRST_2017-03-09 XBRL_TW_Entry_Points | http://www.xbrl.org/tifrs/fr/role/BalanceSheet http://www.xbrl.org/tifrs/fr/role/StatementOfChangesInEquity | tifrs-bsci-basi_BalanceSheetAbstract > ifrs-full_EquityAndLiabilitiesAbstract > ifrs-full_EquityAbstract > ifrs-full_Equity | tifrs-bsci-bd_BalanceSheetAbstract > ifrs-full_EquityAndLiabilitiesAbstract > ifrs-full_EquityAbstract > ifrs-full_Equity | tifrs-bsci-ci_BalanceSheetAbstract > ifrs-full_EquityAndLiabilitiesAbstract > ifrs-full_EquityAbstract > ifrs-full_Equity | tifrs-bsci-fh_BalanceSheet > ifrs-full_EquityAndLiabilitiesAbstract > ifrs-full_EquityAbstract > ifrs-full_Equity | tifrs-bsci-ins_BalanceSheetAbstract > ifrs-full_EquityAndLiabilitiesAbstract > ifrs-full_EquityAbstract > ifrs-full_Equity | tifrs-bsci-mim_BalanceSheetAbstract > ifrs-full_EquityAndLiabilitiesAbstract > ifrs-full_EquityAbstract > ifrs-full_Equity | ifrs-full_StatementOfChangesInEquityAbstract > ifrs-full_StatementOfChangesInEquityLineItems > ifrs-full_Equity"
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "input": "/Users/leonlin/Cursor/BackEnd/CreditInvestigationChatBotAgentPython/src/services/xbrl_data_dictionary_all.json",
+  "output_dir": "/Users/leonlin/Cursor/BackEnd/CreditInvestigationChatBotAgentPython/src/services/xbrl_dictionary_splits",
+  "total_concepts": 10351,
+  "statements": {
+    "balance_sheet": {
+      "concept_count": 2276,
+      "family_counts": {
+        "BSCI": 2276,
+        "ES": 1,
+        "IFRST_2017-03-09": 200,
+        "SCF": 1,
+        "XBRL_TW_Entry_Points": 21
+      }
+    },
+    "comprehensive_income_statement": {
+      "concept_count": 1491,
+      "family_counts": {
+        "BSCI": 1491,
+        "ES": 3,
+        "IFRST_2017-03-09": 127,
+        "SCF": 1,
+        "XBRL_TW_Entry_Points": 22
+      }
+    },
+    "statement_of_cash_flows": {
+      "concept_count": 376,
+      "family_counts": {
+        "BSCI": 5,
+        "IFRST_2017-03-09": 72,
+        "SCF": 376,
+        "XBRL_TW_Entry_Points": 5
+      }
+    }
+  }
+}

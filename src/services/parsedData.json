@@ -1,0 +1,2516 @@
+[
+    {
+        "concept_name": "ifrs-full_AdjustmentsForDecreaseIncreaseInInventories",
+        "en": "A91250",
+        "zh_tw": "存貨（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForUnrealisedForeignExchangeLossesGains",
+        "en": "Unrealized foreign exchange loss (gain)",
+        "zh_tw": "未實現外幣兌換損失（利益）",
+        "code": "A24100"
+    },
+    {
+        "concept_name": "ifrs-full_CashAndCashEquivalents",
+        "en": "Cash and cash equivalents reported in the statement of financial position",
+        "zh_tw": "資產負債表帳列之現金及約當現金",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_CashFlowsFromLosingControlOfSubsidiariesOrOtherBusinessesClassifiedAsInvestingActivities",
+        "en": "Proceeds from disposal of subsidiaries",
+        "zh_tw": "處分子公司",
+        "code": "B02300"
+    },
+    {
+        "concept_name": "ifrs-full_CashFlowsUsedInObtainingControlOfSubsidiariesOrOtherBusinessesClassifiedAsInvestingActivities",
+        "en": "Net cash flow from acquisition of subsidiaries",
+        "zh_tw": "對子公司之收購（扣除所取得之現金）",
+        "code": "B02200"
+    },
+    {
+        "concept_name": "ifrs-full_CashFlowsFromUsedInFinancingActivities",
+        "en": "Net cash flows from (used in) financing activities",
+        "zh_tw": "籌資活動之淨現金流入（流出）",
+        "code": "CCCC"
+    },
+    {
+        "concept_name": "ifrs-full_CashFlowsFromUsedInInvestingActivities",
+        "en": "Net cash flows from (used in) investing activities",
+        "zh_tw": "投資活動之淨現金流入（流出）",
+        "code": "BBBB"
+    },
+    {
+        "concept_name": "ifrs-full_CashFlowsFromUsedInOperatingActivities",
+        "en": "Net cash flows from (used in) operating activities",
+        "zh_tw": "營業活動之淨現金流入（流出）",
+        "code": "AAAA"
+    },
+    {
+        "concept_name": "ifrs-full_DividendsPaidClassifiedAsFinancingActivities",
+        "en": "Cash dividends paid",
+        "zh_tw": "發放現金股利",
+        "code": "C04500"
+    },
+    {
+        "concept_name": "ifrs-full_DividendsPaidClassifiedAsOperatingActivities",
+        "en": "Dividends paid",
+        "zh_tw": "支付之股利",
+        "code": "A33400"
+    },
+    {
+        "concept_name": "ifrs-full_DividendsReceivedClassifiedAsInvestingActivities",
+        "en": "Dividends received",
+        "zh_tw": "收取之股利",
+        "code": "B07600"
+    },
+    {
+        "concept_name": "ifrs-full_DividendsReceivedClassifiedAsOperatingActivities",
+        "en": "Dividends received",
+        "zh_tw": "收取之股利",
+        "code": "A33200"
+    },
+    {
+        "concept_name": "ifrs-full_EffectOfExchangeRateChangesOnCashAndCashEquivalents",
+        "en": null,
+        "zh_tw": null,
+        "code": "DDDD"
+    },
+    {
+        "concept_name": "ifrs-full_IncomeTaxesPaidRefundClassifiedAsFinancingActivities",
+        "en": "Income taxes refund (paid)",
+        "zh_tw": "退還（支付）之所得稅",
+        "code": "C05700"
+    },
+    {
+        "concept_name": "ifrs-full_IncomeTaxesPaidRefundClassifiedAsInvestingActivities",
+        "en": "Income taxes refund (paid)",
+        "zh_tw": "退還（支付）之所得稅",
+        "code": "B07700"
+    },
+    {
+        "concept_name": "ifrs-full_IncomeTaxesPaidRefundClassifiedAsOperatingActivities",
+        "en": "Income taxes refund (paid)",
+        "zh_tw": "退還（支付）之所得稅",
+        "code": "A33500"
+    },
+    {
+        "concept_name": "ifrs-full_IncreaseDecreaseInCashAndCashEquivalents",
+        "en": "Net increase (decrease) in cash and cash equivalents",
+        "zh_tw": "本期現金及約當現金增加（減少）數",
+        "code": "EEEE"
+    },
+    {
+        "concept_name": "ifrs-full_InterestPaidClassifiedAsFinancingActivities",
+        "en": "Interest paid",
+        "zh_tw": "支付之股利",
+        "code": "C05600"
+    },
+    {
+        "concept_name": "ifrs-full_InterestPaidClassifiedAsOperatingActivities",
+        "en": "Interest paid",
+        "zh_tw": "支付之利息",
+        "code": "A33300"
+    },
+    {
+        "concept_name": "ifrs-full_InterestReceivedClassifiedAsInvestingActivities",
+        "en": "Interest received",
+        "zh_tw": "收取之利息",
+        "code": "B07500"
+    },
+    {
+        "concept_name": "ifrs-full_InterestReceivedClassifiedAsOperatingActivities",
+        "en": "Interest received",
+        "zh_tw": "收取之利息",
+        "code": "A33100"
+    },
+    {
+        "concept_name": "ifrs-full_OtherCashPaymentsFromOperatingActivities",
+        "en": null,
+        "zh_tw": null,
+        "code": "AB0600"
+    },
+    {
+        "concept_name": "ifrs-full_OtherCashReceiptsFromOperatingActivities",
+        "en": null,
+        "zh_tw": null,
+        "code": "AA0700"
+    },
+    {
+        "concept_name": "ifrs-full_OtherInflowsOutflowsOfCashClassifiedAsFinancingActivities",
+        "en": "Other financing activities",
+        "zh_tw": "其他籌資活動",
+        "code": "C09900"
+    },
+    {
+        "concept_name": "ifrs-full_OtherInflowsOutflowsOfCashClassifiedAsInvestingActivities",
+        "en": "Other investing activities",
+        "zh_tw": "其他投資活動",
+        "code": "B09900"
+    },
+    {
+        "concept_name": "ifrs-full_OtherInflowsOutflowsOfCashClassifiedAsOperatingActivities",
+        "en": "Other inflows (outflows) of cash",
+        "zh_tw": "其他現金流入（出）",
+        "code": "AC0600"
+    },
+    {
+        "concept_name": "ifrs-full_PaymentsForPremiumsAndClaimsAnnuitiesAndOtherPolicyBenefits",
+        "en": "Payments for insurance claim",
+        "zh_tw": "保險賠款與給付之付現",
+        "code": "AB0400"
+    },
+    {
+        "concept_name": "ifrs-full_PaymentsFromContractsHeldForDealingOrTradingPurpose",
+        "en": null,
+        "zh_tw": null,
+        "code": "AB0200"
+    },
+    {
+        "concept_name": "ifrs-full_PaymentsToAndOnBehalfOfEmployees",
+        "en": null,
+        "zh_tw": null,
+        "code": "AB0300"
+    },
+    {
+        "concept_name": "ifrs-full_PaymentsToSuppliersForGoodsAndServices",
+        "en": null,
+        "zh_tw": null,
+        "code": "AB0100"
+    },
+    {
+        "concept_name": "ifrs-full_ProceedsFromIssuingShares",
+        "en": null,
+        "zh_tw": "現金增資",
+        "code": "C04600"
+    },
+    {
+        "concept_name": "ifrs-full_ProceedsFromSalesOfIntangibleAssetsClassifiedAsInvestingActivities",
+        "en": "Proceeds from disposal of intangible assets",
+        "zh_tw": "處分無形資產",
+        "code": "B04600"
+    },
+    {
+        "concept_name": "ifrs-full_ProceedsFromSalesOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities",
+        "en": "Proceeds from disposal of property and equipment",
+        "zh_tw": "處分不動產及設備",
+        "code": "B02800"
+    },
+    {
+        "concept_name": "ifrs-full_ProfitLossBeforeTax",
+        "en": "Profit (loss) from continuing operations before tax",
+        "zh_tw": "繼續營業單位稅前淨利（淨損）",
+        "code": "A00010"
+    },
+    {
+        "concept_name": "ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities",
+        "en": "Acquisition of intangible assets",
+        "zh_tw": "取得無形資產",
+        "code": "B04500"
+    },
+    {
+        "concept_name": "ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities",
+        "en": "Acquisition of property and equipment",
+        "zh_tw": "取得不動產及設備",
+        "code": "B02700"
+    },
+    {
+        "concept_name": "ifrs-full_ReceiptsFromContractsHeldForDealingOrTradingPurpose",
+        "en": null,
+        "zh_tw": null,
+        "code": "AA0300"
+    },
+    {
+        "concept_name": "ifrs-full_ReceiptsFromPremiumsAndClaimsAnnuitiesAndOtherPolicyBenefits",
+        "en": "Receipts from insurance",
+        "zh_tw": "保險之收現",
+        "code": "AA0400"
+    },
+    {
+        "concept_name": "ifrs-full_ReceiptsFromRoyaltiesFeesCommissionsAndOtherRevenue",
+        "en": null,
+        "zh_tw": null,
+        "code": "AA0200"
+    },
+    {
+        "concept_name": "ifrs-full_ReceiptsFromSalesOfGoodsAndRenderingOfServices",
+        "en": null,
+        "zh_tw": null,
+        "code": "AA0100"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForSharebasedPayments",
+        "en": "Share-based payments",
+        "zh_tw": "股份基礎給付酬勞成本",
+        "code": "A21900"
+    },
+    {
+        "concept_name": "ifrs-full_ReceiptsFromRentsAndSubsequentSalesOfSuchAssets",
+        "en": null,
+        "zh_tw": null,
+        "code": "AA0600"
+    },
+    {
+        "concept_name": "ifrs-full_OtherAdjustmentsToReconcileProfitLoss",
+        "en": null,
+        "zh_tw": "其他項目",
+        "code": "A29900"
+    },
+    {
+        "concept_name": "ifrs-full_ProceedsFromChangesInOwnershipInterestsInSubsidiaries",
+        "en": "Disposal of ownership interests in subsidiaries (without losing control)",
+        "zh_tw": "處分子公司股權（未喪失控制力）",
+        "code": "C05500"
+    },
+    {
+        "concept_name": "ifrs-full_CashFlowsFromUsedInOperations",
+        "en": "Total cash inflow (outflow) generated from operations",
+        "zh_tw": "營運產生之現金流入（流出）合計",
+        "code": "A33000"
+    },
+    {
+        "concept_name": "ifrs-full_CashAndCashEquivalentsClassifiedAsPartOfDisposalGroupHeldForSale",
+        "en": "(Non-current) assets (or disposal groups) classified as held for sale, net",
+        "zh_tw": "分類至待出售（非流動）資產（或處分群組）之現金及約當現金",
+        "code": "E00212"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForInterestExpense",
+        "en": "Interest expense",
+        "zh_tw": "利息費用",
+        "code": "A20900"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForInterestIncome",
+        "en": "Interest income (including financial income)",
+        "zh_tw": "利息收入（含財務收入）",
+        "code": "A21200"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForDividendIncome",
+        "en": "Dividend income",
+        "zh_tw": "股利收入",
+        "code": "A21300"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForDecreaseIncreaseInOtherAssets",
+        "en": "A71990",
+        "zh_tw": "其他資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForIncreaseDecreaseInOtherLiabilities",
+        "en": "A72990",
+        "zh_tw": "其他負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForDecreaseIncreaseInOtherCurrentAssets",
+        "en": "A91280",
+        "zh_tw": "其他流動資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForIncreaseDecreaseInOtherCurrentLiabilities",
+        "en": "A92280",
+        "zh_tw": "其他流動負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForAmortisationExpense",
+        "en": "Amortization expense",
+        "zh_tw": "攤銷費用",
+        "code": "A20200"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForDepreciationExpense",
+        "en": "Depreciation expense",
+        "zh_tw": "折舊費用",
+        "code": "A20100"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForGainsLossesOnFairValueAdjustmentInvestmentProperty",
+        "en": "Loss (gain) on fair value adjustment of investment property",
+        "zh_tw": "投資性不動產公允價值調整損失(利益)",
+        "code": "A24600"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForGainLossOnDisposalsPropertyPlantAndEquipment",
+        "en": "Loss (gain) on disposal of property and equipment",
+        "zh_tw": "處分及報廢不動產及設備損失（利益）",
+        "code": "A22500"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForGainLossOnDisposalOfInvestmentsInSubsidiariesJointVenturesAndAssociates",
+        "en": "Loss (gain) on disposal of investments accounted for using equity method",
+        "zh_tw": "處分採用權益法之投資損失（利益）",
+        "code": "A23200"
+    },
+    {
+        "concept_name": "ifrs-full_PurchaseOfInterestsInInvestmentsAccountedForUsingEquityMethod",
+        "en": "Acquisition of investments accounted for using equity method",
+        "zh_tw": "取得採用權益法之投資",
+        "code": "B01800"
+    },
+    {
+        "concept_name": "ifrs-full_ProceedsFromSalesOfInvestmentsAccountedForUsingEquityMethod",
+        "en": "Proceeds from disposal of investments accounted for using equity method",
+        "zh_tw": "處分採用權益法之投資",
+        "code": "B01900"
+    },
+    {
+        "concept_name": "ifrs-full_PurchaseOfInvestmentProperty",
+        "en": "Acquisition of investment properties",
+        "zh_tw": "取得投資性不動產",
+        "code": "B05400"
+    },
+    {
+        "concept_name": "ifrs-full_ProceedsFromSalesOfInvestmentProperty",
+        "en": "Proceeds from disposal of investment properties",
+        "zh_tw": "處分投資性不動產",
+        "code": "B05500"
+    },
+    {
+        "concept_name": "ifrs-full_ProceedsFromDisposalOfNoncurrentAssetsOrDisposalGroupsClassifiedAsHeldForSaleAndDiscontinuedOperations",
+        "en": "Proceeds from disposal of assets classified as held for sale",
+        "zh_tw": "處分待出售資產",
+        "code": "B02600"
+    },
+    {
+        "concept_name": "ifrs-full_PurchaseOfPropertyPlantAndEquipmentIntangibleAssetsOtherThanGoodwillInvestmentPropertyAndOtherNoncurrentAssets",
+        "en": "Acquisition of assets classified as held for sale",
+        "zh_tw": "取得待出售資產",
+        "code": "B02500"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForDecreaseIncreaseInLoansAndAdvancesToCustomers",
+        "en": "A91290",
+        "zh_tw": "貼現及放款（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForDecreaseIncreaseInLoansAndAdvancesToBanks",
+        "en": "A91110",
+        "zh_tw": "存放央行及拆借銀行同業（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForIncreaseDecreaseInDepositsFromCustomers",
+        "en": "A92290",
+        "zh_tw": "存款及匯款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForIncreaseDecreaseInDepositsFromBanks",
+        "en": "A72110",
+        "zh_tw": "央行及銀行同業存款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_PaymentsOfLeaseLiabilitiesClassifiedAsFinancingActivities",
+        "en": "Payments of lease liabilities",
+        "zh_tw": "租賃本金償還",
+        "code": "C04020"
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForDecreaseIncreaseInBiologicalAssets",
+        "en": "A91300",
+        "zh_tw": "生物資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForDecreaseIncreaseInFinancialAssetsHeldForTrading",
+        "en": "A31110",
+        "zh_tw": "持有供交易之金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "ifrs-full_AdjustmentsForIncreaseDecreaseInFinancialLiabilitiesHeldForTrading",
+        "en": "A32110",
+        "zh_tw": "持有供交易之金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ProfitLossFromDiscontinuedOperationsBeforeTax",
+        "en": "Profit (loss) from discontinued operations before tax",
+        "zh_tw": "停業單位稅前淨利（淨損）",
+        "code": "A00020"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProvisionReversalOfProvisionForBadDebtExpense",
+        "en": "Provision (reversal of provision) for bad debt expense",
+        "zh_tw": "呆帳費用提列（轉列收入）數",
+        "code": "A20300"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetLossGainOnFinancialAssetsOrLiabilitiesAtFairValueThroughProfitOrLoss",
+        "en": "Net loss (gain) on financial assets or liabilities at fair value through profit or loss",
+        "zh_tw": "透過損益按公允價值衡量金融資產及負債之淨損失（利益）",
+        "code": "A20400"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetLossGainArisingFromDerecognitionOfFinancialAssetsMeasuredAtAmortisedCost",
+        "en": "Net (loss) gain arising from derecognition of financial assets measured at amortised cost",
+        "zh_tw": "除列按攤銷後成本衡量金融資產淨損失（利益）",
+        "code": "A21000"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetLossGainOnReclassificationOfFinancialAssets",
+        "en": "Net (loss) gain on reclassification of financial assets",
+        "zh_tw": "金融資產重分類淨損失（利益）",
+        "code": "A21100"
+    },
+    {
+        "concept_name": "tifrs-SCF_EffectOfExchangeRateChangesOfBondsPayable",
+        "en": "Effect of exchange rate changes of bonds payable",
+        "zh_tw": "應付公司債匯率影響數",
+        "code": "A22000"
+    },
+    {
+        "concept_name": "tifrs-SCF_ShareOfLossProfitOfAssociatesAndJointVenturesAccountedForUsingEquityMethod",
+        "en": "Share of loss (profit) of associates and joint ventures accounted for using equity method",
+        "zh_tw": "採用權益法認列之關聯企業及合資損失（利益）之份額",
+        "code": "A22300"
+    },
+    {
+        "concept_name": "tifrs-SCF_ShareOfLossProfitOfSubsidiariesAssociatesAndJointVenturesAccountedForUsingEquityMethod",
+        "en": "Share of loss (profit) of subsidiaries, associates and joint ventures accounted for using equity method",
+        "zh_tw": "採用權益法認列之子公司、關聯企業及合資損失（利益）之份額",
+        "code": "A22400"
+    },
+    {
+        "concept_name": "tifrs-SCF_PropertyPlanAndEquipmentTransferredToExpenses",
+        "en": "Property and equipment transferred to expenses",
+        "zh_tw": "不動產及設備轉列費用數",
+        "code": "A22600"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnDisposalOfInvestmentProperties",
+        "en": "Loss (gain) on disposal of investment properties",
+        "zh_tw": "處分投資性不動產投資損失（利益）",
+        "code": "A22700"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnDisposalOfIntangibleAssets",
+        "en": "Loss (gain) on disposal of intangible assets",
+        "zh_tw": "處分無形資產損失（利益）",
+        "code": "A22800"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnDisposalOfOtherAssets",
+        "en": "Loss (gain) on disposal of other assets",
+        "zh_tw": "處分其他非流動資產損失（利益）",
+        "code": "A22900"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnDisposalOfNoncurrentAssetsClassifiedAsHeldForSale",
+        "en": "Loss (gain) on disposal of assets classified as held for sale",
+        "zh_tw": "處分待出售資產損失（利益）",
+        "code": "A23000"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnDisposalOfInvestments",
+        "en": "Loss (gain) on disposal of investments",
+        "zh_tw": "處分投資損失（利益）",
+        "code": "A23100"
+    },
+    {
+        "concept_name": "tifrs-SCF_ImpairmentLossOnFinancialAssets",
+        "en": "Impairment loss on financial assets",
+        "zh_tw": "金融資產減損損失",
+        "code": "A23500"
+    },
+    {
+        "concept_name": "tifrs-SCF_ReversalOfImpairmentLossOnFinancialAssets",
+        "en": "Reversal of impairment loss on financial assets",
+        "zh_tw": "金融資產減損迴轉利益",
+        "code": "A23600"
+    },
+    {
+        "concept_name": "tifrs-SCF_ImpairmentLossOnNonfinancialAssets",
+        "en": "Impairment loss on non-financial assets",
+        "zh_tw": "非金融資產減損損失",
+        "code": "A23700"
+    },
+    {
+        "concept_name": "tifrs-SCF_ReversalOfImpairmentLossOnNonfinancialAssets",
+        "en": "Reversal of impairment loss on non-financial assets",
+        "zh_tw": "非金融資產減損迴轉利益",
+        "code": "A23800"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnBondRedemption",
+        "en": "Loss (gain) on bond redemption",
+        "zh_tw": "買回應付公司債損失（利益）",
+        "code": "A24200"
+    },
+    {
+        "concept_name": "tifrs-SCF_OtherRevenueOverdueDividendsAndCompensationOfBoardAndDirectors",
+        "en": "Other revenue, overdue compensation of board and directors",
+        "zh_tw": "逾期未領董監酬勞轉列其他收入",
+        "code": "A24500"
+    },
+    {
+        "concept_name": "tifrs-SCF_AdjustmentsToReconcileProfitLoss",
+        "en": "Total adjustments to reconcile profit (loss)",
+        "zh_tw": "收益費損項目合計",
+        "code": "A20010"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFinancialAssetsAtFairValueThroughProfitOrLoss",
+        "en": "A41120",
+        "zh_tw": "透過損益按公允價值衡量之金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInBillInvestmentsUnderResaleAgreements",
+        "en": "A61140",
+        "zh_tw": "附賣回票券投資（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInSecurityBorrowingMargin",
+        "en": "A61220",
+        "zh_tw": "借券保證金－存出（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInConstructionContractsReceivableDueFromRelatedParties",
+        "en": "A91220",
+        "zh_tw": "應收建造合約款－關係人（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInReinsuranceLiabilityReserveContributed",
+        "en": "A51200",
+        "zh_tw": "存出再保責任準備金（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFuturesExchangesMarginsReceivable",
+        "en": "A61200",
+        "zh_tw": "應收期貨交易保證金（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInReceivables",
+        "en": "A41150",
+        "zh_tw": "應收款項（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFinancialAssetsAtCost",
+        "en": "A91160",
+        "zh_tw": "以成本衡量之金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInMarginLoansReceivable",
+        "en": "A91230",
+        "zh_tw": "應收證券融資款（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInSecuritiesPurchasedUnderAgreementsToResell",
+        "en": "A91180",
+        "zh_tw": "附賣回票券及債券投資（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInPremiumsReceivable",
+        "en": "A51120",
+        "zh_tw": "應收保費（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInHeldToMaturityFinancialAssets",
+        "en": "A41180",
+        "zh_tw": "持有至到期日金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInBondInvestmentWithoutActiveMarket",
+        "en": "A61360",
+        "zh_tw": "無活絡市場之債務工具投資（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInPrepaidExpensesAndOtherPrepayments",
+        "en": "A51180",
+        "zh_tw": "預付費用及其他預付款（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInReceivableOfSecuritiesBusinessMoneyLending",
+        "en": "A61180",
+        "zh_tw": "應收證券借貸款項（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInDerivativeFinancialAssetsForHedging",
+        "en": "A51150",
+        "zh_tw": "避險之金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInNotesReceivable",
+        "en": "A51110",
+        "zh_tw": "應收票據（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInNotesReceivableDueFromRelatedParties",
+        "en": "A31140",
+        "zh_tw": "應收票據－關係人（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInSecuritiesPurchasedUnderResellAgreements",
+        "en": "A41140",
+        "zh_tw": "附賣回票券及債券投資（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInAccountsReceivable",
+        "en": "A61250",
+        "zh_tw": "應收帳款（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInAccountsReceivableDueFromRelatedParties",
+        "en": "A31160",
+        "zh_tw": "應收帳款－關係人（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInOtherReceivableRelatedParties",
+        "en": "A61300",
+        "zh_tw": "其他應收款－關係人（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInDebtsInvestmentWithoutActiveMarket",
+        "en": "A91170",
+        "zh_tw": "無活絡市場之債務工具投資（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInConstructionContractsReceivable",
+        "en": "A91210",
+        "zh_tw": "應收建造合約款（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInOtherReceivables",
+        "en": "A51130",
+        "zh_tw": "其他應收款（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInBondInvestmentsUnderResaleAgreements",
+        "en": "A61130",
+        "zh_tw": "附賣回債券投資（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInAvailableForSaleFinancialAssets",
+        "en": "A41170",
+        "zh_tw": "備供出售金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInReinsuranceAssets",
+        "en": "A51170",
+        "zh_tw": "再保險合約資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInPrepaidPension",
+        "en": "A61280",
+        "zh_tw": "淨確定福利資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInRefinancingCollateralReceivable",
+        "en": "A61170",
+        "zh_tw": "應收轉融通擔保價款（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInOtherReceivableDueFromRelatedParties",
+        "en": "A31190",
+        "zh_tw": "其他應收款－關係人（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInOtherPrepayments",
+        "en": "A91260",
+        "zh_tw": "預付款項（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInSecuritiesHeldForCustomerDefault",
+        "en": "A61310",
+        "zh_tw": "違約證券（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInTemporaryPaymentsAndSuspenseAccounts",
+        "en": "A51210",
+        "zh_tw": "暫付及待結轉帳項（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInSecurityBorrowingCollateralPrice",
+        "en": "A61210",
+        "zh_tw": "借券擔保價款（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInPrepaidExpenses",
+        "en": "A31220",
+        "zh_tw": "預付費用（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInPrepayments",
+        "en": "A31230",
+        "zh_tw": "預付款項（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInOverdueReceivable",
+        "en": "A61380",
+        "zh_tw": "催收款項（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInNotesReceivableRelatedParties",
+        "en": "A61240",
+        "zh_tw": "應收票據－關係人（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInBalanceOfTheConstructionInProgressAccountExceedsTheBalanceOfBillingsOnConstructionInProgress",
+        "en": "A91240",
+        "zh_tw": "客戶保證金專戶（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInOtherFinancialAssets",
+        "en": "A41190",
+        "zh_tw": "其他金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInReceivablesDueFromRelatedParties",
+        "en": "A91200",
+        "zh_tw": "應收款項－關係人（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInGuaranteeDepositsPaid",
+        "en": "A51190",
+        "zh_tw": "存出保證金（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInCustomerMarginAccount",
+        "en": "A61190",
+        "zh_tw": "客戶保證金專戶（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInRefinancingMargin",
+        "en": "A61160",
+        "zh_tw": "轉融通保證金（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInDeferredDebits",
+        "en": "A91310",
+        "zh_tw": "遞延借項（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInAccountsReceivableRelatedParties",
+        "en": "A61260",
+        "zh_tw": "應收帳款－關係人（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInOtherOperatingAssets",
+        "en": "A91990",
+        "zh_tw": "其他營業資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ChangesInOperatingAssets",
+        "en": "A41000",
+        "zh_tw": "與營業活動相關之資產之淨變動合計",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInNotesAndBondsIssuedUnderRepurchaseAgreement",
+        "en": "A92110",
+        "zh_tw": "附買回票券及債券負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInDerivativeFinancialLiabilitiesForHedging",
+        "en": "A92130",
+        "zh_tw": "避險之金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInCommercialPapersIssued",
+        "en": "A72150",
+        "zh_tw": "應付商業本票增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInDepositsFromTheCentralBankAndBanks",
+        "en": "A92150",
+        "zh_tw": "央行及銀行同業存款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInReinsuranceIndemnityPayable",
+        "en": "A52130",
+        "zh_tw": "應付再保賠款與給付增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInFinancialLiabilitiesAtFairValueThroughProfitOrLoss",
+        "en": "A42120",
+        "zh_tw": "透過損益按公允價值衡量之金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInDepositsPayableForSecuritiesFinancing",
+        "en": "A62170",
+        "zh_tw": "應付融券擔保價款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFinancialLiabilitiesAtFairValueThroughProfitOrLoss",
+        "en": "A92120",
+        "zh_tw": "透過損益按公允價值衡量之金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInClaimsPayable",
+        "en": "A52120",
+        "zh_tw": "應付保險賠款與給付增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInLiabilitiesForBillsWithAttachedRepurchaseAgreements",
+        "en": "A62120",
+        "zh_tw": "附買回票券負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInNotesPayable",
+        "en": "A52110",
+        "zh_tw": "應付票據增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInLiabilitiesForBondsWithAttachedRepurchaseAgreements",
+        "en": "A62110",
+        "zh_tw": "附買回債券負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInNotesPayableToRelatedParties",
+        "en": "A32140",
+        "zh_tw": "應付票據－關係人增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInNotesAndBondsIssuedUnderRepurchaseAgreement",
+        "en": "A42140",
+        "zh_tw": "附買回票券及債券負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFinancialLiabilitiesAtCost",
+        "en": "A92140",
+        "zh_tw": "以成本衡量之金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInCommissionsPayable",
+        "en": "A52140",
+        "zh_tw": "應付佣金增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInAccountsPayable",
+        "en": "A62230",
+        "zh_tw": "應付帳款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInPayables",
+        "en": "A42150",
+        "zh_tw": "應付款項增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInDueToReinsurersAndCedingCompanies",
+        "en": "A52150",
+        "zh_tw": "應付再保往來款項增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInAccountsPayableToRelatedParties",
+        "en": "A32160",
+        "zh_tw": "應付帳款－關係人增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInPayableToRelatedParties",
+        "en": "A92170",
+        "zh_tw": "應付款項－關係人增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInConstructionContractsReceivable",
+        "en": "A32170",
+        "zh_tw": "應付建造合約款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInOtherPayables",
+        "en": "A52160",
+        "zh_tw": "其他應付款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInProvisionsForEmployeeBenefits",
+        "en": "A42180",
+        "zh_tw": "員工福利負債準備增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInFuturesTradersEquity",
+        "en": "A92260",
+        "zh_tw": "期貨交易人權益增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInConstructionContractsPayable",
+        "en": "A92180",
+        "zh_tw": "應付建造合約款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInSecuritiesFinancingRefundableDeposits",
+        "en": "A62160",
+        "zh_tw": "融券保證金增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInOtherPayableToRelatedParties",
+        "en": "A32190",
+        "zh_tw": "其他應付款－關係人增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInProvisions",
+        "en": "A52190",
+        "zh_tw": "負債準備增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInConstructionContractsPayableToRelatedParties",
+        "en": "A92190",
+        "zh_tw": "應付建造合約款－關係人增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInRefundableDeposit",
+        "en": "A62190",
+        "zh_tw": "借券保證金－存入增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInReceiptsInAdvance",
+        "en": "A92270",
+        "zh_tw": "預收款項增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInOtherPayableRelatedParties",
+        "en": "A62280",
+        "zh_tw": "其他應付款－關係人增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInIncomesCollectedInAdvance",
+        "en": "A52210",
+        "zh_tw": "預收收益增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInOtherFinancialLiabilities",
+        "en": "A42170",
+        "zh_tw": "其他金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInAdvanceReceipts",
+        "en": "A52220",
+        "zh_tw": "預收款項增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInNotesPayableRelatedParties",
+        "en": "A62220",
+        "zh_tw": "應付票據－關係人增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInDepositsReceivedFromSecuritiesBorrowers",
+        "en": "A92200",
+        "zh_tw": "融券保證金增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInRefinancingBorrowings",
+        "en": "A62180",
+        "zh_tw": "轉融通借入款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInAccruedPensionLiability",
+        "en": "A62290",
+        "zh_tw": "淨確定福利負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInDeferredFeeIncome",
+        "en": "A52230",
+        "zh_tw": "遞延手續費收入增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInAccruedPensionLiabilities",
+        "en": "A32240",
+        "zh_tw": "淨確定福利負債增加(減少)",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInGuaranteeDepositsAndMarginsReceived",
+        "en": "A62340",
+        "zh_tw": "存入保證金增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInAccountsPayableRelatedParties",
+        "en": "A62240",
+        "zh_tw": "應付帳款－關係人增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInDeferredCredits",
+        "en": "A92320",
+        "zh_tw": "遞延貸項增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInLong-TermDeferredRevenue",
+        "en": "A62330",
+        "zh_tw": "長期遞延收入增加(減少)",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInAmountsReceivedInAdvance",
+        "en": "A62250",
+        "zh_tw": "預收款項增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInGuaranteedPriceDepositsReceivedFromSecuritiesBorrowers",
+        "en": "A92250",
+        "zh_tw": "應付融券擔保價款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInFinancialLiabilitiesAtCost",
+        "en": "A62140",
+        "zh_tw": "以成本衡量之金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInReceiptsUnderCustody",
+        "en": "A62260",
+        "zh_tw": "代收款項增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInReinsuranceLiabilityReserveReceived",
+        "en": "A52250",
+        "zh_tw": "存入再保責任準備金增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInOtherOperatingLiabilities",
+        "en": "A92990",
+        "zh_tw": "其他營業負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInOtherOperatingAssets",
+        "en": "A62990",
+        "zh_tw": "其他營業負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInTemporaryReceiptsAndSuspenseAccounts",
+        "en": "A52260",
+        "zh_tw": "暫收及待結轉款項增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ChangesInOperatingLiabilities",
+        "en": "A42000",
+        "zh_tw": "與營業活動相關之負債之淨變動合計",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ChangesInOperatingAssetsAndLiabilities",
+        "en": "A40000",
+        "zh_tw": "與營業活動相關之資產及負債之淨變動合計",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_Adjustments",
+        "en": "Total adjustments",
+        "zh_tw": "調整項目合計",
+        "code": "A20000"
+    },
+    {
+        "concept_name": "tifrs-SCF_DividendsPaid-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "en": "Dividends paid",
+        "zh_tw": "支付之股利",
+        "code": "AC0100"
+    },
+    {
+        "concept_name": "tifrs-SCF_DividendsReceived-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "en": "Dividends received",
+        "zh_tw": "收取之股利",
+        "code": "AC0200"
+    },
+    {
+        "concept_name": "tifrs-SCF_InterestPaid-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "en": "Interest paid",
+        "zh_tw": "支付之利息",
+        "code": "AC0300"
+    },
+    {
+        "concept_name": "tifrs-SCF_InterestReceived-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "en": "Interest received",
+        "zh_tw": "收取之利息",
+        "code": "AC0400"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncomeTaxesRefundPaid-CashFlowsFromUsedInOperatingActivitiesDirectMethod",
+        "en": "Income taxes refund (paid)",
+        "zh_tw": "退還（支付）所得稅",
+        "code": "AC0500"
+    },
+    {
+        "concept_name": "tifrs-SCF_CashAndCashEquivalentsAtEndOfPeriod",
+        "en": "Cash and cash equivalents at end of period",
+        "zh_tw": "期末現金及約當現金餘額",
+        "code": "E00200"
+    },
+    {
+        "concept_name": "tifrs-SCF_OtherItemsQualifyingForCashAndCashEquivalentsUnderTheDefinitionOfIas7",
+        "en": "Other items qualifying for cash and cash equivalents under the definition of IAS 7",
+        "zh_tw": "其他符合國際會計準則第七號現金及約當現金定義之項目",
+        "code": "E00240"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfFinancialAssetsAtFairValueThroughOtherComprehensiveIncome",
+        "en": "Acquisition of financial assets at fair value through other comprehensive income",
+        "zh_tw": "取得透過其他綜合損益按公允價值衡量之金融資產",
+        "code": "B00010"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfFinancialAssetsAtFairValueThroughOtherComprehensiveIncome",
+        "en": "Proceeds from disposal of financial assets at fair value through other comprehensive income",
+        "zh_tw": "處分透過其他綜合損益按公允價值衡量之金融資產",
+        "code": "B00020"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromCapitalReductionOfFinancialAssetsAtFairValueThroughOtherComprehensiveIncome",
+        "en": "Proceeds from capital reduction of financial assets at fair value through other comprehensive income",
+        "zh_tw": "透過其他綜合損益按公允價值衡量之金融資產減資退回股款",
+        "code": "B00030"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfFinancialAssetsAtAmortisedCost",
+        "en": "Acquisition of financial assets at amortised cost",
+        "zh_tw": "取得按攤銷後成本衡量之金融資產",
+        "code": "B00040"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfFinancialAssetsAtAmortisedCost",
+        "en": "Proceeds from disposal of financial assets at amortised cost",
+        "zh_tw": "處分按攤銷後成本衡量之金融資產",
+        "code": "B00050"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromRepaymentsOfFinancialAssetsAtAmortisedCost",
+        "en": "Proceeds from repayments of  financial assets at amortised cost",
+        "zh_tw": "按攤銷後成本衡量之金融資產到期還本",
+        "code": "B00060"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfFinancialAssetsAtFairValueThroughProfitOrLossDesignatedAsUponInitialRecognition",
+        "en": "Acquisition of financial assets at fair value through profit or loss",
+        "zh_tw": "取得透過損益按公允價值衡量之金融資產",
+        "code": "B00100"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfFinancialAssetsAtFairValueThroughProfitOrLossDesignatedAsUponInitialRecognition",
+        "en": "Proceeds from disposal of financial assets at fair value through profit or loss",
+        "zh_tw": "處分透過損益按公允價值衡量之金融資產",
+        "code": "B00200"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfAvailableForSaleFinancialAssets",
+        "en": "Acquisition of available-for-sale financial assets",
+        "zh_tw": "取得備供出售金融資產",
+        "code": "B00300"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfAvailableForSaleFinancialAssets",
+        "en": "Proceeds from disposal of available-for-sale financial assets",
+        "zh_tw": "處分備供出售金融資產",
+        "code": "B00400"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromCapitalReductionOfAvailableForSaleFinancialAssets",
+        "en": "Proceeds from capital reduction of available-for-sale financial assets",
+        "zh_tw": "備供出售金融資產減資退回股款",
+        "code": "B00500"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfBondInvestmentsWithoutActiveMarket",
+        "en": "Acquisition of investments in debt instrument without active market",
+        "zh_tw": "取得無活絡市場之債務工具投資",
+        "code": "B00600"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfBondInvestmentsWithoutActiveMarket",
+        "en": "Proceeds from disposal of investments in debt instrument without active market",
+        "zh_tw": "處分無活絡市場之債務工具投資",
+        "code": "B00700"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromRepaymentsOfBondInvestmentWithoutActiveMarket",
+        "en": "Proceeds from repayments of investments in debt instrument without active market",
+        "zh_tw": "無活絡市場之債務工具投資到期還本",
+        "code": "B00800"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfHeldToMaturityFinancialAssets",
+        "en": "Acquisition of held-to-maturity financial assets",
+        "zh_tw": "取得持有至到期日金融資產",
+        "code": "B00900"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfHeldToMaturityFinancialAssets",
+        "en": "Proceeds from disposal of held-to-maturity financial assets",
+        "zh_tw": "處分持有至到期日金融資產",
+        "code": "B01000"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromRepaymentsOfHeldToMaturityFinancialAssets",
+        "en": "Proceeds from repayments of held-to-maturity financial assets",
+        "zh_tw": "持有至到期日金融資產到期還本",
+        "code": "B01100"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfFinancialAssetsAtCost",
+        "en": "Acquisition of financial assets at cost",
+        "zh_tw": "取得以成本衡量之金融資產",
+        "code": "B01200"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfFinancialAssetsAtCost",
+        "en": "Proceeds from disposal of financial assets at cost",
+        "zh_tw": "處分以成本衡量之金融資產",
+        "code": "B01300"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromCapitalReductionOfFinancialAssetsAtCost",
+        "en": "Proceeds from capital reduction of financial assets at cost",
+        "zh_tw": "以成本衡量之金融資產減資退回股款",
+        "code": "B01400"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfDerivativeFinancialAssetsForHedging-CashFlowsFromUsedInInvestingActivities",
+        "en": "Acquisition of financial assets for hedging",
+        "zh_tw": "取得避險之金融資產",
+        "code": "B01500"
+    },
+    {
+        "concept_name": "tifrs-SCF_DisposalOfDerivativeFinancialAssetsForHedging-CashFlowsFromUsedInInvestingActivities",
+        "en": "Disposal of financial assets for hedging",
+        "zh_tw": "處分避險之金融資產",
+        "code": "B01600"
+    },
+    {
+        "concept_name": "tifrs-SCF_DerecognitionOfDerivativeFinancialLiabilitiesForHedging-CashFlowsFromUsedInInvestingActivities",
+        "en": "Derecognition of financial liabilities for hedging",
+        "zh_tw": "除列避險之金融負債",
+        "code": "B01700"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInPrepaymentsForInvestments",
+        "en": "Increase in prepayments for investments",
+        "zh_tw": "預付投資款增加",
+        "code": "B02000"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInPrepaymentsForInvestments",
+        "en": "Decrease in prepayments for investments",
+        "zh_tw": "預付投資款減少",
+        "code": "B02100"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromCapitalReductionOfInvestmentsAccountedForUsingEquityMethod",
+        "en": "Proceeds from capital reduction of investments accounted for using equity method",
+        "zh_tw": "採用權益法之被投資公司減資退回股款",
+        "code": "B02400"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInReceiptsInAdvanceDueToDisposalOfAssets",
+        "en": "Increase in receipts in advance due to disposal of assets",
+        "zh_tw": "預收款項增加－處分資產",
+        "code": "B02900"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInReceiptsInAdvanceDueToDisposalOfAssets",
+        "en": "Decrease in receipts in advance due to disposal of assets",
+        "zh_tw": "預收款項減少－處分資產",
+        "code": "B03000"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInTrustEnterpriseCompensationReserve",
+        "en": "Increase in trust enterprise compensation reserve",
+        "zh_tw": "信託業賠償準備金增加",
+        "code": "B03100"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInTrustEnterpriseCompensationReserve",
+        "en": "Decrease in trust enterprise compensation reserve",
+        "zh_tw": "信託業賠償準備金減少",
+        "code": "B03200"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOperationGuarantee",
+        "en": "Increase in operation guarantee",
+        "zh_tw": "營業保證金增加",
+        "code": "B03300"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInDepositsSettlementFund",
+        "en": "Increase in deposits settlement fund",
+        "zh_tw": "交割結算基金增加",
+        "code": "B03500"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInDepositsSettlementFund",
+        "en": "Decrease in deposits settlement fund",
+        "zh_tw": "交割結算基金減少",
+        "code": "B03600"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInRefundableDeposits",
+        "en": "Increase in refundable deposits",
+        "zh_tw": "存出保證金增加",
+        "code": "B03700"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInRefundableDeposits",
+        "en": "Decrease in refundable deposits",
+        "zh_tw": "存出保證金減少",
+        "code": "B03800"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInReinsuranceLiabilityReserveContribute",
+        "en": "Increase in reinsurance liability reserve contribute",
+        "zh_tw": "存出再保責任準備金增加",
+        "code": "B03900"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInReinsuranceLiabilityReserveContribute",
+        "en": "Decrease in reinsurance liability reserve contribute",
+        "zh_tw": "存出再保責任準備金減少",
+        "code": "B04000"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOtherReceivables",
+        "en": "Increase in other receivables",
+        "zh_tw": "其他應收款增加",
+        "code": "B04100"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOtherReceivables",
+        "en": "Decrease in other receivables",
+        "zh_tw": "其他應收款減少",
+        "code": "B04200"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOtherReceivablesDueFromRelatedParties",
+        "en": "Increase in other receivables due from related parties",
+        "zh_tw": "其他應收款－關係人增加",
+        "code": "B04300"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOtherReceivablesDueFromRelatedParties",
+        "en": "Decrease in other receivables due from related parties",
+        "zh_tw": "其他應收款－關係人減少",
+        "code": "B04400"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedFromDisposalOfForeclosedCollateral",
+        "en": "Proceed from disposal of foreclosed collateral",
+        "zh_tw": "處分承受擔保品",
+        "code": "B04700"
+    },
+    {
+        "concept_name": "tifrs-SCF_PurchaseOfForeclosedCollateral",
+        "en": "Purchase of foreclosed collateral",
+        "zh_tw": "購買承受擔保品",
+        "code": "B04800"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetCashReceiptsFromAcquisitionsOfSubsidiariesAndOtherBusinessUnits",
+        "en": "Net cash receipts from acquisitions of subsidiaries and other business units",
+        "zh_tw": "概括承受他公司之淨現金收取數",
+        "code": "B04900"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetCashInflowsFromBusinessCombination",
+        "en": "Net cash inflows from business combination",
+        "zh_tw": "因合併產生之現金流入",
+        "code": "B05000"
+    },
+    {
+        "concept_name": "tifrs-SCF_CashPaymentsToAcquireSubsidiariesAndOtherBusinessUnits",
+        "en": "Cash payments to acquire subsidiaries and other business units",
+        "zh_tw": "概括承受他公司之賠付款",
+        "code": "B05100"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInLoans",
+        "en": "Increase in loans",
+        "zh_tw": "放款增加",
+        "code": "B05200"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInLoans",
+        "en": "Decrease in loans",
+        "zh_tw": "放款減少",
+        "code": "B05300"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInSecuritiesPurchasedUnderResellAgreements",
+        "en": "Increase in securities purchased under resell agreements",
+        "zh_tw": "附賣回票券及債券投資增加",
+        "code": "B05600"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInSecuritiesPurchasedUnderResellAgreements",
+        "en": "Decrease in securities purchased under resell agreements",
+        "zh_tw": "附賣回票券及債券投資減少",
+        "code": "B05700"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInReceivables",
+        "en": "Increase in receivables",
+        "zh_tw": "應收款項增加",
+        "code": "B05800"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInReceivables",
+        "en": "Decrease in receivables",
+        "zh_tw": "應收款項減少",
+        "code": "B05900"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInLongTermLeaseAndInstallmentReceivables",
+        "en": "Increase in lease and installment receivables ",
+        "zh_tw": "應收租賃款增加 ",
+        "code": "B06000"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInLongTermLeaseAndInstallmentReceivables",
+        "en": "Decrease in  lease and installment receivables",
+        "zh_tw": "應收租賃款減少 ",
+        "code": "B06100"
+    },
+    {
+        "concept_name": "tifrs-SCF_CompensationOnDisposalOfNonperformingLoans",
+        "en": "Compensation on disposal of non-performing loans",
+        "zh_tw": "出售不良債權回饋金",
+        "code": "B06200"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfNonperformingLoan",
+        "en": "Proceeds from disposal of non-performing loan",
+        "zh_tw": "已收現之出售不良債權",
+        "code": "B06300"
+    },
+    {
+        "concept_name": "tifrs-SCF_BuybackOfNonperformingLoan",
+        "en": "Buyback of non-performing loan",
+        "zh_tw": "買回已出售之不良債權",
+        "code": "B06400"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOtherFinancialAssets",
+        "en": "Increase in other financial assets",
+        "zh_tw": "其他金融資產增加",
+        "code": "B06500"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOtherFinancialAssets",
+        "en": "Decrease in other financial assets",
+        "zh_tw": "其他金融資產減少",
+        "code": "B06600"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOtherAssets",
+        "en": "Increase in other assets",
+        "zh_tw": "其他資產增加",
+        "code": "B06700"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOtherAssets",
+        "en": "Decrease in other non-current assets",
+        "zh_tw": "其他非流動資產減少",
+        "code": "B06800"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInPrepaymentForLandAndBuilding",
+        "en": "Increase in prepayment for land and building",
+        "zh_tw": "預付房地款增加",
+        "code": "B06900"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInPrepaymentForLandAndBuilding",
+        "en": "Decrease in prepayment for land and building",
+        "zh_tw": "預付房地款減少",
+        "code": "B07000"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInPrepaymentsForBusinessFacilities",
+        "en": "Increase in prepayments for business facilities",
+        "zh_tw": "預付設備款增加",
+        "code": "B07100"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInPrepaymentsForBusinessFacilities",
+        "en": "Decrease in prepayments for business facilities",
+        "zh_tw": "預付設備款減少",
+        "code": "B07200"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOtherPrepayments",
+        "en": "Increase in other prepayments",
+        "zh_tw": "其他預付款項增加",
+        "code": "B07300"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOtherPrepayments",
+        "en": "Decrease in other prepayments",
+        "zh_tw": "其他預付款項減少",
+        "code": "B07400"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetCashFlowsFromUsedInInvestingActivities",
+        "en": "Net cash flows from (used in) investing activities",
+        "zh_tw": "投資活動之淨現金流入（流出）",
+        "code": "BBBB"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInShortTermLoans",
+        "en": "Increase in short-term loans",
+        "zh_tw": "短期借款增加",
+        "code": "C00100"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInShortTermLoans",
+        "en": "Decrease in short-term loans",
+        "zh_tw": "短期借款減少",
+        "code": "C00200"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInDueToTheCentralBankAndBanks",
+        "en": "Increase in due to the central bank and banks",
+        "zh_tw": "央行及同業融資增加",
+        "code": "C00300"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInDueToTheCentralBankAndBanks",
+        "en": "Decrease in due to the central bank and banks",
+        "zh_tw": "央行及同業融資減少",
+        "code": "C00400"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInShortTermNotesAndBillsPayable",
+        "en": "Increase in short-term notes and bills payable",
+        "zh_tw": "應付短期票券增加",
+        "code": "C00500"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInShortTermNotesAndBillsPayable",
+        "en": "Decrease in short-term notes and bills payable",
+        "zh_tw": "應付短期票券減少",
+        "code": "C00600"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInCommercialPapersPayable",
+        "en": "Increase in commercial papers payable",
+        "zh_tw": "應付商業本票增加",
+        "code": "C00700"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInCommercialPapersPayable",
+        "en": "Decrease in commercial papers payable",
+        "zh_tw": "應付商業本票減少",
+        "code": "C00800"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfDerivativeFinancialAssetsForHedging-CashFlowsFromUsedInFinancingActivities",
+        "en": "Acquisition of financial assets for hedging",
+        "zh_tw": "取得避險之金融資產",
+        "code": "C00900"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfDerivativeFinancialAssetsForHedging-CashFlowsFromUsedInFinancingActivities",
+        "en": "Proceeds from disposal of financial assets for hedging",
+        "zh_tw": "處分避險之金融資產",
+        "code": "C01000"
+    },
+    {
+        "concept_name": "tifrs-SCF_DerecognitionOfDerivativeFinancialLiabilitiesForHedging-CashFlowsFromUsedInFinancingActivities",
+        "en": "Derecognition of financial liabilities for hedging",
+        "zh_tw": "除列避險之金融負債",
+        "code": "C01100"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromIssuingBonds",
+        "en": "Proceeds from issuing bonds",
+        "zh_tw": "發行公司債",
+        "code": "C01200"
+    },
+    {
+        "concept_name": "tifrs-SCF_RepaymentsOfBonds",
+        "en": "Repayments of bonds",
+        "zh_tw": "償還公司債",
+        "code": "C01300"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromIssuingBankNotesPayable",
+        "en": "Proceeds from issuing bank notes payable",
+        "zh_tw": "發行金融債券",
+        "code": "C01400"
+    },
+    {
+        "concept_name": "tifrs-SCF_RepaymentsOfBankNotesPayable",
+        "en": "Repayments of bank notes payable",
+        "zh_tw": "償還金融債券",
+        "code": "C01500"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromLongTermDebt",
+        "en": "Proceeds from long-term debt",
+        "zh_tw": "舉借長期借款",
+        "code": "C01600"
+    },
+    {
+        "concept_name": "tifrs-SCF_RepaymentsOfLongTermDebt",
+        "en": "Repayments of long-term debt",
+        "zh_tw": "償還長期借款",
+        "code": "C01700"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOtherBorrowings",
+        "en": "Increase in other borrowings",
+        "zh_tw": "其他借款增加",
+        "code": "C01800"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOtherBorrowings",
+        "en": "Decrease in other borrowings",
+        "zh_tw": "其他借款減少",
+        "code": "C01900"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInNotesAndBondsIssuedUnderRepurchaseAgreement",
+        "en": "Increase in notes and bonds issued under repurchase agreement",
+        "zh_tw": "附買回票券及債券負債增加",
+        "code": "C02000"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInNotesAndBondsIssuedUnderRepurchaseAgreement",
+        "en": "Decrease in notes and bonds issued under repurchase agreement",
+        "zh_tw": "附買回票券及債券負債減少",
+        "code": "C02100"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInFinancialLiabilitiesAtFairValueThroughProfitOrLossDesignatedAsUponInitialRecognition",
+        "en": "Increase in financial liabilities designated at fair value through profit or loss",
+        "zh_tw": "指定為透過損益按公允價值衡量之金融負債增加",
+        "code": "C02200"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInFinancialLiabilitiesAtFairValueThroughProfitOrLossDesignatedAsUponInitialRecognition",
+        "en": "Decrease in financial liabilities designated at fair value through profit or loss",
+        "zh_tw": "指定為透過損益按公允價值衡量之金融負債減少",
+        "code": "C02300"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInFinancialLiabilitiesAtAmortisedCost",
+        "en": "Increase in financial liabilities at amortised cost",
+        "zh_tw": "按攤銷後成本衡量之金融負債增加",
+        "code": "C02400"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInFinancialLiabilitiesAtAmortisedCost",
+        "en": "Decrease in financial liabilities at amortised cost",
+        "zh_tw": "按攤銷後成本衡量之金融負債減少",
+        "code": "C02500"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInFinancialLiabilitiesAtCost",
+        "en": "Increase in financial liabilities at cost",
+        "zh_tw": "以成本衡量之金融負債增加",
+        "code": "C02600"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInFinancialLiabilitiesAtCost",
+        "en": "Decrease in financial liabilities at cost",
+        "zh_tw": "以成本衡量之金融負債減少",
+        "code": "C02700"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromIssuingPreferenceShareLiabilities",
+        "en": "Proceeds from issuing preference share liabilities",
+        "zh_tw": "發行特別股負債",
+        "code": "C02800"
+    },
+    {
+        "concept_name": "tifrs-SCF_RepaymentsOfPreferenceShareLiabilities",
+        "en": "Repayments of preference share liabilities",
+        "zh_tw": "償還特別股負債",
+        "code": "C02900"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInGuaranteeDepositsReceived",
+        "en": "Increase in guarantee deposits received",
+        "zh_tw": "存入保證金增加",
+        "code": "C03000"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInGuaranteeDepositsReceived",
+        "en": "Decrease in guarantee deposits received",
+        "zh_tw": "存入保證金減少",
+        "code": "C03100"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromFinancialAssetsSecuritization",
+        "en": "Proceeds from financial assets securitization",
+        "zh_tw": "金融資產證券化款項",
+        "code": "C03200"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInReinsuranceLiabilityReserveReceived",
+        "en": "Increase in reinsurance liability reserve received",
+        "zh_tw": "存入再保責任準備金增加",
+        "code": "C03300"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInReinsuranceLiabilityReserveReceived",
+        "en": "Decrease in reinsurance liability reserve received",
+        "zh_tw": "存入再保責任準備金減少",
+        "code": "C03400"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInPayables",
+        "en": "Increase in payables",
+        "zh_tw": "應付款項增加",
+        "code": "C03500"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInPayables",
+        "en": "Decrease in payables",
+        "zh_tw": "應付款項減少",
+        "code": "C03600"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOtherPayablesToRelatedParties",
+        "en": "Increase in other payables to related parties",
+        "zh_tw": "其他應付款－關係人增加",
+        "code": "C03700"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOtherPayablesToRelatedParties",
+        "en": "Decrease in other payables to related parties",
+        "zh_tw": "其他應付款－關係人減少",
+        "code": "C03800"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInLeasePayable",
+        "en": "Increase in lease payable",
+        "zh_tw": "應付租賃款增加",
+        "code": "C03900"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInLeasePayable",
+        "en": "Decrease in lease payable",
+        "zh_tw": "應付租賃款減少",
+        "code": "C04000"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOtherFinancialLiabilities",
+        "en": "Increase in other financial liabilities",
+        "zh_tw": "其他金融負債增加",
+        "code": "C04100"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOtherFinancialLiabilities",
+        "en": "Decrease in other financial liabilities",
+        "zh_tw": "其他金融負債減少",
+        "code": "C04200"
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseInOtherLiabilities",
+        "en": "Increase in other liabilities",
+        "zh_tw": "其他負債增加",
+        "code": "C04300"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOtherLiabilities",
+        "en": "Decrease in other liabilities",
+        "zh_tw": "其他負債減少",
+        "code": "C04400"
+    },
+    {
+        "concept_name": "tifrs-SCF_CapitalReductionPaymentsToShareholders",
+        "en": "Capital reduction payments to shareholders",
+        "zh_tw": "現金減資",
+        "code": "C04700"
+    },
+    {
+        "concept_name": "tifrs-SCF_ExerciseOfEmployeeShareOptions",
+        "en": "Exercise of employee share options",
+        "zh_tw": "員工執行認股權",
+        "code": "C04800"
+    },
+    {
+        "concept_name": "tifrs-SCF_PaymentsToAcquireTreasuryShares",
+        "en": "Payments to acquire treasury shares",
+        "zh_tw": "庫藏股票買回成本",
+        "code": "C04900"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromSaleOfTreasuryShares",
+        "en": "Proceeds from sale of treasury shares",
+        "zh_tw": "庫藏股票處分",
+        "code": "C05000"
+    },
+    {
+        "concept_name": "tifrs-SCF_TreasurySharesSoldToEmployees",
+        "en": "Treasury shares sold to employees",
+        "zh_tw": "員工購買庫藏股",
+        "code": "C05100"
+    },
+    {
+        "concept_name": "tifrs-SCF_IssuanceOfPreferenceSharesBySubsidiaries",
+        "en": "Issuance of preference shares by subsidiaries",
+        "zh_tw": "子公司發行特別股",
+        "code": "C05200"
+    },
+    {
+        "concept_name": "tifrs-SCF_RetroactiveAdjustmentDueToIssuanceOfNewSharesForAMerger",
+        "en": "Retroactive adjustment due to issuance of new shares for a merger",
+        "zh_tw": "合併發行新股追溯調整",
+        "code": "C05300"
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfOwnershipInterestsInSubsidiaries",
+        "en": "Acquisition of ownership interests in subsidiaries",
+        "zh_tw": "取得子公司股權",
+        "code": "C05400"
+    },
+    {
+        "concept_name": "tifrs-SCF_ChangeInNoncontrollingInterests",
+        "en": "Change in non-controlling interests",
+        "zh_tw": "非控制權益變動",
+        "code": "C05800"
+    },
+    {
+        "concept_name": "tifrs-SCF_CashFlowsFromUsedInFinancingActivities",
+        "en": "Net cash flows from (used in) financing activities",
+        "zh_tw": "籌資活動之淨現金流入（流出）",
+        "code": "CCCC"
+    },
+    {
+        "concept_name": "tifrs-SCF_ClassesOfCashReceiptsFromOperatingActivities",
+        "en": "Total classes of cash receipts from operating activities",
+        "zh_tw": "營業活動之收現類別合計",
+        "code": "AA0000"
+    },
+    {
+        "concept_name": "tifrs-SCF_ClassesOfCashPaymentsFromOperatingActivities",
+        "en": "Total classes of cash payments from operating activities",
+        "zh_tw": "營業活動之付現類別合計",
+        "code": "AB0000"
+    },
+    {
+        "concept_name": "tifrs-SCF_ReceiptsFromReinsurance",
+        "en": "Receipts from reinsurance",
+        "zh_tw": "再保險之收現",
+        "code": "AA0500"
+    },
+    {
+        "concept_name": "tifrs-SCF_PaymentsForReinsurance",
+        "en": "Payments for reinsurance",
+        "zh_tw": "再保險之付現",
+        "code": "AB0500"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetLossGainOnNonoperatingFinancialInstrumentsAtFairValue",
+        "en": "Net loss (gain) on non-operating financial instruments at fair value",
+        "zh_tw": "營業外金融商品按公允價值衡量之損失（利益）",
+        "code": "A23300"
+    },
+    {
+        "concept_name": "tifrs-SCF_UnrealizedGainLossOnIssuanceOfCallOrPut",
+        "en": "Unrealized gain (loss) on issuance of call or put warrants",
+        "zh_tw": "未實現認購（售）權證發行損失（利益）",
+        "code": "A23400"
+    },
+    {
+        "concept_name": "tifrs-SCF_UnrealizedProfitLossFromSales",
+        "en": "Unrealized profit (loss) from sales",
+        "zh_tw": "未實現銷貨利益（損失）",
+        "code": "A23900"
+    },
+    {
+        "concept_name": "tifrs-SCF_RealizedLossProfitOnFromSales",
+        "en": "Realized loss (profit) on from sales",
+        "zh_tw": "已實現銷貨損失（利益）",
+        "code": "A24000"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetLossGainOnAvailableForSaleFinancialAssets",
+        "en": "Net loss (gain) on available for sale financial assets",
+        "zh_tw": "備供出售金融資產之淨損失（利益）",
+        "code": "A20500"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetlossGainOnFinancialAssetsOrLiabilitiesAtCost",
+        "en": "Net loss (gain) on financial assets or liabilities at cost",
+        "zh_tw": "以成本衡量之金融資產及負債之淨損失（利益）",
+        "code": "A20600"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetLossGainOnBondInvestmentWithoutActive",
+        "en": "Net loss (gain) on investments in debt instrument without active market",
+        "zh_tw": "無活絡市場之債務工具投資損益之淨損失（利益）",
+        "code": "A20700"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetLossGainOnHeldToMaturityFinancialAssets",
+        "en": "Net loss (gain) on held-to-maturity financial assets",
+        "zh_tw": "持有至到期日金融資產之淨損失（利益）",
+        "code": "A20800"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetChangeInInsuranceLiabilities",
+        "en": "Net change in insurance liabilities",
+        "zh_tw": "各項保險負債淨變動",
+        "code": "A21400"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetChangeInReserveForInsuranceWithNatureOfFinancialInstrument",
+        "en": "Net change in reserve for insurance with nature of financial instrument",
+        "zh_tw": "具金融商品性質之保險契約準備淨變動",
+        "code": "A21500"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetChangeInReserveForForeignExchangeValuation",
+        "en": "Net change in reserve for foreign exchange valuation",
+        "zh_tw": "外匯價格變動準備淨變動",
+        "code": "A21600"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetChangeInProvisionsForGuaranteeLiabilities",
+        "en": "Net change in provisions for guarantee liabilities",
+        "zh_tw": "保證責任準備淨變動",
+        "code": "A21700"
+    },
+    {
+        "concept_name": "tifrs-SCF_NetChangeInOtherProvisions",
+        "en": "Net change in other provisions",
+        "zh_tw": "其他各項負債準備淨變動",
+        "code": "A21800"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProvisionLossGainOnDisposalOfForeclosedCollaterals",
+        "en": "Provision loss (gain) on disposal of foreclosed collaterals",
+        "zh_tw": "處分承受擔保品提存損失（利益）",
+        "code": "A22100"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnFinancialAssetsSecuritization",
+        "en": "Loss (gain) on financial assets securitization",
+        "zh_tw": "資產證券化損失（利益）",
+        "code": "A22200"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossOnDisposalOfNonPerformingLoans",
+        "en": "Loss on disposal of non-performing loans",
+        "zh_tw": "出售及攤銷不良債權之損失",
+        "code": "A24300"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnDisposalOfForeclosedProperties",
+        "en": "Loss (gain) on disposal of foreclosed properties",
+        "zh_tw": "處分承受擔保品損失（利益）",
+        "code": "A24400"
+    },
+    {
+        "concept_name": "tifrs-SCF_DueFromTheCentralBankAndCallLoansToBanksQualifyingForCashAndCashEquivalentsUnderTheDefinitionOfIAS7",
+        "en": "Due from the central bank and call loans to banks qualifying for cash and cash equivalents under the definition of IAS 7",
+        "zh_tw": "符合國際會計準則第七號現金及約當現金定義之存放央行及拆借銀行同業",
+        "code": "E00220"
+    },
+    {
+        "concept_name": "tifrs-SCF_SecuritiesPurchasedUnderResellAgreementsQualifyingForCashAndCashEquivalentsUnderTheDefinitionOfIAS7",
+        "en": "Securities purchased under resell agreements qualifying for cash and cash equivalents under the definition of IAS 7",
+        "zh_tw": "符合國際會計準則第七號現金及約當現金定義之附賣回票券及債券投資",
+        "code": "E00230"
+    },
+    {
+        "concept_name": "tifrs-SCF_ProfitLossBeforeTax",
+        "en": "Profit (loss) before tax",
+        "zh_tw": "本期稅前淨利（淨損）",
+        "code": "A10000"
+    },
+    {
+        "concept_name": "tifrs-SCF_CashAndCashEquivalentsAtBeginningOfPeriod",
+        "en": "Cash and cash equivalents at beginning of period ",
+        "zh_tw": "期初現金及約當現金餘額",
+        "code": "E00100"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseInOperationGuarantee",
+        "en": "Decrease in operation guarantee",
+        "zh_tw": "營業保證金減少",
+        "code": "B03400"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInAvailableForSaleFinancialAssetsForIns",
+        "en": "A51220",
+        "zh_tw": "備供出售金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIincreaseInFinancialAssetsAtCostForIns",
+        "en": "A51230",
+        "zh_tw": "以成本衡量之金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInDebtsInvestmentWithoutActiveMarketForIns",
+        "en": "A51240",
+        "zh_tw": "無活絡市場之債務工具投資（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInHeldToMaturityFinancialAssetsForIns",
+        "en": "A51250",
+        "zh_tw": "持有至到期日金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFinancialLiabilitiesAtCostForIns",
+        "en": "A52270",
+        "zh_tw": "以成本衡量之金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInLoans",
+        "en": "Decrease (increase) in loans",
+        "zh_tw": "放款（增加）減少",
+        "code": "A51260"
+    },
+    {
+        "concept_name": "tifrs-SCF_Non-currentAssetsOrDisposalGroupsClassifiedAsHeldForDistributionToOwnersNet",
+        "en": "(Non-current) assets (or disposal groups) classified as held for distribution to owners, net",
+        "zh_tw": "分類至待分配與業主之（非流動）資產（或處分群組）之現金及約當現金",
+        "code": "E00214"
+    },
+    {
+        "concept_name": "tifrs-SCF_ExpectedCreditLossReversalOfCreditLoss",
+        "en": "Expected credit losses or reversal of expected credit losses of investments",
+        "zh_tw": "投資之預期信用減損損失（迴轉利益）",
+        "code": "A21830"
+    },
+    {
+        "concept_name": "tifrs-SCF_ExpectedCreditLossReversalOfCreditLoss2",
+        "en": "Expected credit losses or reversal of expected credit losses of non-investments",
+        "zh_tw": "非投資之預期信用減損損失（迴轉利益）",
+        "code": "A21850"
+    },
+    {
+        "concept_name": "tifrs-SCF_LossProfitReclassifiedByApplyingOverlayApproach",
+        "en": " Loss (profit) reclassified by applying overlay approach",
+        "zh_tw": "採用覆蓋法重分類之損失（利益）",
+        "code": "A22450"
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFinancialAssetsAtFairValueThroughProfitOrLossMandatorilyMeasuredAtFairValue",
+        "en": "A31115",
+        "zh_tw": "強制透過損益按公允價值衡量之金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFinancialAssetsAtFairValueThroughOtherComprehensiveIncome",
+        "en": "A61365",
+        "zh_tw": "透過其他綜合損益按公允價值衡量之金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFinancialAssetsAtAmortisedCost",
+        "en": "A61366",
+        "zh_tw": "按攤銷後成本衡量之金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInInvestmentsInDebtInstrumentsMeasuredAtAmortisedCost",
+        "en": "A71123",
+        "zh_tw": "按攤銷後成本衡量之債務工具投資（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInContractAssets",
+        "en": "A91185",
+        "zh_tw": "合約資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInContractLiabilities",
+        "en": "A92145",
+        "zh_tw": "合約負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInAssetsRecognisedAsIncrementalCostsToObtainContractWithCustomers",
+        "en": "A31270",
+        "zh_tw": "取得合約之增額成本（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInAssetsRecognisedFromCostsToFulfilContractsWithCustomers",
+        "en": "A31280",
+        "zh_tw": "履行合約成本（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_NetLossGainOnFinancialAssetsOrLiabilitiesAtFairValueThroughOtherComprehensiveIncome",
+        "en": "Net loss (gain) on financial assets or liabilities at fair value through other comprehensive income",
+        "zh_tw": "透過其他綜合損益按公允價值衡量金融資產及負債之淨損失（利益）",
+        "code": "A20450"
+    },
+    {
+        "concept_name": "tifrs-SCF_DepreciationExpense",
+        "en": "Depreciation expense",
+        "zh_tw": "折舊費用",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_AmortizationExpense",
+        "en": "Amortization expense",
+        "zh_tw": "攤銷費用",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_InterestExpense",
+        "en": "Interest expense",
+        "zh_tw": "利息費用",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_InterestIncome",
+        "en": "Interest income",
+        "zh_tw": "利息收入",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DividendIncome",
+        "en": "Dividend income",
+        "zh_tw": "股利收入",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ShareBasedPayments",
+        "en": "Share-based payments",
+        "zh_tw": "股份基礎給付酬勞成本",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnDisposalOfPropertyPlanAndEquipment",
+        "en": "Loss (gain) on disposal of property, plan and equipment",
+        "zh_tw": "處分及報廢不動產、廠房及設備損失（利益）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnDisposalOfInvestmentsAccountedForUsingEquityMethod",
+        "en": "Loss (gain) on disposal of investments accounted for using equity method",
+        "zh_tw": "處分採用權益法之投資損失（利益）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_UnrealizedForeignExchangeLossGain",
+        "en": "Unrealized foreign exchange loss (gain)",
+        "zh_tw": "未實現外幣兌換損失（利益）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_LossGainOnFairValueAdjustmentOfInvestmentProperty",
+        "en": "Loss (gain) on fair value adjustment of investment property",
+        "zh_tw": "投資性不動產公允價值調整損失(利益)",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInFinancialAssetsHeldForTrading",
+        "en": "Decrease (increase) in financial assets held for trading",
+        "zh_tw": "持有供交易之金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInDueFromTheCentralBankAndCallLoansToBanks",
+        "en": "Decrease (increase) in due from the central bank and call loans to banks",
+        "zh_tw": "存放央行及拆借金融同業（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInInventories",
+        "en": "Decrease (increase) in inventories",
+        "zh_tw": "存貨（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInOtherCurrentAssets",
+        "en": "Decrease (increase) in other current assets",
+        "zh_tw": "其他流動資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInDiscountsAndLoans",
+        "en": "Decrease (increase) in discounts and loans",
+        "zh_tw": "貼現及放款（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInBiologicalAssets",
+        "en": "Decrease (increase) in biological assets",
+        "zh_tw": "生物資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInOtherAssets",
+        "en": "Decrease (increase) in other assets",
+        "zh_tw": "其他資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInDepositsFromTheCentralBankAndBanks",
+        "en": "Increase (decrease) in deposits from the central bank and banks",
+        "zh_tw": "央行及銀行同業存款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInOtherLiabilities",
+        "en": "Increase (decrease) in other liabilities",
+        "zh_tw": "其他負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInFinancialLiabilitiesHeldForTrading",
+        "en": "Increase (decrease) in financial liabilities held for trading",
+        "zh_tw": "持有供交易之金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInOtherCurrentLiabilities",
+        "en": "Increase (decrease) in other current liabilities",
+        "zh_tw": "其他流動負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_IncreaseDecreaseInDepositsAndRemittances",
+        "en": "Increase (decrease) in deposits and remittances",
+        "zh_tw": "存款及匯款增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_CashInflowOutflowGeneratedFromOperations",
+        "en": "Cash inflow (outflow) generated from operations",
+        "zh_tw": "營運產生之現金流入（流出）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfInvestmentsAccountedForUsingEquityMethod",
+        "en": "Acquisition of investments accounted for using equity method",
+        "zh_tw": "取得採用權益法之投資",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfInvestmentsAccountedForUsingEquityMethod",
+        "en": "Proceeds from disposal of investments accounted for using equity method",
+        "zh_tw": "處分採用權益法之投資",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_NetCashFlowFromAcquisitionOfSubsidiaries",
+        "en": "Net cash flow from acquisition of subsidiaries",
+        "zh_tw": "對子公司之收購（扣除所取得之現金）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfSubsidiaries",
+        "en": "Proceeds from disposal of subsidiaries",
+        "zh_tw": "處分子公司",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfNoncurrentAssetsClassifiedAsHeldForSale",
+        "en": "Acquisition of assets classified as held for sale",
+        "zh_tw": "取得待出售資產",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfNoncurrentAssetsClassifiedAsHeldForSale",
+        "en": "Proceeds from disposal of  non-current assets classified as held for sale",
+        "zh_tw": "處分待出售非流動資產",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfPropertyPlantAndEquipment",
+        "en": "Acquisition of property, plant and equipment",
+        "zh_tw": "取得不動產、廠房及設備",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfPropertyPlantAndEquipment",
+        "en": "Proceeds from disposal of property, plant and equipment",
+        "zh_tw": "處分不動產、廠房及設備",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfIntangibleAssets",
+        "en": "Acquisition of intangible assets",
+        "zh_tw": "取得無形資產",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfIntangibleAssets",
+        "en": "Proceeds from disposal of intangible assets",
+        "zh_tw": "處分無形資產",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfInvestmentProperties",
+        "en": "Acquisition of investment properties",
+        "zh_tw": "取得投資性不動產",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_ProceedsFromDisposalOfInvestmentProperties",
+        "en": "Proceeds from disposal of investment properties",
+        "zh_tw": "處分投資性不動產",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_OtherInvestingActivities",
+        "en": "Other investing activities",
+        "zh_tw": "其他投資活動",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_CashDividendsPaid",
+        "en": "Cash dividends paid",
+        "zh_tw": "發放現金股利",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DisposalOfOwnershipInterestsInSubsidiariesWithoutLosingControl",
+        "en": "Disposal of ownership interests in subsidiaries (without losing control)",
+        "zh_tw": "處分子公司股權（未喪失控制力）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_OtherFinancingActivities",
+        "en": "Other financing activities",
+        "zh_tw": "其他籌資活動",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_Non-currentAssetsOrDisposalGroupsClassifiedAsHeldForSaleNet",
+        "en": "(Non-current) assets (or disposal groups) classified as held for sale, net",
+        "zh_tw": "分類至待出售（非流動）資產（或處分群組）之現金及約當現金",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_OtherInflowsOutflowsOfCash",
+        "en": "Other inflows (outflows) of cash",
+        "zh_tw": "其他現金流入（出）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInHedgingDerivativesAssets",
+        "en": "Decrease (increase) in hedging derivatives assets",
+        "zh_tw": "避險之衍生金融資產（增加）減少",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_DecreaseIncreaseInDerivativeFinancialLiabilitiesForHedging",
+        "en": "Decrease (increase) in derivative financial liabilities for hedging",
+        "zh_tw": "避險之衍生金融負債增加（減少）",
+        "code": null
+    },
+    {
+        "concept_name": "tifrs-SCF_AcquisitionOfUseOfRightAssets",
+        "en": "Acquisition of use-of-right assets",
+        "zh_tw": "取得使用權資產",
+        "code": "B05350"
+    },
+    {
+        "concept_name": "tifrs-SCF_IssueSecurityTokenOffer",
+        "en": "Issue Security Token Offer",
+        "zh_tw": "發行具證券性質之虛擬通貨",
+        "code": "C04650"
+    },
+    {
+        "concept_name": "tifrs-SCF_RepurchaseSecurityTokenOffer",
+        "en": "Repurchase Security Token Offer",
+        "zh_tw": "買回具證券性質之虛擬通貨",
+        "code": "C04950"
+    }
+]
