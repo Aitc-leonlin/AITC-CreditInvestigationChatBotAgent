@@ -28,7 +28,7 @@ XBRLDI = "{http://xbrl.org/2006/xbrldi}"
 ROLE_LABEL = "http://www.xbrl.org/2003/role/label"
 
 INDUSTRY_TYPES = ("CI", "BASI", "FH", "INS", "BD", "MIM")
-REPORT_SCOPES = ("CR", "SR")
+REPORT_SCOPES = ("CR", "ER", "IR", "SR")
 
 
 def split_tag(tag: str) -> Tuple[Optional[str], str]:

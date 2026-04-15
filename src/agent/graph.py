@@ -23,9 +23,7 @@ from langgraph.checkpoint.memory import MemorySaver
 
 def question_type_condition_edge(state: OverallState) -> str:
     match state["question_type"]:
-        case "語意檢索":
-            return "semantic_retrieval"
-        case "精確查詢":
+        case "EXACT_QUERY":
             return "classify_statement_type"
         case _:
             return "semantic_retrieval"

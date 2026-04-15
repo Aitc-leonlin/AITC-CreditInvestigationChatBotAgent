@@ -387,15 +387,15 @@ def extract_semantic_plan(question: str) -> Dict:
             )
         )
         raise
-    print(
-        "[semantic_retrieval] extract_semantic_plan raw llm response:\n"
-        + dump_log_payload(
-            {
-                "question": sanitized_question,
-                "response_content": get_message_text(response),
-            }
-        )
-    )
+    # print(
+    #     "[semantic_retrieval] extract_semantic_plan raw llm response:\n"
+    #     + dump_log_payload(
+    #         {
+    #             "question": sanitized_question,
+    #             "response_content": get_message_text(response),
+    #         }
+    #     )
+    # )
     return normalize_semantic_plan(parser.invoke(response))
 
 
@@ -700,7 +700,10 @@ def retrieve_requirement_data(question: str, company: Dict, requirement: Dict) -
     query_results = []
     values = []
     candidates_by_field_query = {}
+    value_result_cache = {}
+    emitted_value_keys = set()
 
+    candidate_search_started_at = perf_counter()
     for field_query in field_queries:
         # 先根據 field_query、報表類型與公司常用 family 範圍，找出可比對的候選 XBRL concept。
         candidates = search_candidates_across_statements(
@@ -710,6 +713,11 @@ def retrieve_requirement_data(question: str, company: Dict, requirement: Dict) -
             company_code=company["companyCode"],
         )
         candidates_by_field_query[field_query] = candidates
+    print(
+        f"[timing] semantic_retrieval.match_requirement_field_queries took {perf_counter() - candidate_search_started_at:.3f}s "
+        f"(statement_type={requirement.get('statement_type')}, field_queries={len(field_queries)}, "
+        f"candidate_count={sum(len(candidates) for candidates in candidates_by_field_query.values())})"
+    )
 
     selected_candidates_by_field_query = choose_best_candidates_for_requirement(
         question=question,
@@ -725,35 +733,51 @@ def retrieve_requirement_data(question: str, company: Dict, requirement: Dict) -
         for period in requirement.get("periods", []):
             result = None
             quarter = period.get("quarter")
+            value_key = None
             if selected_candidate:
-                if quarter is None:
-                    print(
-                        "[semantic_retrieval] fetch_financial_value in annual mode (quarter missing, fallback to Q4 cumulative/year-end):\n"
-                        + json.dumps(
-                            {
-                                "field_query": field_query,
-                                "period": period,
-                                "selected_candidate": build_llm_evidence_candidate(selected_candidate),
-                            },
-                            ensure_ascii=False,
-                            indent=2,
-                        )
-                    )
-                # 針對選中的 concept，在指定公司與期間上查詢實際財務數值。
-                result = fetch_financial_value(
-                    company_code=company["companyCode"],
-                    year=period["year"],
-                    quarter=quarter,
-                    statement_type=selected_candidate.get("statement_type") or requirement["statement_type"],
-                    concept_id=selected_candidate.get("concept_name"),
+                statement_type = selected_candidate.get("statement_type") or requirement["statement_type"]
+                concept_name = selected_candidate.get("concept_name")
+                value_key = (
+                    statement_type,
+                    concept_name,
+                    period.get("year"),
+                    quarter,
                 )
+                if value_key in value_result_cache:
+                    result = value_result_cache[value_key]
+                else:
+                    # if quarter is None:
+                    #     print(
+                    #         "[semantic_retrieval] fetch_financial_value in annual mode (quarter missing, fallback to Q4 cumulative/year-end):\n"
+                    #         + json.dumps(
+                    #             {
+                    #                 "field_query": field_query,
+                    #                 "period": period,
+                    #                 "selected_candidate": build_llm_evidence_candidate(selected_candidate),
+                    #             },
+                    #             ensure_ascii=False,
+                    #             indent=2,
+                    #         )
+                    #     )
+                    # 針對選中的 concept，在指定公司與期間上查詢實際財務數值。
+                    result = fetch_financial_value(
+                        company_code=company["companyCode"],
+                        year=period["year"],
+                        quarter=quarter,
+                        statement_type=statement_type,
+                        concept_id=concept_name,
+                    )
+                    value_result_cache[value_key] = result
             value_item = {
                 "field_query": field_query,
                 "period": period,
                 "result": result,
             }
-            query_values.append(value_item)
-            values.append(value_item)
+            if value_key is None or value_key not in emitted_value_keys:
+                query_values.append(value_item)
+                values.append(value_item)
+                if value_key is not None:
+                    emitted_value_keys.add(value_key)
 
         # 保留每個 field_query 的完整查詢結果，供後續 fulfilled/planned 統計與最終證據組裝使用。
         query_results.append(
@@ -969,8 +993,7 @@ def semantic_retrieval(state: OverallState) -> OverallState:
             "已查到足夠的財務資料，但最終分析回答階段失敗。"
             f"你可以先參考 reference_data 中的 JSON 證據。錯誤：{exc}"
         )
-    # print("\n[semantic_retrieval] final_answer:")
-    # print(final_answer)
+    print("[semantic_retrieval] final_answer:\n" + str(final_answer))
 
     print(f"[timing] semantic_retrieval.total took {perf_counter() - started_at:.3f}s")
     return {

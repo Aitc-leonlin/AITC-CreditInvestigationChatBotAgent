@@ -10,6 +10,10 @@ class OverallState(TypedDict):
     user_input: str
     rephrased_question: str
     question_type: str
+    question_type_confidence: float
+    question_type_result: dict[str, Any]
     statement_type: str
+    statement_types: list[str]
+    statement_type_result: dict[str, Any]
     reference_data: any
     answer: str

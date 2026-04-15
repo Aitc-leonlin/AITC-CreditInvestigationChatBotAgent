@@ -1,12 +1,53 @@
-import os
 from time import perf_counter
+from typing import Literal
 
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from pydantic import BaseModel, Field
 
-from src.mappings.company_stock_code_array import CompanyStockCodeArray
-from typing_extensions import TypedDict, NotRequired, Annotated
+from src.providers.chat_openAI_provider import chat_model
 from src.types.langgraph_state_types import OverallState
-from src.providers.chat_openAI_provider import chat_model, get_message_text
+
+
+VALID_STATEMENT_TYPES = (
+    "balance_sheet",
+    "comprehensive_income_statement",
+    "statement_of_cash_flows",
+)
+
+
+class StatementFieldClassification(BaseModel):
+    field_name: str = Field(description="使用者問題中拆出的單一查詢欄位")
+    statement_types: list[
+        Literal[
+            "balance_sheet",
+            "comprehensive_income_statement",
+            "statement_of_cash_flows",
+        ]
+    ] = Field(
+        default_factory=list,
+        description="該欄位可能對應的報表類型，可複選",
+    )
+    primary_statement_type: Literal[
+        "balance_sheet",
+        "comprehensive_income_statement",
+        "statement_of_cash_flows",
+    ] = Field(description="最優先嘗試查詢的報表類型")
+
+
+class StatementTypeClassification(BaseModel):
+    statement_types: list[
+        Literal[
+            "balance_sheet",
+            "comprehensive_income_statement",
+            "statement_of_cash_flows",
+        ]
+    ] = Field(
+        default_factory=list,
+        description="整體問題需要跨哪些報表取數，可複選且不得重複",
+    )
+    field_mappings: list[StatementFieldClassification] = Field(
+        default_factory=list,
+        description="每個查詢欄位對應的報表分類結果",
+    )
 
 
 def sanitize_llm_text(text: str) -> str:
@@ -22,55 +63,61 @@ def sanitize_llm_text(text: str) -> str:
     return "".join(sanitized_chars)
 
 
-# langGraph Node:將question提供給LLM進行分析，判斷是
-# 將question提供給LLM進行分析，判斷此問題是不是在財務報表的問題範圍內
-# 財務報表類別：資產負債表、綜合損益表、現金流量表、權益變動表、會計師查核報告。
-# Todo：判斷式不要直接用reponse.content的中文來作比對，要增加一個判斷對錯的類型比較好，事先定義好錯誤的類別，用英文
 def classify_statement_type(state: OverallState) -> OverallState:
     started_at = perf_counter()
-    question_with_system_prompt = f"""
-        使用者會問你一些與財報相關的問題，請根據「使用者問題中提及的關鍵項目」判斷該項目最常出現在哪一種財務報表中。請從以下3種類別中選擇，可能複選。
+    question = state.get("rephrased_question") or state.get("user_input") or ""
+    sanitized_question = sanitize_llm_text(question)
 
-        若問題與財務、信用徵審沒有相關聯，請回覆：
-        「此問題超出我可回答的範圍，請洽詢專業人士。」
+    structured_llm = chat_model.with_structured_output(StatementTypeClassification)
+    prompt = f"""
+你是財報欄位分類器。
+請分析使用者問題中提到的所有查詢欄位，判斷每個欄位最可能出現在哪些財務報表，並且支援跨表情境。
 
-        僅輸出類別名稱（可多選），用逗號隔開，不要補充說明。
+可使用的報表類型只有：
+- balance_sheet
+- comprehensive_income_statement
+- statement_of_cash_flows
 
-        ### 報表種類（請依照會計實務為準）：
-        1. 資產負債表：資產、負債、權益的期末狀況。例如「現金」「應收帳款」「預付款項」。
-        2. 綜合損益表：本期的收入、成本與費用。例如「營業收入」「稅後淨利」「手續費收入」「股利收入」。
-        3. 現金流量表：現金流入與流出，如「營業活動之現金流入」「投資活動」「收取之股利」。
+判斷原則：
+1. 問題裡如果一次詢問多個欄位，必須逐一拆開判斷，不可只給整題一個單一報表。
+2. 同一欄位若在實務上可能跨表出現，可以回傳多個 statement_types，但仍必須指定一個 primary_statement_type。
+3. 整體的 statement_types 應該是所有 field_mappings 內報表類型的去重聯集。
+4. 資產、負債、權益、應收款、無形資產、現金及約當現金等期末存量項目，通常屬於 balance_sheet。
+5. 收入、成本、費損、獲利等期間經營成果項目，通常屬於 comprehensive_income_statement。
+6. 現金流入流出、折舊攤銷調整、收取股利、投資活動、籌資活動等現金移動項目，通常屬於 statement_of_cash_flows。
+7. 如果問題提到的欄位像「現金及約當現金」，雖然常見於資產負債表，但若題意是在跨表整批取數，也可將 statement_of_cash_flows 一併列入候選。
+8. 只輸出結構化結果，不要輸出說明文字。
 
-        報表種類若是
-        1. 資產負債表則回傳「balance_sheet」
-        2. 綜合損益表則回傳「comprehensive_income_statement」
-        3. 現金流量表則回傳「statement_of_cash_flows」
+範例：
+問題：請給我台泥1101的2024年Q1的現金及約當現金、其他應收款、無形資產、長期應收融資租賃款淨額
+可接受的分類方向：
+- 現金及約當現金 -> ["balance_sheet", "statement_of_cash_flows"]
+- 其他應收款 -> ["balance_sheet"]
+- 無形資產 -> ["balance_sheet"]
+- 長期應收融資租賃款淨額 -> ["balance_sheet"]
 
-        ### 問題：
-        ${state['rephrased_question']}"""
+使用者問題：
+{sanitized_question}
+"""
 
-    # 4. 權益變動表：如「資本公積」「特別盈餘公積」「股利分派」「保留盈餘調整」。
-    # 5. 會計師查核報告：會計師查核或核閱意見相關的報告，不屬於一般財務報表內容。
+    print("[classify_statement_type] prompt:\n" + prompt)
+    result = structured_llm.invoke(prompt)
+    classification = result.model_dump()
 
-    sanitized_prompt = sanitize_llm_text(question_with_system_prompt)
-    print("[classify_statement_type] prompt:\n" + sanitized_prompt)
-    response = chat_model.invoke(sanitized_prompt)
-    statement_type = get_message_text(response)
+    field_mappings = classification.get("field_mappings", [])
+    overall_statement_types = classification.get("statement_types", [])
+    primary_statement_type = (
+        field_mappings[0]["primary_statement_type"]
+        if field_mappings
+        else (overall_statement_types[0] if overall_statement_types else "")
+    )
 
-    print("classify_statement_type statement_type======", statement_type)
+    print("[classify_statement_type] result:", classification)
     print(f"[timing] classify_statement_type took {perf_counter() - started_at:.3f}s")
 
-    return {**state, "statement_type": statement_type}
-    # if (response.content === "此問題超出我可回答的範圍，請洽詢專業人士。") {
-    #     return {
-    #     ...state,
-    #     category: "此問題超出我可回答的範圍，請洽詢專業人士。",
-    #     answer: "此問題超出我可回答的範圍，請洽詢專業人士。",
-    #     isQuestionOutOfRange: true,
-    #     };
-    # } else {
-    #     return {
-    #     ...state,
-    #     category: response.content,
-    #     };
-    # }
+    return {
+        **state,
+        "statement_type": primary_statement_type,
+        "statement_types": overall_statement_types,
+        "statement_type_result": classification,
+    }
