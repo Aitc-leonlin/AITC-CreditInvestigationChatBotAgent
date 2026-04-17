@@ -1,0 +1,24 @@
+{
+  "dictionary_json": "src/services/xbrl_data_dictionary_all.json",
+  "taxonomy_root": "/Users/leonlin/Desktop/WORK/專案/AI-徵審團隊機器人/XBRL Criteria tifrs-20200630",
+  "concept_count": 10351,
+  "canonical_zh_count": 6167,
+  "canonical_en_count": 6136,
+  "alias_count": 34578,
+  "label_role_counts": {
+    "http://www.xbrl.org/2003/role/label": 6154,
+    "http://www.xbrl.org/2003/role/negativeLabel": 60,
+    "http://www.xbrl.org/2003/role/negativeTerseLabel": 28,
+    "http://www.xbrl.org/2003/role/negativeVerboseLabel": 55,
+    "http://www.xbrl.org/2003/role/periodEndLabel": 2,
+    "http://www.xbrl.org/2003/role/periodStartLabel": 1,
+    "http://www.xbrl.org/2003/role/positiveLabel": 44,
+    "http://www.xbrl.org/2003/role/positiveTerseLabel": 25,
+    "http://www.xbrl.org/2003/role/positiveVerboseLabel": 40,
+    "http://www.xbrl.org/2003/role/terseLabel": 4684,
+    "http://www.xbrl.org/2003/role/totalLabel": 555,
+    "http://www.xbrl.org/2003/role/verboseLabel": 34,
+    "http://www.xbrl.org/2009/role/negatedPeriodEndLabel": 2,
+    "http://www.xbrl.org/2009/role/negatedPeriodStartLabel": 1
+  }
+}

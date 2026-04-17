@@ -9,6 +9,7 @@ from typing import Dict, List, Optional
 
 SERVICES_DIR = Path(__file__).parent
 DICTIONARY_PATH = SERVICES_DIR / "xbrl_data_dictionary_all.json"
+MAPPING_PATH = SERVICES_DIR / "xbrl_mapping" / "concept_mapping.json"
 SPLIT_DIR = SERVICES_DIR / "xbrl_dictionary_splits"
 DB_PATH = SERVICES_DIR.parent.parent / "FinancialStatementXBRL.db"
 KNOWN_INDUSTRY_TYPES = ("basi", "bd", "ci", "fh", "ins", "mim")
@@ -54,6 +55,36 @@ def load_dictionary_file(path_text: str) -> List[Dict]:
     if not path.exists():
         return []
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+@lru_cache(maxsize=1)
+def load_concept_mapping_by_id() -> Dict[str, Dict]:
+    if not MAPPING_PATH.exists():
+        return {}
+    records = json.loads(MAPPING_PATH.read_text(encoding="utf-8"))
+    return {
+        record["concept_id"]: record
+        for record in records
+        if isinstance(record, dict) and record.get("concept_id")
+    }
+
+
+def enrich_item_with_mapping(item: Dict) -> Dict:
+    concept_name = item.get("concept_name")
+    mapping = load_concept_mapping_by_id().get(concept_name)
+    if not mapping:
+        return item
+    enriched = dict(item)
+    enriched["mapping_canonical_zh"] = mapping.get("canonical_zh")
+    enriched["mapping_canonical_en"] = mapping.get("canonical_en")
+    enriched["mapping_aliases"] = mapping.get("aliases", [])
+    enriched["mapping_statement_types"] = mapping.get("statement_types", [])
+    enriched["mapping_industry_types"] = mapping.get("industry_types", [])
+    return enriched
+
+
+def enrich_items_with_mapping(items: List[Dict]) -> List[Dict]:
+    return [enrich_item_with_mapping(item) for item in items]
 
 
 def split_file_path(statement_type: str, family: Optional[str] = None) -> Path:
@@ -260,7 +291,7 @@ def extract_profile_specific_queries(item: Dict, industry_type: Optional[str]) -
 
 def load_search_items(statement_type: str, company_code: Optional[str] = None) -> List[Dict]:
     if statement_type not in STATEMENT_FILTERS:
-        return load_dictionary()
+        return enrich_items_with_mapping(load_dictionary())
 
     loaded_items: List[Dict] = []
     families = get_company_families(company_code) if company_code else ()
@@ -270,14 +301,49 @@ def load_search_items(statement_type: str, company_code: Optional[str] = None) -
             loaded_items.extend(load_dictionary_file(str(family_path)))
 
     if loaded_items:
-        return dedupe_items(loaded_items)
+        return enrich_items_with_mapping(dedupe_items(loaded_items))
 
     statement_all_path = split_file_path(statement_type)
     statement_items = load_dictionary_file(str(statement_all_path))
     if statement_items:
-        return dedupe_items(statement_items)
+        return enrich_items_with_mapping(dedupe_items(statement_items))
 
-    return load_dictionary()
+    return enrich_items_with_mapping(load_dictionary())
+
+
+def filter_items_by_industry_type(items: List[Dict], industry_type: Optional[str]) -> List[Dict]:
+    target_token = normalize_profile_token(industry_type)
+    if not target_token:
+        return items
+
+    filtered_items = []
+    for item in items:
+        matched_tokens = set(detect_item_industry_types(item))
+        if not matched_tokens or target_token in matched_tokens:
+            filtered_items.append(item)
+    return filtered_items
+
+
+def search_item_source_paths(statement_type: str, company_code: Optional[str] = None) -> List[str]:
+    if statement_type not in STATEMENT_FILTERS:
+        return [str(DICTIONARY_PATH)]
+
+    source_paths: List[str] = []
+    families = get_company_families(company_code) if company_code else ()
+    for family in families:
+        for family_variant in family_variants(family):
+            family_path = split_file_path(statement_type, family_variant)
+            if load_dictionary_file(str(family_path)):
+                source_paths.append(str(family_path))
+
+    if source_paths:
+        return list(dict.fromkeys(source_paths))
+
+    statement_all_path = split_file_path(statement_type)
+    if load_dictionary_file(str(statement_all_path)):
+        return [str(statement_all_path)]
+
+    return [str(DICTIONARY_PATH)]
 
 
 def role_matches(item: Dict, statement_type: str) -> bool:
@@ -347,10 +413,14 @@ def score_item_details(item: Dict, query: str) -> Dict[str, object]:
     texts = [
         item.get("zh_tw"),
         item.get("en"),
+        item.get("mapping_canonical_zh"),
+        item.get("mapping_canonical_en"),
         item.get("name"),
         item.get("concept_name"),
-        item.get("search_text"),
     ]
+    for alias in item.get("mapping_aliases", []):
+        if isinstance(alias, str) and alias.strip():
+            texts.append(alias.strip())
     normalized_texts = [normalize_text(text) for text in texts if text]
     if not normalized_texts:
         return {
@@ -368,12 +438,14 @@ def score_item_details(item: Dict, query: str) -> Dict[str, object]:
     score = 0.0
     best_text = None
     best_match_type = None
+    has_exact_match = False
     for raw_text, text in zip([text for text in texts if text], normalized_texts):
         candidate_score = SequenceMatcher(None, query_norm, text).ratio() * 70.0
         match_type = "sequence_matcher"
         if query_norm == text:
             candidate_score = 100.0
             match_type = "exact_match"
+            has_exact_match = True
         elif query_norm and query_norm in text:
             candidate_score = 90.0
             match_type = "query_in_text"
@@ -403,6 +475,9 @@ def score_item_details(item: Dict, query: str) -> Dict[str, object]:
     if item.get("code") and re.search(r"\d", item["code"]):
         code_bonus = 1.0
         score += code_bonus
+
+    if not has_exact_match:
+        score = min(score, 99.0)
 
     return {
         "query": query,
@@ -451,6 +526,7 @@ def score_query_against_texts_details(query: str, texts: List[str]) -> Dict[str,
     token_overlap_bonus = 0.0
     best_text = None
     best_match_type = None
+    has_exact_match = False
     raw_texts = [text for text in texts if text]
     for raw_text, text in zip(raw_texts, normalized_texts):
         candidate_score = SequenceMatcher(None, query_norm, text).ratio() * 70.0
@@ -458,6 +534,7 @@ def score_query_against_texts_details(query: str, texts: List[str]) -> Dict[str,
         if query_norm == text:
             candidate_score = 100.0
             match_type = "exact_match"
+            has_exact_match = True
         elif query_norm in text:
             candidate_score = 90.0
             match_type = "query_in_text"
@@ -473,6 +550,8 @@ def score_query_against_texts_details(query: str, texts: List[str]) -> Dict[str,
         if query_tokens and item_tokens:
             token_overlap_bonus += len(query_tokens & item_tokens) * 8.0
     score += token_overlap_bonus
+    if not has_exact_match:
+        score = min(score, 99.0)
     return {
         "query": query,
         "query_norm": query_norm,
@@ -484,6 +563,23 @@ def score_query_against_texts_details(query: str, texts: List[str]) -> Dict[str,
     }
 
 
+def score_component_summary(details: Optional[Dict[str, object]]) -> Optional[Dict[str, float]]:
+    if details is None:
+        return None
+    component_keys = (
+        "base_match",
+        "token_overlap_bonus",
+        "prefix_bonus",
+        "code_bonus",
+        "total",
+    )
+    return {
+        key: round(float(details.get(key) or 0.0), 3)
+        for key in component_keys
+        if key in details
+    }
+
+
 def score_item_with_mapping(item: Dict, original_query: str, mapping_queries: List[str]) -> float:
     return score_item_with_mapping_details(item, original_query, mapping_queries)["total"]
 
@@ -492,18 +588,15 @@ def score_item_with_mapping_details(item: Dict, original_query: str, mapping_que
     base_details = score_item_details(item, original_query)
     score = float(base_details["total"])
     best_mapping_score = 0.0
-    best_mapping_query = None
     if mapping_queries:
         mapping_details = [score_item_details(item, query) for query in mapping_queries if query]
         if mapping_details:
             best_mapping = max(mapping_details, key=lambda detail: float(detail["total"]))
             best_mapping_score = float(best_mapping["total"])
-            best_mapping_query = best_mapping["query"]
             score = max(score, best_mapping_score)
             score += best_mapping_score * 0.1
     return {
-        "base_query_score": base_details,
-        "best_mapping_query": best_mapping_query,
+        "base_query_score": score_component_summary(base_details),
         "best_mapping_score": round(best_mapping_score, 3),
         "mapping_bonus": round(best_mapping_score * 0.1 if best_mapping_score else 0.0, 3),
         "total": round(score, 3),
@@ -536,13 +629,10 @@ def score_item_with_profile_details(
     if not target_token:
         return {
             "base_query_score": mapping_details["base_query_score"],
-            "best_mapping_query": mapping_details["best_mapping_query"],
             "best_mapping_score": mapping_details["best_mapping_score"],
             "mapping_bonus": mapping_details["mapping_bonus"],
             "profile_query_score": None,
             "profile_query_bonus": 0.0,
-            "industry_target": None,
-            "matched_industry_tokens": [],
             "industry_bonus": 0.0,
             "industry_penalty": 0.0,
             "total": round(score, 3),
@@ -570,13 +660,10 @@ def score_item_with_profile_details(
         score -= industry_penalty
     return {
         "base_query_score": mapping_details["base_query_score"],
-        "best_mapping_query": mapping_details["best_mapping_query"],
         "best_mapping_score": mapping_details["best_mapping_score"],
         "mapping_bonus": mapping_details["mapping_bonus"],
-        "profile_query_score": profile_details,
+        "profile_query_score": score_component_summary(profile_details),
         "profile_query_bonus": round(profile_query_bonus, 3),
-        "industry_target": target_token,
-        "matched_industry_tokens": sorted(matched_tokens),
         "industry_bonus": round(industry_bonus, 3),
         "industry_penalty": round(industry_penalty, 3),
         "total": round(score, 3),
@@ -632,6 +719,7 @@ def find_candidates(
     industry_type: Optional[str] = None,
 ) -> List[Dict]:
     items = load_search_items(statement_type, company_code)
+    items = filter_items_by_industry_type(items, industry_type)
 
     mapped_items = map_query_to_dictionary(field_name, items, limit=5)
     mapped_role_items = [
@@ -644,14 +732,8 @@ def find_candidates(
     mapped_items.sort(
         key=lambda payload: profile_sort_key(payload, field_name, industry_type)
     )
-    primary_mapped_items = (mapped_role_items[:1] or mapped_items[:1])
-    mapping_queries = list(
-        dict.fromkeys(
-            query
-            for payload in primary_mapped_items
-            for query in payload["mapping_queries"]
-        )
-    )
+    primary_mapped_items = []
+    mapping_queries: List[str] = []
     filtered = [item for item in items if role_matches(item, statement_type)]
 
     available_concepts = set(
@@ -689,6 +771,9 @@ def find_candidates(
             "concept_name": item.get("concept_name"),
             "zh_tw": item.get("zh_tw"),
             "en": item.get("en"),
+            "mapping_canonical_zh": item.get("mapping_canonical_zh"),
+            "mapping_canonical_en": item.get("mapping_canonical_en"),
+            "mapping_aliases": item.get("mapping_aliases", []),
             "code": item.get("code"),
             "families": item.get("families", []),
             "roles": item.get("roles", []),
@@ -719,6 +804,9 @@ def find_candidates(
             "concept_name": concept_name,
             "zh_tw": item.get("zh_tw"),
             "en": item.get("en"),
+            "mapping_canonical_zh": item.get("mapping_canonical_zh"),
+            "mapping_canonical_en": item.get("mapping_canonical_en"),
+            "mapping_aliases": item.get("mapping_aliases", []),
             "code": item.get("code"),
             "families": item.get("families", []),
             "roles": item.get("roles", []),

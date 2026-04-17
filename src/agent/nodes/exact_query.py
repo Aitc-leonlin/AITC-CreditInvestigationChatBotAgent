@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 
 from src.mappings.company_stock_code_array import CompanyStockCodeArray
 from src.providers.chat_openAI_provider import chat_model, get_message_text
-from src.services.account_title_matcher import find_candidates
+from src.services.account_title_matcher import find_candidates, search_item_source_paths
 from src.types.langgraph_state_types import OverallState
 
 
@@ -69,10 +69,14 @@ def summarize_candidates(candidates: List[Dict], limit: Optional[int] = None) ->
             "code": candidate.get("code"),
             "zh_tw": candidate.get("zh_tw"),
             "en": candidate.get("en"),
+            "mapping_canonical_zh": candidate.get("mapping_canonical_zh"),
+            "mapping_canonical_en": candidate.get("mapping_canonical_en"),
+            "mapping_aliases": candidate.get("mapping_aliases", [])[:8],
             "score": candidate.get("score"),
             "score_breakdown": candidate.get("score_breakdown"),
             "mapped_from": candidate.get("mapped_from"),
             "mapping_queries": candidate.get("mapping_queries"),
+            "dictionary_sources": candidate.get("dictionary_sources", []),
         }
         for candidate in items
     ]
@@ -263,18 +267,33 @@ def build_statement_type_candidates(
                 industry_type=industry_type,
             )
         )
+        dictionary_sources = search_item_source_paths(statement_type, company_code)
         candidate_logs.append(
             {
                 "field_name": field_name,
                 "statement_type": statement_type,
+                "dictionary_sources": dictionary_sources,
                 "candidate_count": len(candidates),
                 "candidates": summarize_candidates(
-                    [{**candidate, "statement_type": statement_type} for candidate in candidates]
+                    [
+                        {
+                            **candidate,
+                            "statement_type": statement_type,
+                            "dictionary_sources": dictionary_sources,
+                        }
+                        for candidate in candidates
+                    ]
                 ),
             }
         )
         for candidate in candidates:
-            all_candidates.append({**candidate, "statement_type": statement_type})
+            all_candidates.append(
+                {
+                    **candidate,
+                    "statement_type": statement_type,
+                    "dictionary_sources": dictionary_sources,
+                }
+            )
 
     deduped_candidates = dedupe_candidates(all_candidates)
     deduped_candidates.sort(
@@ -341,7 +360,11 @@ def select_candidate(
             "code": item.get("code"),
             "zh_tw": item.get("zh_tw"),
             "en": item.get("en"),
+            "mapping_canonical_zh": item.get("mapping_canonical_zh"),
+            "mapping_canonical_en": item.get("mapping_canonical_en"),
+            "mapping_aliases": item.get("mapping_aliases", [])[:8],
             "score": item.get("score"),
+            "dictionary_sources": item.get("dictionary_sources", []),
         }
         for item in candidates
     ]

@@ -396,7 +396,12 @@ def extract_semantic_plan(question: str) -> Dict:
     #         }
     #     )
     # )
-    return normalize_semantic_plan(parser.invoke(response))
+    semantic_plan = normalize_semantic_plan(parser.invoke(response))
+    # print(
+    #     "[semantic_retrieval] extract_semantic_plan parsed JSON:\n"
+    #     + json.dumps(semantic_plan, ensure_ascii=False, indent=2, default=str)
+    # )
+    return semantic_plan
 
 
 def choose_best_candidate(question: str, requirement: Dict, candidates: List[Dict]) -> Dict:
@@ -602,6 +607,56 @@ def build_llm_evidence_candidate(candidate: Dict) -> Dict:
     }
 
 
+def build_candidate_score_log(candidate: Dict) -> Dict:
+    if not candidate:
+        return {}
+    return {
+        "concept_name": candidate.get("concept_name"),
+        "zh_tw": candidate.get("zh_tw"),
+        "en": candidate.get("en"),
+        "code": candidate.get("code"),
+        "statement_type": candidate.get("statement_type"),
+        "matched_query": candidate.get("matched_query"),
+        "score": candidate.get("score"),
+        "mapped_from": candidate.get("mapped_from"),
+        "mapping_queries": candidate.get("mapping_queries"),
+        "score_breakdown": candidate.get("score_breakdown"),
+    }
+
+
+def print_requirement_candidate_score_log(
+    requirement: Dict,
+    candidates_by_field_query: Dict[str, List[Dict]],
+    selected_candidates_by_field_query: Dict[str, Dict],
+    limit: int = 5,
+) -> None:
+    payload = {
+        "requirement": {
+            "field_query": requirement.get("field_query"),
+            "statement_type": requirement.get("statement_type"),
+            "periods": requirement.get("periods"),
+            "purpose": requirement.get("purpose"),
+        },
+        "field_query_matches": [],
+    }
+    for field_query, candidates in candidates_by_field_query.items():
+        selected_candidate = selected_candidates_by_field_query.get(field_query, {})
+        payload["field_query_matches"].append(
+            {
+                "field_query": field_query,
+                "selected_candidate": build_candidate_score_log(selected_candidate),
+                "top_candidates": [
+                    build_candidate_score_log(candidate)
+                    for candidate in candidates[:limit]
+                ],
+            }
+        )
+    # print(
+    #     "[semantic_retrieval] requirement_candidate_score_log:\n"
+    #     + json.dumps(payload, ensure_ascii=False, indent=2, default=str)
+    # )
+
+
 def build_final_answer_result(result: Dict) -> Dict:
     if not result:
         return {}
@@ -694,6 +749,25 @@ def get_log_item_zh_name(detail: Dict) -> str:
     )
 
 
+def print_unique_log_item_names(label: str, details: List[Dict]) -> None:
+    print(label)
+    seen_items = set()
+    for detail in details:
+        name = get_log_item_zh_name(detail)
+        selected_candidate = detail.get("selected_candidate") or {}
+        concept_name = selected_candidate.get("concept_name")
+        item_key = (name, concept_name)
+        if item_key in seen_items:
+            continue
+        seen_items.add(item_key)
+        if concept_name:
+            print(f"- {name} ({concept_name})")
+        else:
+            print(f"- {name}")
+    if not seen_items:
+        print("- 無")
+
+
 def retrieve_requirement_data(question: str, company: Dict, requirement: Dict) -> Dict:
     # 針對單一 requirement 中的每個 field_query 逐一找候選欄位，並以 requirement 為單位批次挑選最佳 concept，再查各期間數值。
     field_queries = requirement.get("field_query", [])
@@ -723,6 +797,11 @@ def retrieve_requirement_data(question: str, company: Dict, requirement: Dict) -
         question=question,
         requirement=requirement,
         candidates_by_field_query=candidates_by_field_query,
+    )
+    print_requirement_candidate_score_log(
+        requirement=requirement,
+        candidates_by_field_query=candidates_by_field_query,
+        selected_candidates_by_field_query=selected_candidates_by_field_query,
     )
 
     for field_query in field_queries:
@@ -869,6 +948,7 @@ def semantic_retrieval(state: OverallState) -> OverallState:
     planned_items = 0
     fulfilled_details = []
     planned_details = []
+    planned_detail_keys = set()
     for item in retrieval_results:
         requirement = item.get("requirement", {})
         query_result_map = {
@@ -878,11 +958,23 @@ def semantic_retrieval(state: OverallState) -> OverallState:
         for value_item in item["values"]:
             field_query = value_item.get("field_query")
             query_result = query_result_map.get(field_query, {})
+            selected_candidate = query_result.get("selected_candidate", {})
+            period = value_item.get("period") or {}
+            planned_detail_key = (
+                selected_candidate.get("statement_type"),
+                selected_candidate.get("concept_name"),
+                period.get("year"),
+                period.get("quarter"),
+            )
+            if selected_candidate and planned_detail_key in planned_detail_keys:
+                continue
+            if selected_candidate:
+                planned_detail_keys.add(planned_detail_key)
             detail = {
                 "requirement": requirement,
                 "field_query": field_query,
-                "selected_candidate": query_result.get("selected_candidate", {}),
-                "period": value_item.get("period"),
+                "selected_candidate": selected_candidate,
+                "period": period,
                 "result": value_item.get("result"),
                 "is_fulfilled": value_item.get("result") is not None,
             }
@@ -901,19 +993,8 @@ def semantic_retrieval(state: OverallState) -> OverallState:
     #     + json.dumps(fulfilled_details, ensure_ascii=False, indent=2, default=str)
     # )
 
-    print("[semantic_retrieval] fulfilled_items_list:")
-    if fulfilled_details:
-        for detail in fulfilled_details:
-            print(f"- {get_log_item_zh_name(detail)}")
-    else:
-        print("- 無")
-
-    print("[semantic_retrieval] planned_items_list:")
-    if planned_details:
-        for detail in planned_details:
-            print(f"- {get_log_item_zh_name(detail)}")
-    else:
-        print("- 無")
+    print_unique_log_item_names("[semantic_retrieval] fulfilled_items_list:", fulfilled_details)
+    print_unique_log_item_names("[semantic_retrieval] planned_items_list:", planned_details)
 
     print("[semantic_retrieval] all_requirement_field_queries:")
     requirements = plan.get("requirements", [])
