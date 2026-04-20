@@ -1,7 +1,7 @@
 from time import perf_counter
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field
 
 from src.providers.chat_openAI_provider import chat_model
 from src.types.langgraph_state_types import OverallState
@@ -15,7 +15,10 @@ VALID_STATEMENT_TYPES = (
 
 
 class StatementFieldClassification(BaseModel):
-    field_name: str = Field(description="使用者問題中拆出的單一查詢欄位")
+    field_name: str = Field(
+        description="使用者問題中拆出的單一查詢欄位",
+        validation_alias=AliasChoices("field_name", "field"),
+    )
     statement_types: list[
         Literal[
             "balance_sheet",
@@ -63,6 +66,50 @@ def sanitize_llm_text(text: str) -> str:
     return "".join(sanitized_chars)
 
 
+def invoke_structured_with_retry(structured_llm, prompt: str) -> dict:
+    try:
+        return structured_llm.invoke(prompt).model_dump()
+    except Exception as exc:
+        print("[classify_statement_type] structured output parse failed, retrying with stricter format rules:", exc)
+
+    retry_prompt = (
+        prompt
+        + """
+
+### 輸出格式修正規則
+前一次輸出格式不符合系統要求。請重新輸出，且必須完全符合下列 JSON schema：
+{
+  "statement_types": ["balance_sheet"],
+  "field_mappings": [
+    {
+      "field_name": "使用者問題中的單一查詢欄位",
+      "statement_types": ["balance_sheet"],
+      "primary_statement_type": "balance_sheet"
+    }
+  ]
+}
+
+嚴格規則：
+1. 只能輸出 JSON object，不要輸出 markdown、說明文字或程式碼區塊。
+2. field_mappings 內每個 item 的欄位名稱必須是 field_name，不可使用 field、name、query 或其他 key。
+3. statement_types 與 primary_statement_type 只能使用：
+   - balance_sheet
+   - comprehensive_income_statement
+   - statement_of_cash_flows
+4. 如果有多個查詢欄位，field_mappings 必須逐一列出。
+"""
+    )
+    print("[classify_statement_type] retry prompt:\n" + retry_prompt)
+    try:
+        return structured_llm.invoke(retry_prompt).model_dump()
+    except Exception as exc:
+        print("[classify_statement_type] structured output retry failed, using fallback:", exc)
+        return {
+            "statement_types": ["balance_sheet"],
+            "field_mappings": [],
+        }
+
+
 def classify_statement_type(state: OverallState) -> OverallState:
     started_at = perf_counter()
     question = state.get("rephrased_question") or state.get("user_input") or ""
@@ -101,8 +148,7 @@ def classify_statement_type(state: OverallState) -> OverallState:
 """
 
     print("[classify_statement_type] prompt:\n" + prompt)
-    result = structured_llm.invoke(prompt)
-    classification = result.model_dump()
+    classification = invoke_structured_with_retry(structured_llm, prompt)
 
     field_mappings = classification.get("field_mappings", [])
     overall_statement_types = classification.get("statement_types", [])

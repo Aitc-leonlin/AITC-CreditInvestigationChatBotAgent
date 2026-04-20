@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 import sqlite3
 from time import perf_counter
 from typing import Dict, List, Literal, Optional
@@ -63,8 +64,24 @@ class RequirementDraft(BaseModel):
 
 class SemanticPlanDraft(BaseModel):
     company_identifier: str = Field(..., description="公司代碼、公司全名、簡稱或英文名")
+    company_identifiers: List[str] = Field(
+        default_factory=list,
+        description="可用於本地公司清單比對的公司識別候選值，例如公司代碼、公司全名、簡稱、英文名",
+    )
     analysis_goal: str = Field(..., description="對問題的高層理解，例如比較營收趨勢、分析獲利變化")
     requirements: List[RequirementDraft] = Field(default_factory=list, description="回答所需的資料清單")
+
+    @field_validator("company_identifiers", mode="before")
+    @classmethod
+    def normalize_company_identifiers(cls, value):
+        if value is None:
+            return []
+        if isinstance(value, str):
+            value = [value]
+        if isinstance(value, list):
+            return [str(item).strip() for item in value if str(item).strip()]
+        text = str(value).strip()
+        return [text] if text else []
 
 
 class CandidateChoiceItem(BaseModel):
@@ -123,6 +140,24 @@ def normalize_periods(periods: List[Dict]) -> List[Dict]:
 
 def normalize_semantic_plan(plan: Dict) -> Dict:
     normalized_plan = dict(plan or {})
+    company_identifiers = normalized_plan.get("company_identifiers") or []
+    if isinstance(company_identifiers, str):
+        company_identifiers = [company_identifiers]
+    if not isinstance(company_identifiers, list):
+        company_identifiers = []
+    company_identifier = normalized_plan.get("company_identifier")
+    if company_identifier:
+        company_identifiers.insert(0, company_identifier)
+    normalized_company_identifiers = []
+    seen_company_identifiers = set()
+    for item in company_identifiers:
+        text = str(item).strip()
+        if not text or text in seen_company_identifiers:
+            continue
+        seen_company_identifiers.add(text)
+        normalized_company_identifiers.append(text)
+    normalized_plan["company_identifiers"] = normalized_company_identifiers
+
     normalized_requirements = []
     for requirement in normalized_plan.get("requirements", []):
         if not isinstance(requirement, dict):
@@ -146,21 +181,67 @@ def build_company_maps() -> tuple[Dict[str, Dict], Dict[str, Dict]]:
     return code_to_company_map, name_to_company_map
 
 
-def resolve_company(identifier: str) -> Optional[Dict]:
-    if not identifier:
+def normalize_company_text(value: object) -> str:
+    return str(value or "").strip().lower().replace("台", "臺")
+
+
+def build_company_identifier_candidates(identifiers: object) -> List[str]:
+    raw_identifiers = identifiers if isinstance(identifiers, list) else [identifiers]
+    candidates = []
+    seen = set()
+
+    def append_candidate(value: object) -> None:
+        text = str(value or "").strip()
+        if not text or text in seen:
+            return
+        seen.add(text)
+        candidates.append(text)
+
+    for identifier in raw_identifiers:
+        text = str(identifier or "").strip()
+        if not text:
+            continue
+        append_candidate(text)
+        for code in re.findall(r"\b\d{4,6}\b", text):
+            append_candidate(code)
+        for part in re.split(r"[(),，、/|;；]", text):
+            append_candidate(part)
+            if "台" in part:
+                append_candidate(part.replace("台", "臺"))
+            if "臺" in part:
+                append_candidate(part.replace("臺", "台"))
+
+    return candidates
+
+
+def resolve_company(identifiers: object) -> Optional[Dict]:
+    candidates = build_company_identifier_candidates(identifiers)
+    if not candidates:
         return None
 
     code_to_company_map, name_to_company_map = build_company_maps()
-    direct = code_to_company_map.get(identifier) or name_to_company_map.get(identifier)
-    if direct:
-        return direct
+    for identifier in candidates:
+        direct = code_to_company_map.get(identifier) or name_to_company_map.get(identifier)
+        if direct:
+            return direct
 
-    for item in CompanyStockCodeArray:
-        if any(
-            isinstance(value, str) and identifier in value
-            for value in item.values()
-        ):
-            return item
+    for identifier in candidates:
+        normalized_identifier = normalize_company_text(identifier)
+        if not normalized_identifier:
+            continue
+        for item in CompanyStockCodeArray:
+            normalized_values = [
+                normalize_company_text(value)
+                for value in item.values()
+                if isinstance(value, str) and value.strip()
+            ]
+            if any(normalized_identifier == value for value in normalized_values):
+                return item
+            if len(normalized_identifier) >= 2 and any(
+                normalized_identifier in value or value in normalized_identifier
+                for value in normalized_values
+            ):
+                return item
     return None
 
 
@@ -325,26 +406,31 @@ def extract_semantic_plan(question: str) -> Dict:
             你的任務是先判斷：要回答使用者問題，至少需要哪些財務數據。
 
             規則：
-            1. company_identifier 一定要填公司代碼、公司名、簡稱或英文名，從問題中擷取。
-            2. statement_type 只能填：
+            1. company_identifier 一定要填最適合代表公司的單一識別值，優先使用公司代碼，其次公司簡稱、公司全名或英文名。
+            2. company_identifiers 必須填字串陣列，將問題中的公司資訊拆成可供本地公司清單比對的候選值。
+               - 若問題包含「台灣水泥 (台泥, Taiwan Cement Corporation, 1101)」，請拆成 ["1101", "台泥", "台灣水泥", "Taiwan Cement Corporation"]。
+               - 不要只輸出整段複合描述；必須把代碼、簡稱、全名、英文名分開放入陣列。
+               - 若有公司代碼，company_identifier 優先填公司代碼。
+            3. statement_type 只能填：
             - balance_sheet
             - comprehensive_income_statement
             - statement_of_cash_flows
-            3. requirements 要列出回答此題真正需要查的欄位。
-            4. 每個 requirement 的 field_query 必須是字串陣列；若有同義詞、近義欄位或複數表達，請全部放進陣列。
-            5. periods 只填問題中明確提到、或回答此題必要的期間。
-            6. 如果問題需要比較多個期間，就列出多個 periods。
-            7. 若沒有辦法判斷，requirements 仍盡量列出最可能需要的欄位。
-            8. 只輸出 JSON，不要輸出 markdown、說明文字或程式碼區塊。
-            9. 若問題只提到年份、年度、全年、整年、年增、年度比較，且沒有明確指定 Q1~Q4，periods 中的 quarter 必須填 null，表示要查該年度全年資料。
-            10. 只有在問題明確指定季度時，quarter 才能填 1 到 4。
-            11.每個requirements的field_query至少要提供5種，並且都提供英文，增加找到參考資料可以被比對到的機會。
+            4. requirements 要列出回答此題真正需要查的欄位。
+            5. 每個 requirement 的 field_query 必須是字串陣列；若有同義詞、近義欄位或複數表達，請全部放進陣列。
+            6. periods 只填問題中明確提到、或回答此題必要的期間。
+            7. 如果問題需要比較多個期間，就列出多個 periods。
+            8. 若沒有辦法判斷，requirements 仍盡量列出最可能需要的欄位。
+            9. 只輸出 JSON，不要輸出 markdown、說明文字或程式碼區塊。
+            10. 若問題只提到年份、年度、全年、整年、年增、年度比較，且沒有明確指定 Q1~Q4，periods 中的 quarter 必須填 null，表示要查該年度全年資料。
+            11. 只有在問題明確指定季度時，quarter 才能填 1 到 4。
+            12. 每個requirements的field_query至少要提供5種，並且都提供英文，增加找到參考資料可以被比對到的機會。
 
             問題：{question}
 
             請輸出以下 JSON 格式：
             {{
-              "company_identifier": "公司代碼、公司名稱、簡稱或英文名",
+              "company_identifier": "優先填公司代碼，否則填公司名稱、簡稱或英文名",
+              "company_identifiers": ["公司代碼", "公司簡稱", "公司名稱", "公司英文名"],
               "analysis_goal": "這題要分析什麼",
               "requirements": [
                 {{
@@ -452,6 +538,7 @@ def choose_best_candidate(question: str, requirement: Dict, candidates: List[Dic
 """
     )
     try:
+        print("[semantic_retrieval] choose_best_candidate prompt:\n" + prompt)
         response = chat_model.invoke(prompt)
         chosen = get_message_text(response).strip()
         for candidate in candidates:
@@ -551,6 +638,7 @@ def choose_best_candidates_for_requirement(
 """
     )
     try:
+        print("[semantic_retrieval] choose_best_candidates_for_requirement prompt:\n" + prompt)
         response = chat_model.invoke(prompt)
         parsed = parser.parse(get_message_text(response))
         choice_map = {
@@ -657,23 +745,145 @@ def print_requirement_candidate_score_log(
     # )
 
 
-def build_final_answer_result(result: Dict) -> Dict:
-    if not result:
-        return {}
+def get_fact_label(field_query: str, candidate: Dict) -> str:
+    return (
+        candidate.get("zh_tw")
+        or candidate.get("en")
+        or field_query
+        or candidate.get("concept_name")
+        or "未命名項目"
+    )
+
+
+def normalize_match_text(value: object) -> str:
+    return str(value or "").strip().lower().replace("_", " ").replace("-", " ")
+
+
+def is_candidate_low_confidence(field_query: str, candidate: Dict) -> bool:
+    if not candidate:
+        return True
+
+    concept_name = normalize_match_text(candidate.get("concept_name"))
+    label_text = normalize_match_text(
+        " ".join(
+            [
+                str(candidate.get("zh_tw") or ""),
+                str(candidate.get("en") or ""),
+                str(candidate.get("matched_query") or ""),
+            ]
+        )
+    )
+    field_text = normalize_match_text(field_query)
+    combined_candidate_text = f"{concept_name} {label_text}"
+
+    # 常見錯配：使用者要流動/短期資產，卻選到資產總計、短期借款或單一金融資產。
+    if any(term in field_text for term in ("liquid assets", "short term assets", "short-term assets")):
+        if "assets" == concept_name.split()[-1] or "shorttermborrowings" in concept_name.replace(" ", ""):
+            return True
+        if "borrowings" in combined_candidate_text:
+            return True
+
+    if "current assets total" in field_text:
+        if "currentassets" not in concept_name.replace(" ", ""):
+            return True
+
+    if "current liabilities" in field_text:
+        if "currentliabilities" not in concept_name.replace(" ", ""):
+            return True
+
+    if "cash and cash equivalents" in field_text or "現金及約當現金" in field_text:
+        if "cashandcashequivalents" not in concept_name.replace(" ", ""):
+            return True
+
+    if "short term debt" in field_text or "short-term debt" in field_text:
+        debt_terms = ("borrowings", "commercialpapers", "notesbillspayable", "shortterm")
+        if not any(term in combined_candidate_text.replace(" ", "") for term in debt_terms):
+            return True
+
+    return False
+
+
+def build_compact_fact(
+    field_query: str,
+    requirement: Dict,
+    selected_candidate: Dict,
+    value_item: Dict,
+) -> Dict:
+    result = value_item.get("result") or {}
+    period = value_item.get("period") or {}
     return {
-        "company_code": result.get("company_code"),
-        "year": result.get("year"),
-        "quarter": result.get("quarter"),
-        "report_period_end": result.get("report_period_end"),
-        "concept_id": result.get("concept_id"),
-        "value": result.get("value"),
-        "value_numeric": result.get("value_numeric"),
+        "label": get_fact_label(field_query, selected_candidate),
+        "field_query": field_query,
+        "concept_name": selected_candidate.get("concept_name"),
+        "statement_type": selected_candidate.get("statement_type") or requirement.get("statement_type"),
+        "period": {
+            "year": result.get("year") or period.get("year"),
+            "quarter": result.get("quarter"),
+            "report_period_end": result.get("report_period_end"),
+        },
+        "value": result.get("value_numeric")
+        if result.get("value_numeric") is not None
+        else result.get("value"),
         "value_text": result.get("value_text"),
-        "unit_id": result.get("unit_id"),
-        "requested_year": result.get("requested_year"),
-        "requested_quarter": result.get("requested_quarter"),
-        "requested_period_type": result.get("requested_period_type"),
+        "unit": result.get("unit_id"),
+        "purpose": requirement.get("purpose"),
     }
+
+
+def compact_metric_value(value: float) -> float:
+    return round(value, 4)
+
+
+def find_numeric_fact(facts: List[Dict], concept_names: List[str]) -> Optional[Dict]:
+    concept_name_set = set(concept_names)
+    for fact in facts:
+        if fact.get("concept_name") in concept_name_set and isinstance(fact.get("value"), (int, float)):
+            return fact
+    return None
+
+
+def build_computed_metrics(facts: List[Dict]) -> List[Dict]:
+    metrics = []
+    current_assets = find_numeric_fact(facts, ["ifrs-full_CurrentAssets"])
+    current_liabilities = find_numeric_fact(facts, ["ifrs-full_CurrentLiabilities"])
+    cash = find_numeric_fact(facts, ["ifrs-full_CashAndCashEquivalents"])
+    operating_cash_flow = find_numeric_fact(
+        facts,
+        [
+            "ifrs-full_CashFlowsFromUsedInOperatingActivities",
+            "ifrs-full_CashFlowsFromUsedInOperations",
+            "tifrs-SCF_CashFlowsFromUsedInOperatingActivities",
+        ],
+    )
+
+    if current_assets and current_liabilities and current_liabilities["value"]:
+        metrics.append(
+            {
+                "label": "流動比率",
+                "formula": "流動資產 / 流動負債",
+                "value": compact_metric_value(current_assets["value"] / current_liabilities["value"]),
+            }
+        )
+
+    if cash and current_liabilities and current_liabilities["value"]:
+        metrics.append(
+            {
+                "label": "現金對流動負債比",
+                "formula": "現金及約當現金 / 流動負債",
+                "value": compact_metric_value(cash["value"] / current_liabilities["value"]),
+            }
+        )
+
+    if operating_cash_flow and current_liabilities and current_liabilities["value"]:
+        metrics.append(
+            {
+                "label": "營業現金流對流動負債比",
+                "formula": "營業活動淨現金流 / 流動負債",
+                "value": compact_metric_value(operating_cash_flow["value"] / current_liabilities["value"]),
+            }
+        )
+
+    return metrics
 
 
 def build_final_answer_evidence(
@@ -682,61 +892,96 @@ def build_final_answer_evidence(
     company: Dict,
     retrieval_results: List[Dict],
 ) -> Dict:
-    compact_retrieval_results = []
+    facts = []
+    excluded_or_low_confidence_facts = []
+    fact_keys = set()
+
     for item in retrieval_results:
         requirement = item.get("requirement", {})
-        compact_query_results = []
         for query_result in item.get("query_results", []):
-            compact_values = []
+            field_query = query_result.get("field_query")
+            selected_candidate = query_result.get("selected_candidate", {})
             for value_item in query_result.get("values", []):
                 result = value_item.get("result")
                 if result is None:
+                    excluded_or_low_confidence_facts.append(
+                        {
+                            "field_query": field_query,
+                            "reason": "查無資料庫數值",
+                            "selected_candidate": {
+                                "concept_name": selected_candidate.get("concept_name"),
+                                "zh_tw": selected_candidate.get("zh_tw"),
+                                "en": selected_candidate.get("en"),
+                            },
+                            "period": value_item.get("period"),
+                        }
+                    )
                     continue
-                compact_values.append(
-                    {
-                        "period": value_item.get("period"),
-                        "result": build_final_answer_result(result),
-                    }
+
+                if is_candidate_low_confidence(field_query, selected_candidate):
+                    excluded_or_low_confidence_facts.append(
+                        {
+                            "field_query": field_query,
+                            "reason": "候選欄位與查詢語意可能不一致，未提供給最終回答引用",
+                            "selected_candidate": {
+                                "concept_name": selected_candidate.get("concept_name"),
+                                "zh_tw": selected_candidate.get("zh_tw"),
+                                "en": selected_candidate.get("en"),
+                            },
+                            "value": result.get("value_numeric")
+                            if result.get("value_numeric") is not None
+                            else result.get("value"),
+                            "unit": result.get("unit_id"),
+                            "period": {
+                                "year": result.get("year"),
+                                "quarter": result.get("quarter"),
+                                "report_period_end": result.get("report_period_end"),
+                            },
+                        }
+                    )
+                    continue
+
+                fact = build_compact_fact(
+                    field_query=field_query,
+                    requirement=requirement,
+                    selected_candidate=selected_candidate,
+                    value_item=value_item,
                 )
-            if not compact_values:
-                continue
-            selected_candidate = query_result.get("selected_candidate", {})
-            compact_query_results.append(
-                {
-                    "field_query": query_result.get("field_query"),
-                    "selected_candidate": {
-                        "concept_name": selected_candidate.get("concept_name"),
-                        "zh_tw": selected_candidate.get("zh_tw"),
-                        "en": selected_candidate.get("en"),
-                        "statement_type": selected_candidate.get("statement_type"),
-                    },
-                    "values": compact_values,
-                }
-            )
-        if not compact_query_results:
+                fact_key = (
+                    fact.get("concept_name"),
+                    fact.get("statement_type"),
+                    fact.get("period", {}).get("year"),
+                    fact.get("period", {}).get("quarter"),
+                    fact.get("period", {}).get("report_period_end"),
+                )
+                if fact_key in fact_keys:
+                    continue
+                fact_keys.add(fact_key)
+                facts.append(fact)
+
+    periods = []
+    period_keys = set()
+    for fact in facts:
+        period = fact.get("period") or {}
+        period_key = (period.get("year"), period.get("quarter"), period.get("report_period_end"))
+        if period_key in period_keys:
             continue
-        compact_retrieval_results.append(
-            {
-                "requirement": {
-                    "field_query": requirement.get("field_query"),
-                    "statement_type": requirement.get("statement_type"),
-                    "periods": requirement.get("periods"),
-                    "purpose": requirement.get("purpose"),
-                },
-                "query_results": compact_query_results,
-            }
-        )
+        period_keys.add(period_key)
+        periods.append(period)
 
     return {
         "question": question,
         "analysis_goal": plan.get("analysis_goal"),
         "company": {
-            "companyCode": company.get("companyCode"),
-            "companyName": company.get("companyName"),
-            "shortName": company.get("shortName"),
-            "englishName": company.get("englishName"),
+            "code": company.get("companyCode"),
+            "name": company.get("companyName"),
+            "short_name": company.get("shortName"),
+            "english_name": company.get("englishName"),
         },
-        "retrieval_results": compact_retrieval_results,
+        "periods": periods,
+        "facts": facts,
+        "computed_metrics": build_computed_metrics(facts),
+        "excluded_or_low_confidence_facts": excluded_or_low_confidence_facts[:20],
     }
 
 
@@ -897,17 +1142,19 @@ def semantic_retrieval(state: OverallState) -> OverallState:
             "answer": f"語意檢索規劃階段失敗，暫時無法分析所需財務資料。錯誤：{exc}",
             "reference_data": {"question": question},
         }
-    # print("\n********** [semantic_retrieval] AI AGENT data-requirement plan start **********")
-    # print(json.dumps(plan, ensure_ascii=False, indent=2))
-    # print("********** [semantic_retrieval] AI AGENT data-requirement plan end **********\n")
+    print("\n********** [semantic_retrieval] AI AGENT data-requirement plan start **********")
+    print(json.dumps(plan, ensure_ascii=False, indent=2))
+    print("********** [semantic_retrieval] AI AGENT data-requirement plan end **********\n")
 
     step_started_at = perf_counter()
-    company = resolve_company(plan.get("company_identifier", ""))
+    company = resolve_company(plan.get("company_identifiers") or plan.get("company_identifier", ""))
+    print(f"company: {json.dumps(company, ensure_ascii=False, indent=2)}")
+
     print(f"[timing] semantic_retrieval.resolve_company took {perf_counter() - step_started_at:.3f}s")
     if not company:
         return {
             **state,
-            "answer": "無法辨識問題中的公司，因此無法進一步查詢資料庫。",
+            "answer": "當前提供的公司名稱資訊不足，無法匹配到現有台灣公司，請補充該公司完整名稱",
             "reference_data": {"plan": plan},
         }
 
@@ -926,19 +1173,20 @@ def semantic_retrieval(state: OverallState) -> OverallState:
         retrieval_results.append(result)
     print(f"[timing] semantic_retrieval.retrieve_requirement_data_total took {perf_counter() - step_started_at:.3f}s")
 
-    evidence_json = {
-        "question": question,
-        "analysis_goal": plan.get("analysis_goal"),
-        "company": company,
-        "available_reports": available_reports,
-        "retrieval_results": retrieval_results,
-    }
     llm_evidence_json = build_final_answer_evidence(
         question=question,
         plan=plan,
         company=company,
         retrieval_results=retrieval_results,
     )
+    evidence_json = {
+        "question": question,
+        "analysis_goal": plan.get("analysis_goal"),
+        "company": company,
+        "available_reports": available_reports,
+        "retrieval_results": retrieval_results,
+        "llm_evidence": llm_evidence_json,
+    }
     # print("\n[semantic_retrieval] evidence_json:")
     # print(json.dumps(evidence_json, ensure_ascii=False, indent=2))
     # print("\n[semantic_retrieval] llm_evidence_json:")
@@ -1011,7 +1259,7 @@ def semantic_retrieval(state: OverallState) -> OverallState:
 
     print("fulfilled_items =", fulfilled_items)
     print("planned_items =", planned_items)
-    enough_information = fulfilled_items > 0 
+    enough_information = bool(llm_evidence_json.get("facts"))
     # enough_information = fulfilled_items > 0 and fulfilled_items == planned_items
 
     # print(
@@ -1036,28 +1284,24 @@ def semantic_retrieval(state: OverallState) -> OverallState:
 
     final_prompt = f"""
         你是信用徵審財報分析助手。
-        請根據下列 JSON 證據資料回答問題。
+        請只根據 JSON evidence 回答，不要臆測。
 
         規則：
-        1. 只能根據 JSON 中已查到的資料回答，不要自行臆測。
-        2. 若有多個已查到值的 requirement / field_query，回答時要盡量涵蓋主要已命中的重點，不要只挑其中一筆就草率下結論。
-        3. 若答案需要比較、趨勢、增減、成長率，請直接用 JSON 中的數值計算或描述。
-        4. 最終回答請用繁體中文。
-        5. 數值請加上千分位，並盡量帶單位。
-        6. 先整理你實際引用的關鍵證據，再給分析結論；不要只輸出一句很短的總結。
-        7. 若部分 requirement 有資料、部分沒有，不要假裝全部都有；只引用查到的資料，並在必要時簡短說明資料不足之處。
+        1. 只能引用 facts 與 computed_metrics，不要引用 excluded_or_low_confidence_facts 作為判斷依據。
+        2. 若需要比較、趨勢、增減或比率，優先使用 computed_metrics；不足時才用 facts 中的數值計算。
+        3. 回答使用繁體中文，數值請加上千分位與單位。
+        4. 若有被排除或低可信資料，只能在補充說明簡短提醒，不要拿來下結論。
 
         請依照以下格式回答：
         一、關鍵證據
-        - 列出本次回答實際引用的 3 到 8 筆關鍵數據或事實。
+        - 列出本次回答實際引用的 3 到 8 筆關鍵數據、比率或事實。
         - 每一點盡量包含欄位名稱、期間、數值。
 
         二、分析結論
-        - 根據上面的證據，直接回答使用者問題。
-        - 若問題涉及比較、趨勢、變化、成長率，請明確寫出比較結果與判斷依據。
+        - 根據上面的證據，直接回答使用者問題，並說明判斷依據。
 
         三、補充說明
-        - 若有重要但未查到的欄位或期間，再簡短補充一次即可。
+        - 若有重要但未查到、被排除或低可信的欄位，簡短補充即可。
 
         ### 使用者問題
         {question}
@@ -1066,6 +1310,7 @@ def semantic_retrieval(state: OverallState) -> OverallState:
         {json.dumps(llm_evidence_json, ensure_ascii=False, indent=2)}
         """
     try:
+        print("[semantic_retrieval] final_answer prompt:\n" + final_prompt)
         step_started_at = perf_counter()
         final_answer = get_message_text(chat_model.invoke(final_prompt))
         print(f"[timing] semantic_retrieval.final_answer_generation took {perf_counter() - step_started_at:.3f}s")

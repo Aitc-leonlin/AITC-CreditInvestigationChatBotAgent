@@ -1,6 +1,7 @@
 import os
 import sys
 import asyncio
+from time import perf_counter
 
 # import chromadb
 import uvicorn
@@ -76,6 +77,7 @@ async def terminal_chat():
         if user_input.lower() in ("exit", "quit"):
             break
         try:
+            started_at = perf_counter()
             # graph_answer = graph.invoke({"user_input": user_input})
             graph_answer = graph.invoke(
                 {
@@ -84,6 +86,7 @@ async def terminal_chat():
                 },
                 config={"configurable": {"thread_id": "1"}},
             )
+            print(f"[timing] terminal_chat.total_graph_to_final_answer took {perf_counter() - started_at:.3f}s")
             # print("graph_answer==========:", graph_answer)
 
             # print("The answer is :", graph_answer["answer"])

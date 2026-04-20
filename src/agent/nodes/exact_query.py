@@ -189,6 +189,7 @@ quarter 請回傳 1 到 4 的整數。
         input_variables=["question"],
         partial_variables={"format_instructions": parser.get_format_instructions()},
     )
+    print("[exact_query] extract_question_schema prompt:\n" + prompt.format(question=question))
     chain = prompt | chat_model | parser
     return chain.invoke({"question": question})
 
@@ -397,7 +398,7 @@ def select_candidate(
 {options}
 """
     parser = JsonOutputParser(pydantic_object=SelectedCandidateSchema)
-    response = chat_model.invoke(
+    prompt_with_format = (
         prompt
         + f"""
 
@@ -405,6 +406,8 @@ def select_candidate(
 {parser.get_format_instructions()}
 """
     )
+    print("[exact_query] candidate_selection prompt:\n" + prompt_with_format)
+    response = chat_model.invoke(prompt_with_format)
     raw_response = get_message_text(response)
     print(
         "[exact_query] candidate_selection_llm_raw_response:\n"
@@ -845,6 +848,7 @@ def exact_query(state: OverallState) -> OverallState:
 {dump_log_payload(unresolved_fields)}
 """
 
+    print("[exact_query] final_answer prompt:\n" + final_prompt)
     step_started_at = perf_counter()
     final_answer = get_message_text(chat_model.invoke(final_prompt))
     print(f"[timing] exact_query.final_answer_generation took {perf_counter() - step_started_at:.3f}s")

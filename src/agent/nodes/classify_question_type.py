@@ -36,6 +36,38 @@ def sanitize_llm_text(text: str) -> str:
     return "".join(sanitized_chars)
 
 
+def invoke_structured_with_retry(structured_llm, prompt: str) -> dict:
+    try:
+        return structured_llm.invoke(prompt).model_dump()
+    except Exception as exc:
+        print("[classify_question_type] structured output parse failed, retrying with stricter format rules:", exc)
+
+    retry_prompt = (
+        prompt
+        + """
+
+### 輸出格式修正規則
+前一次輸出格式不符合系統要求。請重新輸出，且必須完全符合下列 JSON schema：
+{
+  "query_type": "EXACT_QUERY 或 SEMANTIC 或 ANALYSIS 或 DECISION",
+  "confidence": 0.0
+}
+
+嚴格規則：
+1. 只能輸出 JSON object，不要輸出 markdown、說明文字或程式碼區塊。
+2. key 名稱只能使用 query_type 與 confidence，不可使用其他 key。
+3. query_type 必須是 EXACT_QUERY、SEMANTIC、ANALYSIS、DECISION 其中之一。
+4. confidence 必須是 0 到 1 之間的數字。
+"""
+    )
+    print("[classify_question_type] retry prompt:\n" + retry_prompt)
+    try:
+        return structured_llm.invoke(retry_prompt).model_dump()
+    except Exception as exc:
+        print("[classify_question_type] structured output retry failed, using fallback:", exc)
+        return {"query_type": "SEMANTIC", "confidence": 0.0}
+
+
 def classify_question_type(state: OverallState):
     started_at = perf_counter()
     question = state.get("rephrased_question") or state.get("user_input") or ""
@@ -76,9 +108,11 @@ User question:
 {sanitized_question}
 """
 
-    # print("[classify_question_type] prompt:\n" + classify_question_type_prompt)
-    result = structured_llm.invoke(classify_question_type_prompt)
-    classification = result.model_dump()
+    print("[classify_question_type] prompt:\n" + classify_question_type_prompt)
+    classification = invoke_structured_with_retry(
+        structured_llm,
+        classify_question_type_prompt,
+    )
 
     print("[classify_question_type] result:", classification)
     print(f"[timing] classify_question_type took {perf_counter() - started_at:.3f}s")

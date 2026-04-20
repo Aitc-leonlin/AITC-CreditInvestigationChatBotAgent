@@ -21,6 +21,7 @@ def rephrase_question(state: OverallState) -> OverallState:
 
         ### 改寫後的問題："""
 
+    print("[rephrase_question] prompt:\n" + custom_prompt)
     response = chat_model.invoke(custom_prompt)
 
     # print("rephrased_question response======", response)
