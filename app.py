@@ -16,7 +16,6 @@ from src.mappings.company_stock_code_array import CompanyStockCodeArray
 from fastapi.middleware.cors import CORSMiddleware
 
 # import LangChain lib
-from langchain.chains import LLMChain
 from langchain_community.utilities import SQLDatabase
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
