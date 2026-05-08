@@ -17,3 +17,5 @@ class OverallState(TypedDict):
     statement_type_result: dict[str, Any]
     reference_data: any
     answer: str
+    final_answer: NotRequired[str]
+    post_analysis_answer: NotRequired[str]

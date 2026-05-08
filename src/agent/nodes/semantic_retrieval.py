@@ -1,7 +1,9 @@
 import json
 import logging
+import os
 import re
 import sqlite3
+from pathlib import Path
 from time import perf_counter
 from typing import Dict, List, Literal, Optional
 
@@ -17,6 +19,86 @@ from src.types.langgraph_state_types import OverallState
 
 logger = logging.getLogger(__name__)
 DB_PATH = "FinancialStatementXBRL.db"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+CTBC_NEWS_PATH = PROJECT_ROOT / "ctbcNews.txt"
+TCC_YEAR_REPORT_PATH = PROJECT_ROOT / "TCCYearReport.txt"
+INCLUDE_CTBC_NEWS_ENV = "INCLUDE_CTBC_NEWS_IN_FINAL_PROMPT"
+INCLUDE_TCC_YEAR_REPORT_ENV = "INCLUDE_TCC_YEAR_REPORT_IN_FINAL_PROMPT"
+ENABLE_POST_FINAL_ANSWER_ANALYSIS_ENV = "ENABLE_POST_FINAL_ANSWER_ANALYSIS"
+POST_FINAL_ANSWER_ANALYSIS_PROMPT_TEMPLATE = """
+你是銀行授信與投資分析報告的撰稿人。
+你的任務不是新增事實，而是把第一階段回答中已經成立的財務證據、外部背景與判斷，重寫成「更像人寫的分析報告」。
+
+### 改寫目標
+1. 文字要像資深徵審或研究員在對主管寫分析 memo，不要像機器摘要，也不要像條文式回覆。
+2. 風格要接近正式但口語可讀的授信分析報告：
+   - 先講結論，再講理由。
+   - 會把數字翻譯成意義，例如「這代表短期償債壓力不大」。
+   - 可以用「短期看 / 中期看 / 長期看」、「支持理由 / 保留理由」這種決策導向語言。
+   - 可以適度使用一句話提醒，例如「真正要擔心的不是現在有沒有現金，而是後續資本支出會不會把自由現金流吃掉」。
+3. 輸出格式要貼近授信分析報告，不要只保留原本的「關鍵證據 / 分析結論 / 補充說明」三段式。
+
+### 嚴格限制
+1. 只能重寫、重組、濃縮、排序第一階段回答裡已經出現的內容，不可補新的數字、事件、新聞或結論。
+2. 如果第一階段回答沒有提到某個資訊，就不要自行腦補。
+3. 若第一階段回答對某件事保留不確定性，你也必須保留，不可把保留意見寫成確定結論。
+4. 財務數字、比率、年度、季度、正負號要維持正確。
+5. 如果第一階段回答明確區分「JSON 財務證據」與「外部新聞 / 年報背景」，改寫後也要保留這個界線。
+
+### 文風要求
+1. 使用繁體中文。
+2. 句子長短交錯，避免每句都長得一樣。
+3. 盡量不用過多官腔，例如少用「綜上所述」「整體而言」反覆堆疊。
+4. 避免空泛形容詞，盡量把判斷掛在具體數字或事實上。
+5. 可以直接寫「銀行會在意的是…」「投資人真正要看的是…」「這個案子的矛盾在於…」這種人話表達。
+6. 不要輸出 markdown 表格。
+7. 條列可以用，但不要整篇都變成 bullet points；以段落敘述為主。
+
+### 建議輸出骨架
+請依照下列骨架改寫；若原始問題不適合某一節，可省略或簡化，但整體仍要像完整報告：
+
+標題
+- 依問題自擬一個像報告的標題，例如「OOO 授信案分析」、「OOO 投資與信用風險評估」。
+
+一、結論先講
+- 先用 1 到 2 段直接回答使用者問題。
+- 若題目本質上涉及判斷或建議，先明確寫出建議立場，例如可承作 / 建議保守 / 建議觀望 / 有條件核准。
+- 若題目偏分析而非決策，也要先講出核心結論。
+- 之後補一個「三句話版本」或「一句話重點」，用短條列濃縮短期、中期、長期或主要支持 / 保留因素。
+
+二、關鍵判斷依據
+- 這一節不要只是重複數字，要把數字翻成判斷。
+- 可依主題拆成 2 到 4 個小段，例如：
+  - 短期償債與流動性
+  - 獲利能力與現金流落差
+  - 負債與資本支出壓力
+  - 外部事件、治理或產業背景如何影響判斷
+- 每個小段都要同時交代「看到的事實」與「這代表什麼」。
+
+三、如果從決策角度看
+- 如果題目偏授信，寫成「支持承作的理由 / 需要保留的理由 / 建議附帶條件」。
+- 如果題目偏投資，寫成「股東視角會在意什麼 / 哪些訊號偏正面 / 哪些風險還沒解除」。
+- 如果題目同時涉及授信與投資，可簡短區分兩種視角。
+
+四、還缺哪些資料
+- 列出 2 到 6 個會影響判斷精度的缺口資料。
+- 直接說明「為什麼缺這個就不能把話說滿」。
+
+五、總結
+- 用 1 段收束。
+- 若題目涉及建議，最後一句要回到明確立場，但保留必要條件與限制。
+
+### 額外格式要求
+1. 保留章節標題與清楚段落。
+2. 若資料很多，可加入少量條列，但每個條列都要有判斷含義，不只是丟數字。
+3. 最終成品要讓人感覺是在讀一份「能拿去給主管看」的分析報告，而不是 LLM 回答。
+
+### 原始問題
+{question}
+
+### 第一階段回答
+{final_answer}
+""".strip()
 VALID_STATEMENT_TYPES = {
     "balance_sheet",
     "comprehensive_income_statement",
@@ -30,6 +112,72 @@ METADATA_FIELD_PREFIXES = (
     "tifrs-notes_Market",
     "tifrs-notes_Industry",
 )
+
+
+def env_flag_enabled(name: str) -> bool:
+    return os.getenv(name, "FALSE").strip().upper() == "TRUE"
+
+
+def build_ctbc_news_reference_section() -> str:
+    if not env_flag_enabled(INCLUDE_CTBC_NEWS_ENV):
+        return ""
+
+    try:
+        news_content = CTBC_NEWS_PATH.read_text(encoding="utf-8").strip()
+    except OSError as exc:
+        print(f"[semantic_retrieval] failed_to_read_ctbc_news: {exc}")
+        return ""
+
+    if not news_content:
+        return ""
+
+    return f"""
+        ### 外部新聞參考資料
+        以下資料僅供最後判斷分析參考；財務數字仍只能引用 JSON 證據資料，若新聞與 JSON 證據無直接關聯，請不要過度延伸。
+        {news_content}
+        """
+
+
+def build_tcc_year_report_reference_section() -> str:
+    if not env_flag_enabled(INCLUDE_TCC_YEAR_REPORT_ENV):
+        return ""
+
+    try:
+        report_content = TCC_YEAR_REPORT_PATH.read_text(encoding="utf-8").strip()
+    except OSError as exc:
+        print(f"[semantic_retrieval] failed_to_read_tcc_year_report: {exc}")
+        return ""
+
+    if not report_content:
+        return ""
+
+    return f"""
+        ### 外部年報參考資料
+        以下資料來自 TCCYearReport.txt，僅供最後分析判斷參考；財務數字仍只能引用 JSON 證據資料，年報內容可用於說明資本支出、營運布局、策略方向、ESG、產能或風險背景。
+        {report_content}
+        """
+
+
+def run_post_final_answer_analysis(question: str, final_answer: str) -> str:
+    if not env_flag_enabled(ENABLE_POST_FINAL_ANSWER_ANALYSIS_ENV):
+        print("[semantic_retrieval] post_final_answer_analysis skipped: env disabled")
+        return final_answer
+
+    prompt_template = POST_FINAL_ANSWER_ANALYSIS_PROMPT_TEMPLATE.strip()
+    if not prompt_template or "TODO: 請手動填入第二階段分析 Prompt。" in prompt_template:
+        print("[semantic_retrieval] post_final_answer_analysis skipped: prompt template not configured")
+        return final_answer
+
+    prompt = prompt_template.format(question=question, final_answer=final_answer)
+    print("[semantic_retrieval] post_final_answer_analysis prompt:\n" + prompt)
+    step_started_at = perf_counter()
+    analyzed_answer = get_message_text(chat_model.invoke(prompt))
+    print(
+        f"[timing] semantic_retrieval.post_final_answer_analysis took "
+        f"{perf_counter() - step_started_at:.3f}s"
+    )
+    print("[semantic_retrieval] post_final_answer_analysis result:\n" + analyzed_answer)
+    return analyzed_answer
 
 
 class PeriodItem(BaseModel):
@@ -415,15 +563,16 @@ def extract_semantic_plan(question: str) -> Dict:
             - balance_sheet
             - comprehensive_income_statement
             - statement_of_cash_flows
-            4. requirements 要列出回答此題真正需要查的欄位。
-            5. 每個 requirement 的 field_query 必須是字串陣列；若有同義詞、近義欄位或複數表達，請全部放進陣列。
+            4. requirements 要列出回答此題真正需要查的欄位，最多 5 個 requirement；不要為了增加命中率展開過多欄位。
+            5. 每個 requirement 的 field_query 必須是字串陣列，最多 3 個查詢詞；只放最核心的中文欄位名稱與必要別名，不要列出大量同義詞。
             6. periods 只填問題中明確提到、或回答此題必要的期間。
             7. 如果問題需要比較多個期間，就列出多個 periods。
-            8. 若沒有辦法判斷，requirements 仍盡量列出最可能需要的欄位。
+            8. 若沒有辦法判斷，requirements 仍只列出最可能需要的 1 到 3 個欄位。
             9. 只輸出 JSON，不要輸出 markdown、說明文字或程式碼區塊。
             10. 若問題只提到年份、年度、全年、整年、年增、年度比較，且沒有明確指定 Q1~Q4，periods 中的 quarter 必須填 null，表示要查該年度全年資料。
             11. 只有在問題明確指定季度時，quarter 才能填 1 到 4。
-            12. 每個requirements的field_query至少要提供5種，並且都提供英文，增加找到參考資料可以被比對到的機會。
+            12. purpose 要簡短描述此 requirement 的用途；全體 requirements 的 purpose 類型最多 5 個，不要拆出超過 5 種分析目的。
+            13. 不需要每個 field_query 都提供英文；只有使用者問題本身使用英文，或該英文是必要的正式會計項目名稱時才加入。
 
             問題：{question}
 
@@ -434,7 +583,7 @@ def extract_semantic_plan(question: str) -> Dict:
               "analysis_goal": "這題要分析什麼",
               "requirements": [
                 {{
-                  "field_query": ["欄位名稱1", "欄位名稱2"],
+                  "field_query": ["核心欄位名稱", "必要別名，最多 3 個"],
                   "statement_type": "balance_sheet 或 comprehensive_income_statement 或 statement_of_cash_flows",
                   "periods": [
                     {{"year": 2024, "quarter": null}},
@@ -1282,32 +1431,43 @@ def semantic_retrieval(state: OverallState) -> OverallState:
             "reference_data": evidence_json,
         }
 
+    ctbc_news_reference_section = build_ctbc_news_reference_section()
+    tcc_year_report_reference_section = build_tcc_year_report_reference_section()
+
     final_prompt = f"""
         你是信用徵審財報分析助手。
-        請只根據 JSON evidence 回答，不要臆測。
+        請根據 JSON evidence、外部新聞參考資料與外部年報參考資料進行綜合判斷，不要臆測。
+        JSON evidence 是財務數字與關鍵證據的唯一來源；外部新聞與年報參考資料是信用徵審風險、事件背景、營運策略與決策判斷的輔助來源。
 
         規則：
         1. 只能引用 facts 與 computed_metrics，不要引用 excluded_or_low_confidence_facts 作為判斷依據。
         2. 若需要比較、趨勢、增減或比率，優先使用 computed_metrics；不足時才用 facts 中的數值計算。
         3. 回答使用繁體中文，數值請加上千分位與單位。
         4. 若有被排除或低可信資料，只能在補充說明簡短提醒，不要拿來下結論。
+        5. 若有提供外部新聞或年報參考資料，「一、關鍵證據」「二、分析結論」「三、補充說明」都必須納入外部背景後再回答。
+        6. 外部新聞與年報不可作為財務數字來源；若引用外部資料，只能用於說明事件背景、經營權、產業、營運布局、資本支出、ESG、風險或信用徵審判斷。
+        7. 最後的分析決策結果必須同時交代：JSON 財務證據支持什麼、外部新聞或年報背景補充什麼、兩者合併後如何影響判斷。
 
         請依照以下格式回答：
         一、關鍵證據
         - 列出本次回答實際引用的 3 到 8 筆關鍵數據、比率或事實。
         - 每一點盡量包含欄位名稱、期間、數值。
+        - 若有外部新聞或年報參考資料，至少列出 1 點與本題相關的外部背景，並標示為「外部新聞背景」或「外部年報背景」。
 
         二、分析結論
-        - 根據上面的證據，直接回答使用者問題，並說明判斷依據。
+        - 根據 JSON 財務證據、外部新聞背景與外部年報背景，直接回答使用者問題，並說明判斷依據。
+        - 明確說明外部新聞或年報如何改變、強化或限制財務資料本身的解讀。
 
         三、補充說明
         - 若有重要但未查到、被排除或低可信的欄位，簡短補充即可。
+        - 若有外部新聞或年報參考資料，必須補充其限制：外部資料是背景，不等同於本次查詢出的 JSON 財務數字。
 
         ### 使用者問題
         {question}
 
         ### JSON 證據資料
         {json.dumps(llm_evidence_json, ensure_ascii=False, indent=2)}
+
         """
     try:
         print("[semantic_retrieval] final_answer prompt:\n" + final_prompt)
@@ -1321,9 +1481,17 @@ def semantic_retrieval(state: OverallState) -> OverallState:
         )
     print("[semantic_retrieval] final_answer:\n" + str(final_answer))
 
+    post_analysis_answer = final_answer
+    try:
+        post_analysis_answer = run_post_final_answer_analysis(question=question, final_answer=final_answer)
+    except Exception as exc:
+        print(f"[semantic_retrieval] post_final_answer_analysis failed: {exc}")
+
     print(f"[timing] semantic_retrieval.total took {perf_counter() - started_at:.3f}s")
     return {
         **state,
-        "answer": final_answer,
+        "answer": post_analysis_answer,
+        "final_answer": final_answer,
+        "post_analysis_answer": post_analysis_answer,
         "reference_data": evidence_json,
     }

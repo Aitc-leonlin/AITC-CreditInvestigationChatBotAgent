@@ -789,6 +789,71 @@ def load_sql_into_db(db_path: Path, sql_text: str) -> None:
         conn.close()
 
 
+def split_pipe_list(value: Optional[str]) -> set:
+    if not value:
+        return set()
+    return {item for item in value.split("|") if item}
+
+
+def load_taxonomy_from_db(db_path: Path) -> TaxonomyParseResult:
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        entry_points = {}
+        versions = set()
+        for row in conn.execute("SELECT * FROM taxonomy_entry_point"):
+            versions.add(row["taxonomy_version"])
+            entry_points[row["taxonomy_id"]] = {
+                "taxonomy_id": row["taxonomy_id"],
+                "taxonomy_version": row["taxonomy_version"],
+                "module": row["module"],
+                "entry_points": split_pipe_list(row["entry_point"]),
+                "xsd_files": split_pipe_list(row["xsd_file"]),
+                "presentation_files": split_pipe_list(row["presentation_file"]),
+                "label_files": split_pipe_list(row["label_file"]),
+                "calculation_files": split_pipe_list(row["calculation_file"]),
+            }
+
+        concepts = {}
+        concept_lookup = {}
+        for row in conn.execute("SELECT * FROM taxonomy_concept"):
+            concept = ConceptRecord(
+                concept_id=row["concept_id"],
+                taxonomy_id=row["taxonomy_id"],
+                namespace=row["namespace"],
+                local_name=row["local_name"],
+                zh_label=row["zh_label"],
+                en_label=row["en_label"],
+                terse_code=row["terse_code"],
+                period_type=row["period_type"],
+                balance_type=row["balance_type"],
+                data_type=row["data_type"],
+                is_abstract=row["is_abstract"],
+            )
+            concepts[concept.concept_id] = concept
+            concept_lookup[(concept.namespace, concept.local_name)] = concept.concept_id
+
+        presentation_rows = [dict(row) for row in conn.execute("SELECT * FROM taxonomy_presentation")]
+        calculation_rows = [dict(row) for row in conn.execute("SELECT * FROM taxonomy_calculation")]
+
+        for row in presentation_rows:
+            child_concept_id = row.get("child_concept_id")
+            if child_concept_id in concepts and row.get("role_uri"):
+                concepts[child_concept_id].roles.add(row["role_uri"])
+
+        version = next((item for item in versions if item), None)
+        return TaxonomyParseResult(
+            version=version,
+            entry_points=entry_points,
+            concepts=concepts,
+            concept_lookup=concept_lookup,
+            presentation_rows=presentation_rows,
+            calculation_rows=calculation_rows,
+        )
+    finally:
+        conn.close()
+
+
 def build_auto_field_rows(
     report_row: Dict,
     facts: List[Dict],
@@ -991,7 +1056,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Parse tifrs-20200630 taxonomy and an XBRL instance into SQL INSERT statements."
     )
-    parser.add_argument("--taxonomy-root", required=True, help="Root directory of the XBRL taxonomy, e.g. tifrs-20200630.")
+    parser.add_argument("--taxonomy-root", help="Root directory of the XBRL taxonomy, e.g. tifrs-20200630.")
+    parser.add_argument(
+        "--taxonomy-from-db",
+        action="store_true",
+        help="Load taxonomy metadata from --db-path instead of parsing --taxonomy-root.",
+    )
     parser.add_argument("--instance", help="Path to the XBRL instance file to parse.")
     parser.add_argument("--instance-dir", help="Recursively parse all XBRL/iXBRL files under this directory.")
     parser.add_argument("--sql-output", required=True, help="Output path for generated SQL.")
@@ -1008,10 +1078,16 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    taxonomy_root = Path(args.taxonomy_root).resolve()
     sql_output = Path(args.sql_output).resolve()
 
-    taxonomy = parse_taxonomy(taxonomy_root)
+    if args.taxonomy_from_db:
+        if not args.db_path:
+            raise SystemExit("--db-path is required when --taxonomy-from-db is used.")
+        taxonomy = load_taxonomy_from_db(Path(args.db_path).resolve())
+    else:
+        if not args.taxonomy_root:
+            raise SystemExit("--taxonomy-root is required unless --taxonomy-from-db is used.")
+        taxonomy = parse_taxonomy(Path(args.taxonomy_root).resolve())
 
     report_row = None
     facts: List[Dict] = []
@@ -1075,7 +1151,9 @@ def main() -> None:
         ["field_id", "concept_id", "taxonomy_id", "industry_type", "effective_from", "effective_to"],
     )
 
-    sql_blocks = [render_sql(taxonomy, None, [], [], [], [], include_taxonomy=True)]
+    sql_blocks = []
+    if not args.taxonomy_from_db:
+        sql_blocks.append(render_sql(taxonomy, None, [], [], [], [], include_taxonomy=True))
     for report_row in report_rows:
         report_facts = [fact for fact in all_facts if fact["report_id"] == report_row["report_id"]]
         report_metrics = [row for row in all_metric_rows if row["report_id"] == report_row["report_id"]]

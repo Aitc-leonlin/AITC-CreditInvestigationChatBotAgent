@@ -6,8 +6,27 @@ from src.types.langgraph_state_types import OverallState
 from src.providers.chat_openAI_provider import chat_model, get_message_text
 
 
+def format_conversation_history(messages: object) -> str:
+    if not isinstance(messages, list):
+        return ""
+
+    lines = []
+    for message in messages:
+        content = getattr(message, "content", "")
+        if isinstance(content, list):
+            content = " ".join(str(item) for item in content if item is not None)
+        text = str(content or "").strip()
+        if not text:
+            continue
+        message_type = getattr(message, "type", "")
+        role = "assistant" if message_type == "ai" else "user"
+        lines.append(f"{role}: {text}")
+    return "\n".join(lines)
+
+
 def rephrase_question(state: OverallState) -> OverallState:
     started_at = perf_counter()
+    history_text = format_conversation_history(state.get("messages"))
     custom_prompt = f"""
         你是一個專門將使用者問題重寫成完整查詢的助理，用於文件檢索。
         ### 指示：
@@ -18,6 +37,9 @@ def rephrase_question(state: OverallState) -> OverallState:
 
         ### 使用者問題：
         {state['user_input']}
+
+        ### 對話歷史：
+        {history_text or '無'}
 
         ### 改寫後的問題："""
 

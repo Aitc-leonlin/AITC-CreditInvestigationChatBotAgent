@@ -60,6 +60,18 @@ def dump_log_payload(payload: object) -> str:
     return json.dumps(payload, ensure_ascii=False, indent=2, default=str)
 
 
+def remove_search_text(payload: object) -> object:
+    if isinstance(payload, dict):
+        return {
+            key: remove_search_text(value)
+            for key, value in payload.items()
+            if key != "search_text"
+        }
+    if isinstance(payload, list):
+        return [remove_search_text(item) for item in payload]
+    return payload
+
+
 def summarize_candidates(candidates: List[Dict], limit: Optional[int] = None) -> List[Dict]:
     items = candidates[:limit] if limit is not None else candidates
     return [
@@ -420,6 +432,8 @@ def select_candidate(
         )
     )
     parsed = parser.parse(raw_response)
+    print("[exact_query] parsed:", parsed)
+
     concept_name = parsed.get("concept_name")
     chosen_statement_type = parsed.get("statement_type")
     for candidate in candidates:
@@ -808,7 +822,8 @@ def exact_query(state: OverallState) -> OverallState:
             )
 
     resolved_field_results = [
-        item for item in field_results
+        remove_search_text(item)
+        for item in field_results
         if item.get("answer_data") is not None
     ]
     if not resolved_field_results:

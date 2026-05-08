@@ -6,13 +6,15 @@ This project is a backend server for a Credit Investigation ChatBot, implemented
 
 1. **Install dependencies:**
    ```bash
-   pip install -r requirements.txt
+   make setup
    ```
 
 2. **Run the server:**
    ```bash
-   python app.py
-   ```
+   make start
+    ```
+
+If you want a single command similar to `package.json` scripts, use the included `Makefile`. `make start` will create `venv`, install `requirements.txt`, then run `app.py`. If dependencies are already installed and you only want to start the app, use `make run`.
 
 ## Project Structure
 - `app.py`: Main entry point for the backend server.

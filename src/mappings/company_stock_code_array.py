@@ -6329,4 +6329,34 @@ CompanyStockCodeArray = [
         "shortName": "世紀鋼",
         "englishName": "CIS",
     },
+       {
+        "companyCode": "5834",
+        "companyName": "兆豐產物保險股份有限公司",
+        "shortName": "兆豐保險",
+        "englishName": "C.K.I."
+    },
+    {
+        "companyCode": "6985",
+        "companyName": "新光人壽保險股份有限公司",
+        "shortName": "台新人壽",
+        "englishName": "Shin Kong Life"
+    },
+    {
+        "companyCode": "3663",
+        "companyName": "鑫科材料科技股份有限公司",
+        "shortName": "鑫科",
+        "englishName": "TTMC"
+    },
+    {
+        "companyCode": "2743",
+        "companyName": "山富國際旅行社股份有限公司",
+        "shortName": "山富",
+        "englishName": "Richmond"
+    },
+    {
+        "companyCode": "5347",
+        "companyName": "世界先進積體電路股份有限公司",
+        "shortName": "世界",
+        "englishName": "VIS"
+    }
 ]
