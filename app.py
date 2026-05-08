@@ -61,6 +61,13 @@ app.add_middleware(
 )
 
 
+def env_flag_enabled(name: str, default: bool = False) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().upper() == "TRUE"
+
+
 # 建立 VectorStore
 # client = chromadb.HttpClient(host="localhost", port=8000)
 # embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
@@ -95,10 +102,11 @@ async def terminal_chat():
 
 
 if __name__ == "__main__":
-    # Run terminal chat mode
-
-    # 建立API SERVER
-    uvicorn.run(app, host="localhost", port=3001)
+    is_render_deploy = env_flag_enabled("IS_RENDER_DEPLOY", default=False)
+    host = "0.0.0.0" if is_render_deploy else "localhost"
+    default_port = 10000 if is_render_deploy else 3001
+    port = int(os.environ.get("PORT", default_port))
+    uvicorn.run(app, host=host, port=port)
 
     # 測試用：建立terminal ai chat bot
     # asyncio.run(terminal_chat())
