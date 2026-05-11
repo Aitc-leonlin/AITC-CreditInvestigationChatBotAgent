@@ -2,6 +2,7 @@ import os
 import sys
 import asyncio
 from time import perf_counter
+from typing import List
 
 # import chromadb
 import uvicorn
@@ -46,25 +47,39 @@ api_router.include_router(chatbot_router)
 app.include_router(api_router)
 
 
-# print("✅ OPENAI_MODEL_NAME:", os.getenv("OPENAI_MODEL_NAME"))
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",  # Next.js
-]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,  # 需要帶 cookie/認證時要開
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
 def env_flag_enabled(name: str, default: bool = False) -> bool:
     value = os.getenv(name)
     if value is None:
         return default
     return value.strip().upper() == "TRUE"
+
+
+def parse_cors_allow_origins() -> List[str]:
+    configured = os.getenv("CORS_ALLOW_ORIGINS", "")
+    origins = [origin.strip() for origin in configured.split(",") if origin.strip()]
+    if origins:
+        return origins
+    return [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://aitc-credit-investigation-chat-bot.vercel.app",
+    ]
+
+
+allow_origins = parse_cors_allow_origins()
+is_render_deploy = env_flag_enabled("IS_RENDER_DEPLOY", default=False)
+allow_origin_regex = (
+    r"https://.*\.onrender\.com" if is_render_deploy and not os.getenv("CORS_ALLOW_ORIGINS") else None
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allow_origins,
+    allow_origin_regex=allow_origin_regex,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # 建立 VectorStore
@@ -101,7 +116,6 @@ async def terminal_chat():
 
 
 if __name__ == "__main__":
-    is_render_deploy = env_flag_enabled("IS_RENDER_DEPLOY", default=False)
     host = "0.0.0.0" if is_render_deploy else "localhost"
     default_port = 10000 if is_render_deploy else 3001
     port = int(os.environ.get("PORT", default_port))
