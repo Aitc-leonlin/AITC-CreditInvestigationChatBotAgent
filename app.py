@@ -67,6 +67,7 @@ def parse_cors_allow_origins() -> List[str]:
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "https://aitc-credit-investigation-chat-bot.vercel.app",
+        "https://aitc-credit-investigation-chat-bot-web-ashqnxvdk.vercel.app"
     ]
 
 
