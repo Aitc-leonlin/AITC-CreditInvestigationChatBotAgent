@@ -1,6 +1,8 @@
 import os
 import sys
 import asyncio
+import json
+import logging
 from time import perf_counter
 from typing import List
 
@@ -26,6 +28,7 @@ from src.types.langgraph_state_types import OverallState
 
 # import graph
 from src.agent.graph import graph
+from src.services.db_path import build_sqlite_db_diagnostics
 
 # import api routers
 from src.api.chatbot import chatbot_router
@@ -45,6 +48,7 @@ app = FastAPI()
 api_router = APIRouter()
 api_router.include_router(chatbot_router)
 app.include_router(api_router)
+logger = logging.getLogger(__name__)
 
 
 def env_flag_enabled(name: str, default: bool = False) -> bool:
@@ -80,6 +84,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def log_sqlite_db_diagnostics() -> None:
+    diagnostics = build_sqlite_db_diagnostics()
+    logger.warning("SQLite DB diagnostics:\n%s", json.dumps(diagnostics, ensure_ascii=False, indent=2))
+
+
+log_sqlite_db_diagnostics()
 
 
 # 建立 VectorStore

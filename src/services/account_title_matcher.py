@@ -6,12 +6,14 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from src.services.db_path import resolve_sqlite_db_path
+
 
 SERVICES_DIR = Path(__file__).parent
 DICTIONARY_PATH = SERVICES_DIR / "xbrl_data_dictionary_all.json"
 MAPPING_PATH = SERVICES_DIR / "xbrl_mapping" / "concept_mapping.json"
 SPLIT_DIR = SERVICES_DIR / "xbrl_dictionary_splits"
-DB_PATH = SERVICES_DIR.parent.parent / "FinancialStatementXBRL.db"
+DB_PATH = resolve_sqlite_db_path()
 KNOWN_INDUSTRY_TYPES = ("basi", "bd", "ci", "fh", "ins", "mim")
 
 STATEMENT_FILTERS = {

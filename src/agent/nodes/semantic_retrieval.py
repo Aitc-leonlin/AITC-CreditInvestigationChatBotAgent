@@ -14,11 +14,12 @@ from pydantic import BaseModel, Field, field_validator
 from src.mappings.company_stock_code_array import CompanyStockCodeArray
 from src.providers.chat_openAI_provider import chat_model, get_message_text
 from src.services.account_title_matcher import find_candidates
+from src.services.db_path import resolve_sqlite_db_path
 from src.types.langgraph_state_types import OverallState
 
 
 logger = logging.getLogger(__name__)
-DB_PATH = "FinancialStatementXBRL.db"
+DB_PATH = resolve_sqlite_db_path()
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 CTBC_NEWS_PATH = PROJECT_ROOT / "ctbcNews.txt"
 TCC_YEAR_REPORT_PATH = PROJECT_ROOT / "TCCYearReport.txt"
