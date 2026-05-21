@@ -3,7 +3,7 @@ from decimal import Decimal, InvalidOperation
 from time import perf_counter
 from typing import Any, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
@@ -76,6 +76,15 @@ class ChatbotMessage(BaseModel):
     content: Any = ""
 
 
+class AppliedExpertKnowledgeItem(BaseModel):
+    title: str = ""
+    dataSource: str = ""
+    industry: str = ""
+    companyLabel: str = ""
+    description: str = ""
+    systemPrompt: str = ""
+
+
 class ChatbotRequest(BaseModel):
     question: str
     company: Optional[str] = None
@@ -83,6 +92,7 @@ class ChatbotRequest(BaseModel):
     settings: ChatbotSettings = Field(default_factory=ChatbotSettings)
     conversationId: Optional[str] = None
     messages: list[ChatbotMessage] = Field(default_factory=list)
+    appliedExpertKnowledge: list[AppliedExpertKnowledgeItem] = Field(default_factory=list)
 
 
 class ExpertKnowledgeGenerateAnchorRequest(BaseModel):
@@ -231,6 +241,46 @@ def build_enriched_user_input(request: ChatbotRequest) -> str:
     return "\n".join(lines)
 
 
+def normalize_applied_expert_knowledge(items: list[Any]) -> list[dict[str, str]]:
+    normalized_items: list[dict[str, str]] = []
+    for item in items:
+        if isinstance(item, BaseModel):
+            item = item.model_dump()
+        if not isinstance(item, dict):
+            text = compact_text(item)
+            if text:
+                normalized_items.append(
+                    {
+                        "title": "",
+                        "dataSource": "",
+                        "industry": "",
+                        "companyLabel": "",
+                        "description": "",
+                        "systemPrompt": text,
+                    }
+                )
+            continue
+
+        title = compact_text(item.get("title"))
+        data_source = compact_text(item.get("dataSource"))
+        industry = compact_text(item.get("industry"))
+        company_label = compact_text(item.get("companyLabel"))
+        description = compact_text(item.get("description"))
+        system_prompt = compact_text(item.get("systemPrompt"))
+        if title or data_source or industry or company_label or description or system_prompt:
+            normalized_items.append(
+                {
+                    "title": title,
+                    "dataSource": data_source,
+                    "industry": industry,
+                    "companyLabel": company_label,
+                    "description": description,
+                    "systemPrompt": system_prompt,
+                }
+            )
+    return normalized_items
+
+
 def build_exact_query_data_sources(reference_data: dict[str, Any]) -> list[dict[str, str]]:
     schema = reference_data.get("schema") or {}
     company_name = schema.get("companyName")
@@ -359,6 +409,25 @@ def build_api_data_sources(graph_answer: dict[str, Any]) -> list[dict[str, str]]
     return []
 
 
+def build_used_expert_knowledge(graph_answer: dict[str, Any]) -> list[dict[str, str]]:
+    items = graph_answer.get("selected_applied_expert_knowledge") or []
+    normalized_items = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        normalized_items.append(
+            {
+                "title": compact_text(item.get("title")),
+                "dataSource": compact_text(item.get("dataSource")),
+                "industry": compact_text(item.get("industry")),
+                "companyLabel": compact_text(item.get("companyLabel")),
+                "description": compact_text(item.get("description")),
+                "systemPrompt": compact_text(item.get("systemPrompt")),
+            }
+        )
+    return normalized_items
+
+
 def build_llm_prompt_text(formatted_messages: list[BaseMessage]) -> str:
     return "\n\n".join(
         f"[{message.type}] {getattr(message, 'content', '')}"
@@ -397,12 +466,19 @@ def generate_expert_knowledge_content(
 
 
 @chatbot_router.post("/chatbot")
-async def get_chatbot_answer(request: ChatbotRequest):
+async def get_chatbot_answer(http_request: Request, request: ChatbotRequest):
     started_at = perf_counter()
+    raw_request_body = await http_request.body()
+    if raw_request_body:
+        print("[chatbot] raw request body:\n" + raw_request_body.decode("utf-8", errors="replace"))
     user_input = build_enriched_user_input(request)
+    applied_expert_knowledge = normalize_applied_expert_knowledge(
+        request.appliedExpertKnowledge
+    )
     graph_input = {
         "messages": build_langchain_messages(request.messages, request.question),
         "user_input": user_input,
+        "applied_expert_knowledge": applied_expert_knowledge,
     }
     graph_config = (
         {"configurable": {"thread_id": request.conversationId}}
@@ -418,11 +494,14 @@ async def get_chatbot_answer(request: ChatbotRequest):
     )
     print(f"[timing] chatbot.total_graph_to_final_answer took {perf_counter() - started_at:.3f}s")
     data_sources = build_api_data_sources(graph_answer)
+    used_expert_knowledge = build_used_expert_knowledge(graph_answer)
     print("[chatbot] response data_sources:\n" + dump_log_payload(data_sources))
+    print("[chatbot] used expert knowledge:\n" + dump_log_payload(used_expert_knowledge))
 
     return {
         "answer": graph_answer["answer"],
         "data_sources": data_sources,
+        "usedExpertKnowledge": used_expert_knowledge,
     }
 
 

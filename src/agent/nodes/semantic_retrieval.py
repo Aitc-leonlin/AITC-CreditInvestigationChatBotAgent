@@ -119,6 +119,25 @@ def env_flag_enabled(name: str) -> bool:
     return os.getenv(name, "FALSE").strip().upper() == "TRUE"
 
 
+def build_expert_knowledge_prompt_section(state: OverallState) -> str:
+    expert_knowledge_items = state.get("selected_applied_expert_knowledge")
+    if expert_knowledge_items is None:
+        expert_knowledge_items = state.get("applied_expert_knowledge") or []
+    if not expert_knowledge_items:
+        return "無"
+
+    lines = []
+    for index, item in enumerate(expert_knowledge_items, start=1):
+        if isinstance(item, dict):
+            system_prompt = str(item.get("systemPrompt") or "").strip()
+        else:
+            system_prompt = str(item or "").strip()
+
+        if system_prompt:
+            lines.append(f"{index}. {system_prompt}")
+    return "\n".join(lines)
+
+
 def build_ctbc_news_reference_section() -> str:
     if not env_flag_enabled(INCLUDE_CTBC_NEWS_ENV):
         return ""
@@ -1281,20 +1300,17 @@ def semantic_retrieval(state: OverallState) -> OverallState:
     started_at = perf_counter()
 
     question = state["rephrased_question"] or state["user_input"]
-    try:
-        step_started_at = perf_counter()
-        plan = extract_semantic_plan(question)
-        # print(f"[semantic_retrieval] extract_semantic_plan plan:\n{json.dumps(plan, ensure_ascii=False, indent=2)}")
-        print(f"[timing] semantic_retrieval.extract_semantic_plan took {perf_counter() - step_started_at:.3f}s")
-    except Exception as exc:
+    plan = state.get("semantic_plan")
+    if not isinstance(plan, dict) or not plan:
+        semantic_plan_error = state.get("semantic_plan_error")
         return {
             **state,
-            "answer": f"語意檢索規劃階段失敗，暫時無法分析所需財務資料。錯誤：{exc}",
+            "answer": (
+                "語意檢索規劃階段失敗，暫時無法分析所需財務資料。"
+                + (f"錯誤：{semantic_plan_error}" if semantic_plan_error else "")
+            ),
             "reference_data": {"question": question},
         }
-    print("\n********** [semantic_retrieval] AI AGENT data-requirement plan start **********")
-    print(json.dumps(plan, ensure_ascii=False, indent=2))
-    print("********** [semantic_retrieval] AI AGENT data-requirement plan end **********\n")
 
     step_started_at = perf_counter()
     company = resolve_company(plan.get("company_identifiers") or plan.get("company_identifier", ""))
@@ -1437,36 +1453,46 @@ def semantic_retrieval(state: OverallState) -> OverallState:
 
     final_prompt = f"""
         你是信用徵審財報分析助手。
-        請根據 JSON evidence、外部新聞參考資料與外部年報參考資料進行綜合判斷，不要臆測。
-        JSON evidence 是財務數字與關鍵證據的唯一來源；外部新聞與年報參考資料是信用徵審風險、事件背景、營運策略與決策判斷的輔助來源。
+        請根據 JSON evidence、外部新聞參考資料、外部年報參考資料與專家分析參考進行綜合判斷，不要臆測。
+        JSON evidence 是財務數字與關鍵證據的唯一來源；外部新聞、年報與專家分析參考是信用徵審風險、事件背景、營運策略與決策判斷的輔助來源。
 
         規則：
         1. 只能引用 facts 與 computed_metrics，不要引用 excluded_or_low_confidence_facts 作為判斷依據。
         2. 若需要比較、趨勢、增減或比率，優先使用 computed_metrics；不足時才用 facts 中的數值計算。
-        3. 回答使用繁體中文，數值請加上千分位與單位。
+        3. 回答使用繁體中文，數值標注以***仟元***為單位。
         4. 若有被排除或低可信資料，只能在補充說明簡短提醒，不要拿來下結論。
-        5. 若有提供外部新聞或年報參考資料，「一、關鍵證據」「二、分析結論」「三、補充說明」都必須納入外部背景後再回答。
-        6. 外部新聞與年報不可作為財務數字來源；若引用外部資料，只能用於說明事件背景、經營權、產業、營運布局、資本支出、ESG、風險或信用徵審判斷。
-        7. 最後的分析決策結果必須同時交代：JSON 財務證據支持什麼、外部新聞或年報背景補充什麼、兩者合併後如何影響判斷。
+        5. 若有提供外部新聞、年報或專家分析參考資料，「一、關鍵證據」「二、分析結論」「三、補充說明」都必須納入這些背景後再回答。
+        6. 外部新聞、年報與專家分析不可作為財務數字來源；若引用這些資料，只能用於說明事件背景、產業脈絡、經營策略、風險重點、審查方向或信用徵審判斷。
+        7. 若有提供專家分析參考，請逐一吸收所有條目的觀點，並在分析結論中反映其對財務資料解讀的影響，不可忽略。
+        8. 最後的分析決策結果必須同時交代：財務報表證據支持什麼、外部新聞或年報背景補充什麼、專家分析參考提醒什麼、三者合併後如何影響判斷。
+        9. 回答的內容不用在括弧中作太多的說明跟解釋。
 
         請依照以下格式回答：
-        一、關鍵證據
+        一、參考數據
         - 列出本次回答實際引用的 3 到 8 筆關鍵數據、比率或事實。
-        - 每一點盡量包含欄位名稱、期間、數值。
-        - 若有外部新聞或年報參考資料，至少列出 1 點與本題相關的外部背景，並標示為「外部新聞背景」或「外部年報背景」。
+        - 每一點盡量包含欄位名稱、期間、數值，但不要把conecpt_name秀出來。
+        - 若有外部新聞、年報或專家分析參考資料，至少列出 1 點與本題相關的背景，並標示為「外部新聞背景」「外部年報背景」或「專家分析參考」。
+        - 如果有標注數據時間範圍，用「截至」作為期間結尾的詞彙；如果是單一期間的數據，則標注該期間即可。例如：「截至2025 年度期末」
 
-        二、分析結論
-        - 根據 JSON 財務證據、外部新聞背景與外部年報背景，直接回答使用者問題，並說明判斷依據。
-        - 明確說明外部新聞或年報如何改變、強化或限制財務資料本身的解讀。
+        二、專業分析
+        - 根據專家分析參考，把內容列出來，這段不用作為分析結論的依據，只要把專家說了什麼列出來即可，並標示為「專家分析參考」。
+        - 如果專家分析參考是空的，則這一段可以省略不寫。
+        
+        三、分析結論
+        - 根據財務報表、外部新聞背景、外部年報背景與專家分析參考，直接回答使用者問題，並說明判斷依據。
+        - 明確說明外部新聞、年報或專家分析如何改變、強化或限制財務資料本身的解讀。
 
-        三、補充說明
+        四、補充說明
         - 若有重要但未查到、被排除或低可信的欄位，簡短補充即可。
-        - 若有外部新聞或年報參考資料，必須補充其限制：外部資料是背景，不等同於本次查詢出的 JSON 財務數字。
+        - 若有外部新聞、年報或專家分析參考資料，必須補充其限制：這些資料是背景與判讀輔助，不等同於本次查詢出的財務報表財務數字來源。
 
         ### 使用者問題
         {question}
 
-        ### JSON 證據資料
+        ### 專家分析參考
+        {build_expert_knowledge_prompt_section(state)}
+
+        ### 財務報表資料來源
         {json.dumps(llm_evidence_json, ensure_ascii=False, indent=2)}
 
         """

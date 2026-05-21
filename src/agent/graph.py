@@ -10,6 +10,10 @@ from src.agent.nodes.classify_is_question_in_range import (
 )
 from src.agent.nodes.classify_statement_type import classify_statement_type
 from src.agent.nodes.exact_query import exact_query
+from src.agent.nodes.extract_semantic_plan_node import extract_semantic_plan_node
+from src.agent.nodes.select_applied_expert_knowledge import (
+    select_applied_expert_knowledge,
+)
 from src.agent.nodes.semantic_retrieval import semantic_retrieval
 from src.agent.nodes.classify_question_type import classify_question_type
 from src.agent.nodes.question_out_of_range import question_out_of_range
@@ -53,6 +57,8 @@ workflow.add_node(classify_is_question_in_range)
 workflow.add_node(classify_question_type)
 workflow.add_node(classify_statement_type)
 workflow.add_node(exact_query)
+workflow.add_node(extract_semantic_plan_node)
+workflow.add_node(select_applied_expert_knowledge)
 workflow.add_node(semantic_retrieval)
 workflow.add_node(question_out_of_range)
 
@@ -73,13 +79,15 @@ workflow.add_conditional_edges(
     source="classify_question_type",  # 判定問題是「語意檢索」or「精確查詢」
     path=question_type_condition_edge,  # 決定要走哪個路的函式
     path_map={  # 路徑映射
-        "semantic_retrieval": "semantic_retrieval",
+        "semantic_retrieval": "extract_semantic_plan_node",
         "classify_statement_type": "classify_statement_type",
     },
 )
 workflow.add_edge("classify_statement_type", "exact_query")
 
 workflow.add_edge("exact_query", END)
+workflow.add_edge("extract_semantic_plan_node", "select_applied_expert_knowledge")
+workflow.add_edge("select_applied_expert_knowledge", "semantic_retrieval")
 workflow.add_edge("semantic_retrieval", END)
 
 # Add simple in-memory checkpointer

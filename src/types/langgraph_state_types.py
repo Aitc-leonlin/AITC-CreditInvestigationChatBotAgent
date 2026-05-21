@@ -4,10 +4,25 @@ from typing import Any
 from langgraph.graph import MessagesState
 
 
+class AppliedExpertKnowledgeItem(TypedDict):
+    title: str
+    dataSource: str
+    industry: str
+    companyLabel: str
+    description: str
+    systemPrompt: str
+
+
 class OverallState(TypedDict):
     messages: MessagesState
     is_question_in_range: str
     user_input: str
+    applied_expert_knowledge: NotRequired[list[AppliedExpertKnowledgeItem]]
+    semantic_plan: NotRequired[dict[str, Any]]
+    semantic_plan_error: NotRequired[str]
+    needs_expert_knowledge: NotRequired[bool]
+    selected_applied_expert_knowledge: NotRequired[list[AppliedExpertKnowledgeItem]]
+    expert_knowledge_selection_result: NotRequired[dict[str, Any]]
     rephrased_question: str
     question_type: str
     question_type_confidence: float
