@@ -61,6 +61,63 @@ def dump_log_payload(payload: object) -> str:
     return json.dumps(payload, ensure_ascii=False, indent=2, default=str)
 
 
+def quote_sql_debug_value(value: object) -> str:
+    if value is None:
+        return "NULL"
+    if isinstance(value, bool):
+        return "1" if value else "0"
+    if isinstance(value, (int, float)):
+        return str(value)
+    return "'" + str(value).replace("'", "''") + "'"
+
+
+def render_sql_debug_preview(query: str, params: tuple) -> str:
+    rendered = query
+    for value in params:
+        rendered = rendered.replace("?", quote_sql_debug_value(value), 1)
+    return rendered
+
+
+def build_warehouse_data_prompt_section(state: OverallState) -> str:
+    if not bool(state.get("use_warehouse_data", True)):
+        return "無"
+    warehouse_data_items = state.get("selected_applied_warehouse_data")
+    if not warehouse_data_items:
+        warehouse_data_items = state.get("applied_warehouse_data") or []
+    if not warehouse_data_items:
+        return "無"
+
+    lines = []
+    for index, item in enumerate(warehouse_data_items, start=1):
+        if not isinstance(item, dict):
+            continue
+
+        metadata_parts = []
+        for label, key in (
+            ("category", "category"),
+            ("title", "title"),
+            ("industry", "industry"),
+            ("companyLabel", "companyLabel"),
+            ("companyPromptValue", "companyPromptValue"),
+            ("source", "source"),
+            ("url", "url"),
+            ("updatedAt", "updatedAt"),
+        ):
+            value = str(item.get(key) or "").strip()
+            if value:
+                metadata_parts.append(f"{label}={value}")
+
+        summary = str(item.get("summary") or "").strip()
+        if not metadata_parts and not summary:
+            continue
+
+        lines.append(f"{index}. {'; '.join(metadata_parts)}")
+        if summary:
+            lines.append(f"   summary: {summary}")
+
+    return "\n".join(lines) if lines else "無"
+
+
 def remove_search_text(payload: object) -> object:
     if isinstance(payload, dict):
         return {
@@ -565,8 +622,45 @@ def fetch_financial_value(
             industry_type,
             industry_type,
         )
+        # print(
+        #     "[exact_query] SQL financial_metric_value lookup:\n"
+        #     + dump_log_payload(
+        #         {
+        #             "company_code": company_code,
+        #             "year": year,
+        #             "quarter": f"Q{quarter}",
+        #             "statement_type": statement_type,
+        #             "concept_id": concept_id,
+        #             "industry_type": industry_type,
+        #             "where_focus": {
+        #                 "ri.company_code": company_code,
+        #                 "ri.year": year,
+        #                 "ri.quarter": f"Q{quarter}",
+        #                 "fmv.concept_id": concept_id,
+        #                 "fd.statement_type": statement_type,
+        #             },
+        #             "params": params,
+        #             "sql": query,
+        #             "sql_preview": render_sql_debug_preview(query, params),
+        #         }
+        #     )
+        # )
         row = connection.execute(query, params).fetchone()
-        return dict(row) if row else None
+        result = dict(row) if row else None
+        # print(
+        #     "[exact_query] SQL financial_metric_value result:\n"
+        #     + dump_log_payload(
+        #         {
+        #             "found": result is not None,
+        #             "concept_id": concept_id,
+        #             "value": result.get("value") if result else None,
+        #             "value_numeric": result.get("value_numeric") if result else None,
+        #             "unit_id": result.get("unit_id") if result else None,
+        #             "report_id": result.get("report_id") if result else None,
+        #         }
+        #     )
+        # )
+        return result
     finally:
         connection.close()
 
@@ -847,9 +941,13 @@ def exact_query(state: OverallState) -> OverallState:
 若該欄位中文名稱存在，優先用中文欄位名稱表達。
 若有些欄位查不到，請簡短註明哪些欄位查無主期間資料。
 不要臆測，僅根據提供資料回答。
+若有資料倉儲參考資料，可用來補充事件背景、新聞、年報或判決脈絡，但不可把它當成財務數字來源。
 
 ### 問題
 {state['user_input']}
+
+### 資料倉儲參考資料
+{build_warehouse_data_prompt_section(state)}
 
 ### 查詢條件
 公司：{schema['companyName']} ({schema['companyCode']})

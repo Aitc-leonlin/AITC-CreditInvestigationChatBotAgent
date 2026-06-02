@@ -32,6 +32,11 @@ from src.services.db_path import build_sqlite_db_diagnostics
 
 # import api routers
 from src.api.chatbot import chatbot_router
+from src.api.chatbot_with_external import chatbot_with_external_router
+from src.api.expert_knowledge import (
+    expert_knowledge_analysis_router,
+    expert_knowledge_anchor_router,
+)
 
 
 from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
@@ -47,6 +52,9 @@ from langchain_core.messages import HumanMessage, AIMessage
 app = FastAPI()
 api_router = APIRouter()
 api_router.include_router(chatbot_router)
+api_router.include_router(chatbot_with_external_router)
+api_router.include_router(expert_knowledge_anchor_router)
+api_router.include_router(expert_knowledge_analysis_router)
 app.include_router(api_router)
 logger = logging.getLogger(__name__)
 

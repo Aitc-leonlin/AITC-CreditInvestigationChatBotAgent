@@ -1,9 +1,7 @@
 import json
 import logging
-import os
 import re
 import sqlite3
-from pathlib import Path
 from time import perf_counter
 from typing import Dict, List, Literal, Optional
 
@@ -20,86 +18,6 @@ from src.types.langgraph_state_types import OverallState
 
 logger = logging.getLogger(__name__)
 DB_PATH = resolve_sqlite_db_path()
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
-CTBC_NEWS_PATH = PROJECT_ROOT / "ctbcNews.txt"
-TCC_YEAR_REPORT_PATH = PROJECT_ROOT / "TCCYearReport.txt"
-INCLUDE_CTBC_NEWS_ENV = "INCLUDE_CTBC_NEWS_IN_FINAL_PROMPT"
-INCLUDE_TCC_YEAR_REPORT_ENV = "INCLUDE_TCC_YEAR_REPORT_IN_FINAL_PROMPT"
-ENABLE_POST_FINAL_ANSWER_ANALYSIS_ENV = "ENABLE_POST_FINAL_ANSWER_ANALYSIS"
-POST_FINAL_ANSWER_ANALYSIS_PROMPT_TEMPLATE = """
-你是銀行授信與投資分析報告的撰稿人。
-你的任務不是新增事實，而是把第一階段回答中已經成立的財務證據、外部背景與判斷，重寫成「更像人寫的分析報告」。
-
-### 改寫目標
-1. 文字要像資深徵審或研究員在對主管寫分析 memo，不要像機器摘要，也不要像條文式回覆。
-2. 風格要接近正式但口語可讀的授信分析報告：
-   - 先講結論，再講理由。
-   - 會把數字翻譯成意義，例如「這代表短期償債壓力不大」。
-   - 可以用「短期看 / 中期看 / 長期看」、「支持理由 / 保留理由」這種決策導向語言。
-   - 可以適度使用一句話提醒，例如「真正要擔心的不是現在有沒有現金，而是後續資本支出會不會把自由現金流吃掉」。
-3. 輸出格式要貼近授信分析報告，不要只保留原本的「關鍵證據 / 分析結論 / 補充說明」三段式。
-
-### 嚴格限制
-1. 只能重寫、重組、濃縮、排序第一階段回答裡已經出現的內容，不可補新的數字、事件、新聞或結論。
-2. 如果第一階段回答沒有提到某個資訊，就不要自行腦補。
-3. 若第一階段回答對某件事保留不確定性，你也必須保留，不可把保留意見寫成確定結論。
-4. 財務數字、比率、年度、季度、正負號要維持正確。
-5. 如果第一階段回答明確區分「JSON 財務證據」與「外部新聞 / 年報背景」，改寫後也要保留這個界線。
-
-### 文風要求
-1. 使用繁體中文。
-2. 句子長短交錯，避免每句都長得一樣。
-3. 盡量不用過多官腔，例如少用「綜上所述」「整體而言」反覆堆疊。
-4. 避免空泛形容詞，盡量把判斷掛在具體數字或事實上。
-5. 可以直接寫「銀行會在意的是…」「投資人真正要看的是…」「這個案子的矛盾在於…」這種人話表達。
-6. 不要輸出 markdown 表格。
-7. 條列可以用，但不要整篇都變成 bullet points；以段落敘述為主。
-
-### 建議輸出骨架
-請依照下列骨架改寫；若原始問題不適合某一節，可省略或簡化，但整體仍要像完整報告：
-
-標題
-- 依問題自擬一個像報告的標題，例如「OOO 授信案分析」、「OOO 投資與信用風險評估」。
-
-一、結論先講
-- 先用 1 到 2 段直接回答使用者問題。
-- 若題目本質上涉及判斷或建議，先明確寫出建議立場，例如可承作 / 建議保守 / 建議觀望 / 有條件核准。
-- 若題目偏分析而非決策，也要先講出核心結論。
-- 之後補一個「三句話版本」或「一句話重點」，用短條列濃縮短期、中期、長期或主要支持 / 保留因素。
-
-二、關鍵判斷依據
-- 這一節不要只是重複數字，要把數字翻成判斷。
-- 可依主題拆成 2 到 4 個小段，例如：
-  - 短期償債與流動性
-  - 獲利能力與現金流落差
-  - 負債與資本支出壓力
-  - 外部事件、治理或產業背景如何影響判斷
-- 每個小段都要同時交代「看到的事實」與「這代表什麼」。
-
-三、如果從決策角度看
-- 如果題目偏授信，寫成「支持承作的理由 / 需要保留的理由 / 建議附帶條件」。
-- 如果題目偏投資，寫成「股東視角會在意什麼 / 哪些訊號偏正面 / 哪些風險還沒解除」。
-- 如果題目同時涉及授信與投資，可簡短區分兩種視角。
-
-四、還缺哪些資料
-- 列出 2 到 6 個會影響判斷精度的缺口資料。
-- 直接說明「為什麼缺這個就不能把話說滿」。
-
-五、總結
-- 用 1 段收束。
-- 若題目涉及建議，最後一句要回到明確立場，但保留必要條件與限制。
-
-### 額外格式要求
-1. 保留章節標題與清楚段落。
-2. 若資料很多，可加入少量條列，但每個條列都要有判斷含義，不只是丟數字。
-3. 最終成品要讓人感覺是在讀一份「能拿去給主管看」的分析報告，而不是 LLM 回答。
-
-### 原始問題
-{question}
-
-### 第一階段回答
-{final_answer}
-""".strip()
 VALID_STATEMENT_TYPES = {
     "balance_sheet",
     "comprehensive_income_statement",
@@ -113,13 +31,9 @@ METADATA_FIELD_PREFIXES = (
     "tifrs-notes_Market",
     "tifrs-notes_Industry",
 )
-
-
-def env_flag_enabled(name: str) -> bool:
-    return os.getenv(name, "FALSE").strip().upper() == "TRUE"
-
-
 def build_expert_knowledge_prompt_section(state: OverallState) -> str:
+    if not bool(state.get("use_expert_knowledge", True)):
+        return "無"
     expert_knowledge_items = state.get("selected_applied_expert_knowledge")
     if expert_knowledge_items is None:
         expert_knowledge_items = state.get("applied_expert_knowledge") or []
@@ -138,68 +52,61 @@ def build_expert_knowledge_prompt_section(state: OverallState) -> str:
     return "\n".join(lines)
 
 
-def build_ctbc_news_reference_section() -> str:
-    if not env_flag_enabled(INCLUDE_CTBC_NEWS_ENV):
-        return ""
+def build_warehouse_data_prompt_section(state: OverallState) -> str:
+    if not bool(state.get("use_warehouse_data", True)):
+        return "無"
+    warehouse_data_items = state.get("selected_applied_warehouse_data")
+    if not warehouse_data_items:
+        warehouse_data_items = state.get("applied_warehouse_data") or []
+    if not warehouse_data_items:
+        return "無"
 
-    try:
-        news_content = CTBC_NEWS_PATH.read_text(encoding="utf-8").strip()
-    except OSError as exc:
-        print(f"[semantic_retrieval] failed_to_read_ctbc_news: {exc}")
-        return ""
+    lines = []
+    for index, item in enumerate(warehouse_data_items, start=1):
+        if not isinstance(item, dict):
+            continue
 
-    if not news_content:
-        return ""
+        metadata_parts = []
+        for label, key in (
+            ("category", "category"),
+            ("title", "title"),
+            ("industry", "industry"),
+            ("companyLabel", "companyLabel"),
+            ("companyPromptValue", "companyPromptValue"),
+            ("source", "source"),
+            ("url", "url"),
+            ("updatedAt", "updatedAt"),
+        ):
+            value = str(item.get(key) or "").strip()
+            if value:
+                metadata_parts.append(f"{label}={value}")
 
-    return f"""
-        ### 外部新聞參考資料
-        以下資料僅供最後判斷分析參考；財務數字仍只能引用 JSON 證據資料，若新聞與 JSON 證據無直接關聯，請不要過度延伸。
-        {news_content}
-        """
+        summary = str(item.get("summary") or "").strip()
+        if not metadata_parts and not summary:
+            continue
 
+        lines.append(f"{index}. {'; '.join(metadata_parts)}")
+        if summary:
+            lines.append(f"   summary: {summary}")
 
-def build_tcc_year_report_reference_section() -> str:
-    if not env_flag_enabled(INCLUDE_TCC_YEAR_REPORT_ENV):
-        return ""
-
-    try:
-        report_content = TCC_YEAR_REPORT_PATH.read_text(encoding="utf-8").strip()
-    except OSError as exc:
-        print(f"[semantic_retrieval] failed_to_read_tcc_year_report: {exc}")
-        return ""
-
-    if not report_content:
-        return ""
-
-    return f"""
-        ### 外部年報參考資料
-        以下資料來自 TCCYearReport.txt，僅供最後分析判斷參考；財務數字仍只能引用 JSON 證據資料，年報內容可用於說明資本支出、營運布局、策略方向、ESG、產能或風險背景。
-        {report_content}
-        """
-
-
-def run_post_final_answer_analysis(question: str, final_answer: str) -> str:
-    if not env_flag_enabled(ENABLE_POST_FINAL_ANSWER_ANALYSIS_ENV):
-        print("[semantic_retrieval] post_final_answer_analysis skipped: env disabled")
-        return final_answer
-
-    prompt_template = POST_FINAL_ANSWER_ANALYSIS_PROMPT_TEMPLATE.strip()
-    if not prompt_template or "TODO: 請手動填入第二階段分析 Prompt。" in prompt_template:
-        print("[semantic_retrieval] post_final_answer_analysis skipped: prompt template not configured")
-        return final_answer
-
-    prompt = prompt_template.format(question=question, final_answer=final_answer)
-    print("[semantic_retrieval] post_final_answer_analysis prompt:\n" + prompt)
-    step_started_at = perf_counter()
-    analyzed_answer = get_message_text(chat_model.invoke(prompt))
-    print(
-        f"[timing] semantic_retrieval.post_final_answer_analysis took "
-        f"{perf_counter() - step_started_at:.3f}s"
-    )
-    print("[semantic_retrieval] post_final_answer_analysis result:\n" + analyzed_answer)
-    return analyzed_answer
+    return "\n".join(lines) if lines else "無"
 
 
+def build_external_data_prompt_section(state: OverallState) -> str:
+    if not bool(state.get("use_external_data", True)):
+        return "無"
+    query_text = str(state.get("external_data_query_text") or "").strip()
+    response_text = str(state.get("external_data_response") or "").strip()
+    if not query_text and not response_text:
+        return "無"
+
+    lines = []
+    if query_text:
+        lines.append(f"查詢主題: {query_text}")
+    if response_text:
+        lines.append("查詢結果:")
+        lines.append(response_text)
+    return "\n".join(lines)
 class PeriodItem(BaseModel):
     year: int = Field(..., description="西元年")
     quarter: Optional[int] = Field(None, description="季度，1 到 4；若是全年或未明確指定，可為空")
@@ -264,6 +171,23 @@ class CandidateChoiceBatch(BaseModel):
 # 將 log payload 轉成可讀 JSON 字串，避免直接印 dict 時不易閱讀。
 def dump_log_payload(payload: object) -> str:
     return json.dumps(payload, ensure_ascii=False, indent=2, default=str)
+
+
+def quote_sql_debug_value(value: object) -> str:
+    if value is None:
+        return "NULL"
+    if isinstance(value, bool):
+        return "1" if value else "0"
+    if isinstance(value, (int, float)):
+        return str(value)
+    return "'" + str(value).replace("'", "''") + "'"
+
+
+def render_sql_debug_preview(query: str, params: tuple) -> str:
+    rendered = query
+    for value in params:
+        rendered = rendered.replace("?", quote_sql_debug_value(value), 1)
+    return rendered
 
 
 # 清理要送進 LLM 的文字，避免非法控制字元導致 API request 失敗。
@@ -504,8 +428,7 @@ def fetch_financial_value(
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
     try:
-        cursor = connection.execute(
-            """
+        query = """
             SELECT
                 ri.report_id,
                 ri.company_code,
@@ -551,11 +474,47 @@ def fetch_financial_value(
                 CASE WHEN xf.unit_id = 'TWD' THEN 0 ELSE 1 END,
                 ABS(fmv.value) DESC
             LIMIT 1
-            """,
-            (company_code, year, f"Q{effective_quarter}", concept_id, statement_type),
+            """
+        params = (company_code, year, f"Q{effective_quarter}", concept_id, statement_type)
+        print(
+            "[semantic_retrieval] SQL financial_metric_value lookup:\n"
+            + dump_log_payload(
+                {
+                    "company_code": company_code,
+                    "year": year,
+                    "quarter": f"Q{effective_quarter}",
+                    "requested_quarter": quarter,
+                    "statement_type": statement_type,
+                    "concept_id": concept_id,
+                    "where_focus": {
+                        "ri.company_code": company_code,
+                        "ri.year": year,
+                        "ri.quarter": f"Q{effective_quarter}",
+                        "fmv.concept_id": concept_id,
+                        "fd.statement_type": statement_type,
+                    },
+                    "params": params,
+                    "sql": query,
+                    "sql_preview": render_sql_debug_preview(query, params),
+                }
+            )
         )
+        cursor = connection.execute(query, params)
         row = cursor.fetchone()
         result = dict(row) if row else None
+        # print(
+        #     "[semantic_retrieval] SQL financial_metric_value result:\n"
+        #     + dump_log_payload(
+        #         {
+        #             "found": result is not None,
+        #             "concept_id": concept_id,
+        #             "value": result.get("value") if result else None,
+        #             "value_numeric": result.get("value_numeric") if result else None,
+        #             "unit_id": result.get("unit_id") if result else None,
+        #             "report_id": result.get("report_id") if result else None,
+        #         }
+        #     )
+        # )
         if result is not None:
             result["requested_year"] = year
             result["requested_quarter"] = quarter
@@ -583,7 +542,7 @@ def extract_semantic_plan(question: str) -> Dict:
             - balance_sheet
             - comprehensive_income_statement
             - statement_of_cash_flows
-            4. requirements 要列出回答此題真正需要查的欄位，最多 5 個 requirement；不要為了增加命中率展開過多欄位。
+            4. requirements 要列出回答此題真正需要查的欄位，最多10 個 requirement；不要為了增加命中率展開過多欄位。
             5. 每個 requirement 的 field_query 必須是字串陣列，最多 3 個查詢詞；只放最核心的中文欄位名稱與必要別名，不要列出大量同義詞。
             6. periods 只填問題中明確提到、或回答此題必要的期間。
             7. 如果問題需要比較多個期間，就列出多個 periods。
@@ -1352,6 +1311,11 @@ def semantic_retrieval(state: OverallState) -> OverallState:
         "available_reports": available_reports,
         "retrieval_results": retrieval_results,
         "llm_evidence": llm_evidence_json,
+        "selected_warehouse_data": state.get("selected_applied_warehouse_data") or [],
+        "selected_expert_knowledge": state.get("selected_applied_expert_knowledge") or [],
+        "external_data_query_text": state.get("external_data_query_text") or "",
+        "external_data_response": state.get("external_data_response") or "",
+        "external_data_response_prompt": state.get("external_data_response_prompt") or "",
     }
     # print("\n[semantic_retrieval] evidence_json:")
     # print(json.dumps(evidence_json, ensure_ascii=False, indent=2))
@@ -1425,7 +1389,8 @@ def semantic_retrieval(state: OverallState) -> OverallState:
 
     print("fulfilled_items =", fulfilled_items)
     print("planned_items =", planned_items)
-    enough_information = bool(llm_evidence_json.get("facts"))
+    has_external_data_response = bool(str(state.get("external_data_response") or "").strip())
+    enough_information = bool(llm_evidence_json.get("facts")) or has_external_data_response
     # enough_information = fulfilled_items > 0 and fulfilled_items == planned_items
 
     # print(
@@ -1448,49 +1413,113 @@ def semantic_retrieval(state: OverallState) -> OverallState:
             "reference_data": evidence_json,
         }
 
-    ctbc_news_reference_section = build_ctbc_news_reference_section()
-    tcc_year_report_reference_section = build_tcc_year_report_reference_section()
+    use_expert_knowledge = bool(state.get("use_expert_knowledge", True))
+    use_warehouse_data = bool(state.get("use_warehouse_data", True))
+    optional_rule_lines = []
+    if use_expert_knowledge:
+        optional_rule_lines.append(
+            "若有提供專家分析參考，請逐一吸收所有條目的觀點，並在分析結論中反映其對財務資料解讀的影響，不可忽略。"
+        )
+
+    if use_warehouse_data:
+        optional_rule_lines.extend(
+            [
+                "若有提供資料倉儲參考資料，請優先使用其中與題目最相關的內容，摘要其與公司、產業、風險事件或判決爭議的關聯。",
+                "如果資料倉儲資料存在原文連結或來源，回答中可簡短標示資料類型與來源，但不要大段轉貼原文。",
+            ]
+        )
+
+    if has_external_data_response:
+        optional_rule_lines.extend(
+            [
+                "若有提供外部資料查詢結果，請在回答中新增獨立章節列出其摘要，並用於補充事件背景、負面消息、產業脈絡或信用風險判斷。",
+                "外部資料查詢結果不可作為財務報表數字來源；若內容存在不確定性或無法確認，必須在補充說明揭露限制。",
+            ]
+        )
+
+    numbered_optional_rule_lines = [
+        f"{index}. {rule}"
+        for index, rule in enumerate(optional_rule_lines, start=7)
+    ]
+    final_rule_index = 7 + len(numbered_optional_rule_lines)
+
+    expert_section = ""
+    if use_expert_knowledge:
+        expert_section = """
+        ***專業分析***
+        - 根據專家分析參考，把內容列出來，這段不用作為分析結論的依據，只要把專家說了什麼列出來即可，並標示為「專家分析參考」。
+        - 如果專家分析參考是空的，則這一段可以省略不寫。
+        """.strip()
+
+    warehouse_data = ""
+    if use_warehouse_data:
+        warehouse_data = """
+        ***資料倉儲***
+        - 資料倉儲參考資料，把內容列出來，這段不用作為分析結論的依據，只要把資料倉儲說了什麼列出來即可，並標示為「資料倉儲參考」。
+        """.strip()
+
+    external_data_section = ""
+    if has_external_data_response:
+        external_data_section = """
+        ***外部資料查詢結果***
+        - 將 AI Agent 外部資料查詢結果整理成可讀摘要，明確列出查詢主題、摘要重點、可能影響與資料限制。
+        - 這一段可作為分析結論的背景依據，但不可取代財務報表數字。
+        """.strip()
+
+    prompt_reference_sections = []
+    if use_expert_knowledge:
+        prompt_reference_sections.extend(
+            ["### 專家分析參考", build_expert_knowledge_prompt_section(state), ""]
+        )
+    if use_warehouse_data:
+        prompt_reference_sections.extend(
+            ["### 資料倉儲參考資料", build_warehouse_data_prompt_section(state), ""]
+        )
+    if has_external_data_response:
+        prompt_reference_sections.extend(
+            ["### 外部資料查詢結果", build_external_data_prompt_section(state), ""]
+        )
 
     final_prompt = f"""
         你是信用徵審財報分析助手。
-        請根據 JSON evidence、外部新聞參考資料、外部年報參考資料與專家分析參考進行綜合判斷，不要臆測。
-        JSON evidence 是財務數字與關鍵證據的唯一來源；外部新聞、年報與專家分析參考是信用徵審風險、事件背景、營運策略與決策判斷的輔助來源。
+        請根據財務報表資料來源、資料倉儲參考資料、外部資料查詢結果與專家分析參考進行綜合判斷，不要臆測。
+        財務報表資料來源是財務數字與關鍵證據的唯一來源；資料倉儲、外部資料查詢結果與專家分析參考是信用徵審風險、事件背景、營運策略與決策判斷的輔助來源。
 
         規則：
         1. 只能引用 facts 與 computed_metrics，不要引用 excluded_or_low_confidence_facts 作為判斷依據。
         2. 若需要比較、趨勢、增減或比率，優先使用 computed_metrics；不足時才用 facts 中的數值計算。
         3. 回答使用繁體中文，數值標注以***仟元***為單位。
         4. 若有被排除或低可信資料，只能在補充說明簡短提醒，不要拿來下結論。
-        5. 若有提供外部新聞、年報或專家分析參考資料，「一、關鍵證據」「二、分析結論」「三、補充說明」都必須納入這些背景後再回答。
-        6. 外部新聞、年報與專家分析不可作為財務數字來源；若引用這些資料，只能用於說明事件背景、產業脈絡、經營策略、風險重點、審查方向或信用徵審判斷。
-        7. 若有提供專家分析參考，請逐一吸收所有條目的觀點，並在分析結論中反映其對財務資料解讀的影響，不可忽略。
-        8. 最後的分析決策結果必須同時交代：財務報表證據支持什麼、外部新聞或年報背景補充什麼、專家分析參考提醒什麼、三者合併後如何影響判斷。
-        9. 回答的內容不用在括弧中作太多的說明跟解釋。
+        5. 若有提供資料倉儲、外部資料查詢結果或專家分析參考資料，「一、參考數據」「二、專業分析」「三、分析結論」「四、補充說明」都必須納入這些背景後再回答。
+        6. 資料倉儲、外部資料查詢結果與專家分析不可作為財務數字來源；若引用這些資料，只能用於說明事件背景、產業脈絡、經營策略、風險重點、審查方向、訴訟或負面消息背景、信用徵審判斷。
+        {chr(10).join(numbered_optional_rule_lines)}
+        {final_rule_index}. 最後的分析決策結果必須同時交代：財務報表證據支持什麼、資料倉儲或外部資料背景補充什麼、專家分析參考提醒什麼、綜合後如何影響判斷。
+        {final_rule_index + 1}. 回答的內容不用在括弧中作太多的說明跟解釋。
 
-        請依照以下格式回答：
-        一、參考數據
-        - 列出本次回答實際引用的 3 到 8 筆關鍵數據、比率或事實。
+        請依照以下格式回答，並自動將標題補上中文數字一二三，依序下去：
+        ***參考數據***
+        - 主要參考財務報表資料來源，來列出本次回答實際引用的關鍵數據、比率或事實。
         - 每一點盡量包含欄位名稱、期間、數值，但不要把conecpt_name秀出來。
-        - 若有外部新聞、年報或專家分析參考資料，至少列出 1 點與本題相關的背景，並標示為「外部新聞背景」「外部年報背景」或「專家分析參考」。
         - 如果有標注數據時間範圍，用「截至」作為期間結尾的詞彙；如果是單一期間的數據，則標注該期間即可。例如：「截至2025 年度期末」
 
-        二、專業分析
-        - 根據專家分析參考，把內容列出來，這段不用作為分析結論的依據，只要把專家說了什麼列出來即可，並標示為「專家分析參考」。
-        - 如果專家分析參考是空的，則這一段可以省略不寫。
-        
-        三、分析結論
-        - 根據財務報表、外部新聞背景、外部年報背景與專家分析參考，直接回答使用者問題，並說明判斷依據。
-        - 明確說明外部新聞、年報或專家分析如何改變、強化或限制財務資料本身的解讀。
+        {expert_section}
 
-        四、補充說明
+        {warehouse_data}
+
+        {external_data_section}
+
+        ***分析結論***
+        - 根據財務報表、資料倉儲參考、外部資料查詢結果與專家分析參考，直接回答使用者問題，並說明判斷依據。
+        - 明確說明資料倉儲、外部資料查詢結果或專家分析如何改變、強化或限制財務資料本身的解讀。
+
+        ***補充說明***
         - 若有重要但未查到、被排除或低可信的欄位，簡短補充即可。
-        - 若有外部新聞、年報或專家分析參考資料，必須補充其限制：這些資料是背景與判讀輔助，不等同於本次查詢出的財務報表財務數字來源。
+        - 若有資料倉儲、外部資料查詢結果或專家分析參考資料，必須補充其限制：這些資料是背景與判讀輔助，不等同於本次查詢出的財務報表財務數字來源。
 
         ### 使用者問題
         {question}
 
-        ### 專家分析參考
-        {build_expert_knowledge_prompt_section(state)}
+        {chr(10).join(prompt_reference_sections)}
 
         ### 財務報表資料來源
         {json.dumps(llm_evidence_json, ensure_ascii=False, indent=2)}
@@ -1508,17 +1537,11 @@ def semantic_retrieval(state: OverallState) -> OverallState:
         )
     print("[semantic_retrieval] final_answer:\n" + str(final_answer))
 
-    post_analysis_answer = final_answer
-    try:
-        post_analysis_answer = run_post_final_answer_analysis(question=question, final_answer=final_answer)
-    except Exception as exc:
-        print(f"[semantic_retrieval] post_final_answer_analysis failed: {exc}")
-
     print(f"[timing] semantic_retrieval.total took {perf_counter() - started_at:.3f}s")
     return {
         **state,
-        "answer": post_analysis_answer,
+        "answer": final_answer,
         "final_answer": final_answer,
-        "post_analysis_answer": post_analysis_answer,
+        "post_analysis_answer": final_answer,
         "reference_data": evidence_json,
     }

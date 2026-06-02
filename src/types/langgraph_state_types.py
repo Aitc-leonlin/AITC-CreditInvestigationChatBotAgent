@@ -9,20 +9,47 @@ class AppliedExpertKnowledgeItem(TypedDict):
     dataSource: str
     industry: str
     companyLabel: str
-    description: str
+    anchorDescription: str
     systemPrompt: str
+
+
+class AppliedWarehouseDataItem(TypedDict):
+    category: str
+    title: str
+    industry: str
+    companyLabel: str
+    companyPromptValue: str
+    source: str
+    url: str
+    summary: str
+    updatedAt: str
 
 
 class OverallState(TypedDict):
     messages: MessagesState
     is_question_in_range: str
     user_input: str
+    use_expert_knowledge: NotRequired[bool]
+    use_warehouse_data: NotRequired[bool]
+    use_external_data: NotRequired[bool]
+    request_source: NotRequired[str]
+    needs_external_data: NotRequired[bool]
+    awaiting_external_data_confirmation: NotRequired[bool]
+    external_data_query_text: NotRequired[str]
+    external_data_decision: NotRequired[str]
+    external_data_result: NotRequired[dict[str, Any]]
+    external_data_response: NotRequired[str]
+    external_data_response_prompt: NotRequired[str]
     applied_expert_knowledge: NotRequired[list[AppliedExpertKnowledgeItem]]
+    applied_warehouse_data: NotRequired[list[AppliedWarehouseDataItem]]
     semantic_plan: NotRequired[dict[str, Any]]
     semantic_plan_error: NotRequired[str]
     needs_expert_knowledge: NotRequired[bool]
     selected_applied_expert_knowledge: NotRequired[list[AppliedExpertKnowledgeItem]]
     expert_knowledge_selection_result: NotRequired[dict[str, Any]]
+    needs_warehouse_data: NotRequired[bool]
+    selected_applied_warehouse_data: NotRequired[list[AppliedWarehouseDataItem]]
+    warehouse_data_selection_result: NotRequired[dict[str, Any]]
     rephrased_question: str
     question_type: str
     question_type_confidence: float

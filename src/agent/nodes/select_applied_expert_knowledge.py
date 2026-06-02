@@ -88,6 +88,19 @@ def metadata_matches_context(
 
 def select_applied_expert_knowledge(state: OverallState) -> OverallState:
     started_at = perf_counter()
+    if not bool(state.get("use_expert_knowledge", True)):
+        print("[select_applied_expert_knowledge] skipped: use_expert_knowledge is false")
+        return {
+            **state,
+            "needs_expert_knowledge": False,
+            "selected_applied_expert_knowledge": [],
+            "expert_knowledge_selection_result": {
+                "needs_expert_knowledge": False,
+                "selected_indexes": [],
+                "reason": "Skipped because referenceSettings.useExpertKnowledge is false.",
+            },
+        }
+
     expert_knowledge_items = state.get("applied_expert_knowledge") or []
     if not expert_knowledge_items:
         print("[select_applied_expert_knowledge] no applied expert knowledge provided")
@@ -173,7 +186,7 @@ def select_applied_expert_knowledge(state: OverallState) -> OverallState:
                     "dataSource": item.get("dataSource", ""),
                     "industry": item.get("industry", ""),
                     "companyLabel": item.get("companyLabel", ""),
-                    "description": item.get("description", ""),
+                    "anchorDescription": item.get("anchorDescription", ""),
                 },
                 ensure_ascii=False,
             )
@@ -188,9 +201,9 @@ def select_applied_expert_knowledge(state: OverallState) -> OverallState:
 1. 主要根據 analysis_goal 與 requirements 內的 purpose 來判斷是否相關。
 2. title 只能當作識別用途，不可拿來當主要判斷依據。
 3. systemPrompt 在這一步不可用來判斷是否匹配；它只會在後續真的被選中後才提供給最終回答模型使用。
-4. 只能根據每個條目的 description 與 analysis_goal / purpose 的語意關聯來判斷是否相關。
-5. 若問題涉及授信判斷、風險分析、產業脈絡、信用徵審、還款能力、擔保品、決策建議、異常財務變化原因判讀，且 description 與分析目的明顯相關，則可選入。
-6. 若問題只是單純查數字、定義解釋，或 description 與 analysis_goal / purpose 無明顯關聯，則不要選入。
+4. 只能根據每個條目的 anchorDescription 與 analysis_goal / purpose 的語意關聯來判斷是否相關。
+5. 若問題涉及授信判斷、風險分析、產業脈絡、信用徵審、還款能力、擔保品、決策建議、異常財務變化原因判讀，且 anchorDescription 與分析目的明顯相關，則可選入。
+6. 若問題只是單純查數字、定義解釋，或 anchorDescription 與 analysis_goal / purpose 無明顯關聯，則不要選入。
 7. 原始使用者問題只可作為輔助理解上下文，不可凌駕 analysis_goal 與 purpose。
 8. 可選 0 個、1 個或多個條目，但只選真正相關的。
 
