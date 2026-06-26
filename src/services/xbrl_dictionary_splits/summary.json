@@ -2,6 +2,30 @@
   "input": "/Users/leonlin/Cursor/BackEnd/CreditInvestigationChatBotAgentPython/src/services/xbrl_data_dictionary_all.json",
   "output_dir": "/Users/leonlin/Cursor/BackEnd/CreditInvestigationChatBotAgentPython/src/services/xbrl_dictionary_splits",
   "total_concepts": 10351,
+  "usage_review": {
+    "有用到": [
+      "balance_sheet/BSCI.json",
+      "balance_sheet/ES.json",
+      "balance_sheet/IFRST_2017-03-09.json",
+      "balance_sheet/SCF.json",
+      "balance_sheet/__all__.json",
+      "comprehensive_income_statement/BSCI.json",
+      "comprehensive_income_statement/ES.json",
+      "comprehensive_income_statement/IFRST_2017-03-09.json",
+      "comprehensive_income_statement/SCF.json",
+      "comprehensive_income_statement/__all__.json",
+      "statement_of_cash_flows/BSCI.json",
+      "statement_of_cash_flows/IFRST_2017-03-09.json",
+      "statement_of_cash_flows/SCF.json",
+      "statement_of_cash_flows/__all__.json"
+    ],
+    "沒用到": [
+      "balance_sheet/XBRL_TW_Entry_Points.json",
+      "comprehensive_income_statement/XBRL_TW_Entry_Points.json",
+      "statement_of_cash_flows/XBRL_TW_Entry_Points.json",
+      "summary.json"
+    ]
+  },
   "statements": {
     "balance_sheet": {
       "concept_count": 2276,

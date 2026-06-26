@@ -11,3 +11,4 @@ langchain_core
 langchain-anthropic
 langgraph
 rpds-py
+python-docx
