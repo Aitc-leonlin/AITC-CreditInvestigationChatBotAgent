@@ -1,13 +1,15 @@
 from time import perf_counter
 from urllib.parse import quote
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Query, Response
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from src.services.report_generator_service import (
     DOCX_MIME_TYPE,
+    ReportGenerationError,
     generate_and_store_credit_report,
+    get_report_dashboard,
     get_report_download_path,
     list_report_history,
 )
@@ -31,11 +33,13 @@ def content_disposition(filename: str) -> str:
 async def generate_report(request: ReportGeneratorRequest):
     started_at = perf_counter()
     try:
-        report_bytes, filename, history_item = generate_and_store_credit_report(
+        report_bytes, filename, history_item, dashboard_item = generate_and_store_credit_report(
             company_code=request.companyCode.strip(),
             company_label=request.companyLabel.strip(),
             year=request.year,
         )
+    except ReportGenerationError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
     except FileNotFoundError as error:
         raise HTTPException(status_code=500, detail=str(error)) from error
     except Exception as error:
@@ -51,13 +55,35 @@ async def generate_report(request: ReportGeneratorRequest):
         headers={
             "Content-Disposition": content_disposition(filename),
             "X-Report-History-Id": str(history_item.get("id", "")),
+            "X-Report-Dashboard-Id": str(dashboard_item.get("id", "")),
+            "X-Report-Dashboard-Path": f"/api/report-generator/history/{history_item.get('id', '')}/dashboard",
         },
     )
 
 
 @report_generator_router.get("/api/report-generator/history")
-async def get_report_history():
-    return {"reports": list_report_history()}
+async def get_report_history(
+    page: int = Query(default=1, ge=1),
+    pageSize: int = Query(default=10, ge=1, le=100),
+    offset: int | None = Query(default=None, ge=0),
+    keyword: str = Query(default=""),
+    status: str = Query(default=""),
+):
+    return list_report_history(
+        page=page,
+        page_size=pageSize,
+        offset=offset,
+        keyword=keyword,
+        status=status,
+    )
+
+
+@report_generator_router.get("/api/report-generator/history/{history_id}/dashboard")
+async def get_report_dashboard_item(history_id: int):
+    dashboard = get_report_dashboard(history_id)
+    if not dashboard:
+        raise HTTPException(status_code=404, detail="歷史報告儀表板資料不存在")
+    return {"dashboard": dashboard}
 
 
 @report_generator_router.get("/api/report-generator/history/{public_id}/download")

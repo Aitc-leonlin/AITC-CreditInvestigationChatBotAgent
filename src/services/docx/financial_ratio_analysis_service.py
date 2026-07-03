@@ -50,6 +50,7 @@ def establish_financial_ratios(
     )
     add_spacer(document, 2)
 
+    add_heading(document, "基於資產負債表得出結論", size=18)
     summary = document.add_paragraph()
     for index, line in enumerate((ai_summary_text or "").splitlines()):
         if index:

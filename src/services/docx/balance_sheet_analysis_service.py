@@ -20,6 +20,12 @@ BALANCE_SHEET_COLUMNS = (
 )
 
 
+def format_thousand_unit(value: Any) -> str:
+    if isinstance(value, (int, float)):
+        return format_value(value / 1000)
+    return format_value(value)
+
+
 def establish_balance_sheet(
     year: int,
     gui_no: str,
@@ -39,11 +45,11 @@ def establish_balance_sheet(
         add_heading(document, f"{year}年第{quarter}季", size=12)
         row = rows_by_quarter.get(quarter, {})
         table_rows = [
-            (label(BALANCE_SHEET_MAP, key), format_value(value))
+            (label(BALANCE_SHEET_MAP, key), format_thousand_unit(value))
             for key, value in row.items()
             if key not in {"year", "quarter"}
         ]
-        add_metric_table(document, table_rows)
+        add_metric_table(document, table_rows, value_header="數值（仟元）")
         add_spacer(document, 2)
 
     return document

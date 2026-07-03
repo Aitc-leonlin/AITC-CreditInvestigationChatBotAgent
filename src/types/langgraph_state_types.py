@@ -11,6 +11,8 @@ class AppliedExpertKnowledgeItem(TypedDict):
     companyLabel: str
     anchorDescription: str
     systemPrompt: str
+    createdAt: str
+    updatedAt: str
 
 
 class AppliedWarehouseDataItem(TypedDict):
@@ -22,6 +24,8 @@ class AppliedWarehouseDataItem(TypedDict):
     source: str
     url: str
     summary: str
+    recordUpdatedAt: str
+    createdAt: str
     updatedAt: str
 
 

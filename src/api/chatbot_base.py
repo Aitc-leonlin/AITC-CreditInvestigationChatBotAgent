@@ -54,6 +54,10 @@ def compact_text(text: Any) -> str:
     return " ".join(str(text or "").split())
 
 
+def preserve_text(text: Any) -> str:
+    return str(text or "").strip()
+
+
 class ChatbotSettings(BaseModel):
     company: Optional[str] = None
     period: Optional[str] = None
@@ -85,6 +89,8 @@ class AppliedExpertKnowledgeItem(BaseModel):
     companyLabel: str = ""
     anchorDescription: str = ""
     systemPrompt: str = ""
+    createdAt: str = ""
+    updatedAt: str = ""
 
 
 class AppliedWarehouseDataItem(BaseModel):
@@ -96,6 +102,8 @@ class AppliedWarehouseDataItem(BaseModel):
     source: str = ""
     url: str = ""
     summary: str = ""
+    recordUpdatedAt: str = ""
+    createdAt: str = ""
     updatedAt: str = ""
 
 
@@ -148,6 +156,8 @@ class ChatbotRequest(BaseModel):
                         "companyLabel": "",
                         "anchorDescription": "",
                         "systemPrompt": "",
+                        "createdAt": "",
+                        "updatedAt": "",
                     }
                 ],
                 "appliedWarehouseData": [
@@ -160,6 +170,8 @@ class ChatbotRequest(BaseModel):
                         "source": "",
                         "url": "",
                         "summary": "",
+                        "recordUpdatedAt": "",
+                        "createdAt": "",
                         "updatedAt": "",
                     }
                 ],
@@ -195,6 +207,8 @@ class UsedExpertKnowledgeItem(BaseModel):
     title: str = ""
     anchorDescription: str = ""
     systemPrompt: str = ""
+    createdAt: str = ""
+    updatedAt: str = ""
 
 
 class AppliedExternalDataItem(BaseModel):
@@ -298,10 +312,12 @@ def normalize_applied_expert_knowledge(items: list[Any]) -> list[dict[str, str]]
         data_source = compact_text(item.get("dataSource"))
         industry = compact_text(item.get("industry"))
         company_label = compact_text(item.get("companyLabel"))
-        anchor_description = compact_text(
+        anchor_description = preserve_text(
             item.get("anchorDescription") or item.get("description")
         )
-        system_prompt = compact_text(item.get("systemPrompt"))
+        system_prompt = preserve_text(item.get("systemPrompt"))
+        created_at = compact_text(item.get("createdAt"))
+        updated_at = compact_text(item.get("updatedAt"))
         if (
             title
             or data_source
@@ -309,6 +325,8 @@ def normalize_applied_expert_knowledge(items: list[Any]) -> list[dict[str, str]]
             or company_label
             or anchor_description
             or system_prompt
+            or created_at
+            or updated_at
         ):
             normalized_items.append(
                 {
@@ -318,6 +336,8 @@ def normalize_applied_expert_knowledge(items: list[Any]) -> list[dict[str, str]]
                     "companyLabel": company_label,
                     "anchorDescription": anchor_description,
                     "systemPrompt": system_prompt,
+                    "createdAt": created_at,
+                    "updatedAt": updated_at,
                 }
             )
     return normalized_items
@@ -338,7 +358,9 @@ def normalize_applied_warehouse_data(items: list[Any]) -> list[dict[str, str]]:
         company_prompt_value = compact_text(item.get("companyPromptValue"))
         source = compact_text(item.get("source"))
         url = compact_text(item.get("url"))
-        summary = compact_text(item.get("summary"))
+        summary = preserve_text(item.get("summary"))
+        record_updated_at = compact_text(item.get("recordUpdatedAt"))
+        created_at = compact_text(item.get("createdAt"))
         updated_at = compact_text(item.get("updatedAt"))
 
         if (
@@ -350,6 +372,8 @@ def normalize_applied_warehouse_data(items: list[Any]) -> list[dict[str, str]]:
             or source
             or url
             or summary
+            or record_updated_at
+            or created_at
             or updated_at
         ):
             normalized_items.append(
@@ -362,6 +386,8 @@ def normalize_applied_warehouse_data(items: list[Any]) -> list[dict[str, str]]:
                     "source": source,
                     "url": url,
                     "summary": summary,
+                    "recordUpdatedAt": record_updated_at,
+                    "createdAt": created_at,
                     "updatedAt": updated_at,
                 }
             )
@@ -513,10 +539,12 @@ def build_used_expert_knowledge(graph_answer: dict[str, Any]) -> list[dict[str, 
         normalized_items.append(
             {
                 "title": compact_text(item.get("title")),
-                "anchorDescription": compact_text(
+                "anchorDescription": preserve_text(
                     item.get("anchorDescription") or item.get("description")
                 ),
-                "systemPrompt": compact_text(item.get("systemPrompt")),
+                "systemPrompt": preserve_text(item.get("systemPrompt")),
+                "createdAt": compact_text(item.get("createdAt")),
+                "updatedAt": compact_text(item.get("updatedAt")),
             }
         )
     return normalized_items
@@ -541,7 +569,9 @@ def build_used_warehouse_data(graph_answer: dict[str, Any]) -> list[dict[str, st
                 "companyPromptValue": compact_text(item.get("companyPromptValue")),
                 "source": compact_text(item.get("source")),
                 "url": compact_text(item.get("url")),
-                "summary": compact_text(item.get("summary")),
+                "summary": preserve_text(item.get("summary")),
+                "recordUpdatedAt": compact_text(item.get("recordUpdatedAt")),
+                "createdAt": compact_text(item.get("createdAt")),
                 "updatedAt": compact_text(item.get("updatedAt")),
             }
         )
@@ -552,7 +582,7 @@ def build_applied_external_data(graph_answer: dict[str, Any]) -> list[dict[str, 
     response_text = str(graph_answer.get("external_data_response") or "").strip()
     if not response_text:
         return []
-    source = compact_text(graph_answer.get("external_data_query_text")) or "AI Agent 外部資料查詢"
+    source = preserve_text(graph_answer.get("external_data_query_text")) or "AI Agent 外部資料查詢"
 
     return [
         {
@@ -587,7 +617,7 @@ def build_graph_input(
         if external_data_decision:
             graph_input["external_data_decision"] = external_data_decision
 
-        external_data_query_text = compact_text(request.externalDataQueryText)
+        external_data_query_text = preserve_text(request.externalDataQueryText)
         if external_data_query_text:
             graph_input["external_data_query_text"] = external_data_query_text
 
@@ -612,7 +642,7 @@ def build_chatbot_response(
         "usedExpertKnowledge": used_expert_knowledge,
     }
     if include_external_data_query_text:
-        response["externalDataQueryText"] = compact_text(
+        response["externalDataQueryText"] = preserve_text(
             graph_answer.get("external_data_query_text")
         )
     if include_applied_external_data:

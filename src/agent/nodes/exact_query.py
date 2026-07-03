@@ -101,6 +101,8 @@ def build_warehouse_data_prompt_section(state: OverallState) -> str:
             ("companyPromptValue", "companyPromptValue"),
             ("source", "source"),
             ("url", "url"),
+            ("recordUpdatedAt", "recordUpdatedAt"),
+            ("createdAt", "createdAt"),
             ("updatedAt", "updatedAt"),
         ):
             value = str(item.get(key) or "").strip()

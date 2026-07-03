@@ -14,6 +14,9 @@
 -- - financial_metric_value
 -- - xbrl_fact
 -- - report_generator_history
+-- - expert_knowledge_entry
+-- - warehouse_data_entry
+-- - company_profile
 --
 -- Currently used by import/build scripts and taxonomy data maintenance:
 -- - taxonomy_entry_point
@@ -218,6 +221,152 @@ CREATE TABLE IF NOT EXISTS report_generator_history (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_report_generator_history_public_id
     ON report_generator_history(public_id);
+
+CREATE TABLE IF NOT EXISTS report_generator_dashboard (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    history_id INTEGER NOT NULL,
+    summary_items_json TEXT NOT NULL,
+    progress_items_json TEXT NOT NULL,
+    progress_percent INTEGER NOT NULL,
+    metrics_title TEXT NOT NULL,
+    metrics_json TEXT NOT NULL,
+    financial_trends_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+
+    FOREIGN KEY (history_id) REFERENCES report_generator_history(id) ON DELETE CASCADE
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_report_generator_dashboard_history_id
+    ON report_generator_dashboard(history_id);
+
+CREATE TABLE IF NOT EXISTS expert_knowledge_entry (
+    id TEXT PRIMARY KEY,
+
+    title TEXT NOT NULL,
+    data_source TEXT NOT NULL,
+    industry TEXT NOT NULL,
+    company_label TEXT NOT NULL,
+    company_prompt_value TEXT NOT NULL DEFAULT '',
+    source_schema_key TEXT NOT NULL,
+    anchor_description TEXT NOT NULL,
+    system_prompt TEXT NOT NULL,
+
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_expert_knowledge_entry_updated_at
+    ON expert_knowledge_entry(updated_at DESC)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_expert_knowledge_entry_created_at
+    ON expert_knowledge_entry(created_at DESC)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_expert_knowledge_entry_industry
+    ON expert_knowledge_entry(industry)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_expert_knowledge_entry_company_label
+    ON expert_knowledge_entry(company_label)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_expert_knowledge_entry_source_schema_key
+    ON expert_knowledge_entry(source_schema_key)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_expert_knowledge_entry_lookup
+    ON expert_knowledge_entry(data_source, industry, company_label, company_prompt_value)
+    WHERE deleted_at IS NULL;
+
+CREATE TABLE IF NOT EXISTS warehouse_data_entry (
+    id TEXT PRIMARY KEY,
+
+    category TEXT NOT NULL,
+    title TEXT NOT NULL,
+    industry TEXT NOT NULL,
+    company_label TEXT NOT NULL,
+    company_prompt_value TEXT NOT NULL DEFAULT '',
+    summary TEXT NOT NULL,
+    source TEXT NOT NULL,
+    url TEXT NOT NULL DEFAULT '',
+    record_updated_at TEXT NOT NULL DEFAULT '',
+
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_warehouse_data_entry_updated_at
+    ON warehouse_data_entry(updated_at DESC)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_warehouse_data_entry_created_at
+    ON warehouse_data_entry(created_at DESC)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_warehouse_data_entry_category
+    ON warehouse_data_entry(category)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_warehouse_data_entry_industry
+    ON warehouse_data_entry(industry)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_warehouse_data_entry_company_label
+    ON warehouse_data_entry(company_label)
+    WHERE deleted_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS idx_warehouse_data_entry_lookup
+    ON warehouse_data_entry(category, industry, company_label, company_prompt_value)
+    WHERE deleted_at IS NULL;
+
+CREATE TABLE IF NOT EXISTS company_profile (
+    publication_date TEXT NOT NULL,
+    company_code TEXT PRIMARY KEY,
+    company_name TEXT NOT NULL,
+    company_short_name TEXT NOT NULL,
+    foreign_registration_country TEXT NOT NULL DEFAULT '',
+    industry_code TEXT NOT NULL DEFAULT '',
+    address TEXT NOT NULL DEFAULT '',
+    tax_id TEXT NOT NULL DEFAULT '',
+    chairman TEXT NOT NULL DEFAULT '',
+    general_manager TEXT NOT NULL DEFAULT '',
+    spokesperson TEXT NOT NULL DEFAULT '',
+    spokesperson_title TEXT NOT NULL DEFAULT '',
+    acting_spokesperson TEXT NOT NULL DEFAULT '',
+    telephone TEXT NOT NULL DEFAULT '',
+    incorporation_date TEXT NOT NULL DEFAULT '',
+    listing_date TEXT NOT NULL DEFAULT '',
+    par_value TEXT NOT NULL DEFAULT '',
+    paid_in_capital TEXT NOT NULL DEFAULT '',
+    private_placement_shares TEXT NOT NULL DEFAULT '',
+    preferred_shares TEXT NOT NULL DEFAULT '',
+    financial_statement_type TEXT NOT NULL DEFAULT '',
+    stock_transfer_agent TEXT NOT NULL DEFAULT '',
+    transfer_agent_phone TEXT NOT NULL DEFAULT '',
+    transfer_agent_address TEXT NOT NULL DEFAULT '',
+    cpa_firm TEXT NOT NULL DEFAULT '',
+    cpa_1 TEXT NOT NULL DEFAULT '',
+    cpa_2 TEXT NOT NULL DEFAULT '',
+    english_short_name TEXT NOT NULL DEFAULT '',
+    english_mailing_address TEXT NOT NULL DEFAULT '',
+    fax TEXT NOT NULL DEFAULT '',
+    email TEXT NOT NULL DEFAULT '',
+    website TEXT NOT NULL DEFAULT '',
+    issued_common_shares_or_tdr_shares TEXT NOT NULL DEFAULT '',
+    source_json TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_company_profile_company_name
+    ON company_profile(company_name);
+
+CREATE INDEX IF NOT EXISTS idx_company_profile_tax_id
+    ON company_profile(tax_id);
 
 INSERT OR IGNORE INTO schema_migrations (version, description)
 VALUES ('V1.0', 'Initialize FinancialStatementXBRL.db schema');

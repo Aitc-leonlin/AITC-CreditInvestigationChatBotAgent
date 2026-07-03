@@ -19,10 +19,10 @@ from src.services.docx.table_mapping import (
 
 PROFILE_COLUMNS = (
     "stock_code,full_name_zhtw,short_name_zhtw,gui_no,address_zhtw,phone,fax,"
-    "website,email,industry_main,industry_sub,industry_national,ceo,capital,"
-    "employee_count,founded_date,business_scope,accountant_firm,accountants,"
-    "board_shareholding_ratio,board_pledge_ratio,listed_market,par_value,"
-    "ipo_date,avg_60d_price,avg_60d_volume"
+    "website,email,industry_main,ceo,capital,"
+    "founded_date,accountant_firm,accountants,"
+    "listed_market,par_value,"
+    "ipo_date"
 )
 
 
@@ -34,7 +34,7 @@ def establish_company_profile(gui_no: str, db: Any, document: Any = None) -> Any
     )
     en_rows = execute_query(
         db,
-        "SELECT full_name_enus,short_name_enus,address_enus "
+        "SELECT short_name_enus,address_enus "
         f"FROM company_profile WHERE gui_no = {gui_no};",
     )
     other_rows = execute_query(

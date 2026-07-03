@@ -34,9 +34,11 @@ from src.services.db_path import build_sqlite_db_diagnostics
 from src.api.chatbot import chatbot_router
 from src.api.chatbot_with_external import chatbot_with_external_router
 from src.api.report_generator import report_generator_router
+from src.api.warehouse_data import warehouse_data_router
 from src.api.expert_knowledge import (
     expert_knowledge_analysis_router,
     expert_knowledge_anchor_router,
+    expert_knowledge_entries_router,
 )
 
 
@@ -55,6 +57,8 @@ api_router = APIRouter()
 api_router.include_router(chatbot_router)
 api_router.include_router(chatbot_with_external_router)
 api_router.include_router(report_generator_router)
+api_router.include_router(warehouse_data_router)
+api_router.include_router(expert_knowledge_entries_router)
 api_router.include_router(expert_knowledge_anchor_router)
 api_router.include_router(expert_knowledge_analysis_router)
 app.include_router(api_router)
@@ -94,7 +98,12 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["Content-Disposition"],
+    expose_headers=[
+        "Content-Disposition",
+        "X-Report-History-Id",
+        "X-Report-Dashboard-Id",
+        "X-Report-Dashboard-Path",
+    ],
 )
 
 

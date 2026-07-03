@@ -28,6 +28,9 @@ Runtime query code currently uses:
 - `financial_metric_value`
 - `xbrl_fact`
 - `report_generator_history`
+- `expert_knowledge_entry`
+- `warehouse_data_entry`
+- `company_profile`
 
 XBRL import/build scripts and taxonomy maintenance currently use:
 
@@ -45,6 +48,7 @@ These counts were observed when `V1.0` was created:
 | `field_concept_mapping` | 26321 |
 | `field_dictionary` | 1207 |
 | `financial_metric_value` | 532662 |
+| `company_profile` | 1089 |
 | `report_generator_history` | 3 |
 | `report_instance` | 283 |
 | `taxonomy_calculation` | 5145 |
@@ -55,7 +59,8 @@ These counts were observed when `V1.0` was created:
 
 ## Notes
 
-- The V1.0 SQL preserves the current SQLite schema and column types.
+- The V1.0 SQL is the single project-maintained schema baseline.
+- Expert knowledge, warehouse data, and listed company profile schema changes are folded into V1.0.
 - It does not add foreign keys because the current database does not define them.
 - It includes a `schema_migrations` table for future migration tracking.
 - The report generator currently stores history in `FinancialStatementXBRL.db`, while report source data is read from `FinancialStatements.db` unless `REPORT_GENERATOR_DB_PATH` is set.
