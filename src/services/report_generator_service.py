@@ -294,10 +294,11 @@ def normalize_summary_items(ai_summary_text: str, company_name: str, year: int) 
 
 def build_report_progress_items() -> list[dict[str, str]]:
     return [
-        {"label": "財務報表分析", "status": "完成"},
-        {"label": "現金流量分析", "status": "完成"},
-        {"label": "產業分析", "status": "完成"},
-        {"label": "新聞風險分析", "status": "完成"},
+        {"label": "基本資料生成", "status": "完成"},
+        {"label": "資產負債分析生成", "status": "完成"},
+        {"label": "財務比率分析生成", "status": "完成"},
+        {"label": "還款能力分析生成", "status": "完成"},
+        {"label": "產業環境分析生成", "status": "完成"},
         {"label": "AI 徵審結論生成", "status": "完成"},
     ]
 

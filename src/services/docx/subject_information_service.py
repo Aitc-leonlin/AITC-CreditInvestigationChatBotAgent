@@ -30,7 +30,7 @@ def establish_subject_info(gui_no: str, db: Any, document: Any = None) -> Any:
         (label(SUBJECT_MAP, key), value)
         for key, value in subject.items()
     ]
-    mapped_rows.append(("生成項目", "基本資料、資產負債分析、財務比率分析"))
+    mapped_rows.append(("生成項目", "基本資料、資產負債分析、財務比率分析、還款能力分析、產業環境分析"))
     add_key_value_table(document, mapped_rows, header=("項目", "資訊"))
     add_spacer(document, 2)
     return document

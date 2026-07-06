@@ -41,12 +41,12 @@ def build_generating_answer_prompt(ratio_data: dict[str, Any]) -> str:
         f"`{OUT_OF_SCOPE_MESSAGE}` else "
         "answer the following user question, corresponding the given SQL data.\n"
         "Question: Please establish two comments. "
-        "Comment A use source of debt_to_asset_ratio, current_ratio, quick_ratio, roa and roe "
+        "First one use source of debt_to_asset_ratio, current_ratio, quick_ratio, roa and roe "
         f"in the {ratio_data_text} and only following rules. "
-        "Adding % mark after numerical value on Comment A. "
-        "Comment B use source of accounts_receivable_turnover, inventory_turnover, total_asset_turnover "
+        "Adding % mark after numerical value on first comment. "
+        "The second one use source of accounts_receivable_turnover, inventory_turnover, total_asset_turnover "
         f"in the {ratio_data_text} and only following rules. "
-        "Don't Add % mark after numerical value on Comment B. "
+        "Don't Add % mark after numerical value on second comment. "
         "Rules:"
         f"debt_to_asset_ratio: {rules['debt_to_asset_ratio_rule']}"
         f"current_ratio_rule: {rules['current_ratio_rule']}"
@@ -71,7 +71,7 @@ def generate_report_llm_conclusion(ratio_row: dict[str, Any]) -> str:
                 content=(
                     "You are a credit investigation financial analyst. "
                     "Use only the provided SQL data and rules. "
-                    "Return exactly two labeled paragraphs: Comment A and Comment B."
+                    "Return exactly two labeled paragraphs"
                     "And Return the result in Traditional Chinese. "
                 )
             ),

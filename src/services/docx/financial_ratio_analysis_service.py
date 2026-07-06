@@ -22,6 +22,12 @@ FINANCIAL_RATIO_COLUMNS = (
     "fixed_assets_turnover,inventory_turnover,cash_flow_ratio,eps"
 )
 
+FINANCIAL_RATIO_DISPLAY_KEYS = tuple(
+    key
+    for key in FINANCIAL_RATIO_COLUMNS.split(",")
+    if key not in {"year", "gui_no"}
+)
+
 
 def establish_financial_ratios(
     year: int,
@@ -42,9 +48,8 @@ def establish_financial_ratios(
     add_metric_table(
         document,
         [
-            (label(FINANCIAL_RATIOS_MAP, key), format_value(value))
-            for key, value in ratio_row.items()
-            if key not in {"year", "gui_no"}
+            (label(FINANCIAL_RATIOS_MAP, key), format_value(ratio_row.get(key)))
+            for key in FINANCIAL_RATIO_DISPLAY_KEYS
         ],
         value_header=f"{year}年",
     )
