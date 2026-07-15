@@ -20,6 +20,40 @@ If you want a single command similar to `package.json` scripts, use the included
 - `app.py`: Main entry point for the backend server.
 - `requirements.txt`: Python dependencies.
 
+## Backend Modules
+
+Backend feature code is organized under `src/features`. Each module owns the API entry points, business logic, schemas, and module-specific utilities for one business domain.
+
+Current modules:
+
+- `src/features/chatbot`: Chatbot APIs, expert-knowledge APIs, warehouse-data APIs, LangGraph agent flow, LLM provider, XBRL mapping resources, and chatbot-specific helper services.
+- `src/features/membership`: Membership, authentication, RBAC, menu permissions, organization, audit, notification, and admin APIs.
+- `src/features/report_generator`: Credit report generation APIs, report history/dashboard logic, LLM conclusion service, and DOCX chapter generation services.
+
+Common module folders:
+
+| Folder | Purpose |
+|---|---|
+| `api` | FastAPI routers and endpoints. This is the HTTP entry layer called by frontend clients. |
+| `schemas` | Pydantic request/response models and API validation shapes. These also affect Swagger/OpenAPI documentation. |
+| `services` | Business logic and workflow orchestration. API handlers should delegate main behavior here. |
+| `repositories` | Database access logic such as queries, inserts, updates, deletes, and row mapping. |
+| `models` | Domain/data models used by the module, including database entities or workflow state types. |
+| `core` | Module-specific shared utilities and lower-level building blocks, such as auth helpers, JWT/password utilities, LangGraph agent code, providers, or mappings. |
+| `seeds` | Default seed data used during bootstrap, currently mainly used by membership. |
+| `validation` | Shared validation helpers inside a module, currently mainly used by membership. |
+
+Cross-module utilities should go under `src/shared` instead of inside one module. For example, shared database path utilities are under `src/shared/database`.
+
+Placement rules for future changes:
+
+- New API route: `src/features/<module>/api`
+- New business workflow/service: `src/features/<module>/services`
+- New DB access code: `src/features/<module>/repositories`
+- New request/response schema: `src/features/<module>/schemas`
+- New module-only helper: `src/features/<module>/core`
+- Utility used by multiple modules: `src/shared`
+
 ## XBRL To SQL
 
 Use `scripts/build_xbrl_sql.py` to parse a `tifrs-20200630` taxonomy directory together with one XBRL instance file, then generate SQL `INSERT` statements for these tables:

@@ -14,8 +14,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# from src.services.save_document_into_vectordb_service import establish_vector_data
-from src.mappings.company_stock_code_array import CompanyStockCodeArray
+# from src.features.chatbot.services.save_document_into_vectordb_service import establish_vector_data
+from src.features.chatbot.core.mappings.company_stock_code_array import CompanyStockCodeArray
 from fastapi.middleware.cors import CORSMiddleware
 
 # import LangChain lib
@@ -24,22 +24,30 @@ from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 
 # import type
-from src.types.langgraph_state_types import OverallState
+from src.features.chatbot.models.langgraph_state_types import OverallState
 
 # import graph
-from src.agent.graph import graph
-from src.services.db_path import build_sqlite_db_diagnostics
+from src.features.chatbot.core.agent.graph import graph
+from src.shared.database.db_path import build_sqlite_db_diagnostics
 
 # import api routers
-from src.api.chatbot import chatbot_router
-from src.api.chatbot_with_external import chatbot_with_external_router
-from src.api.report_generator import report_generator_router
-from src.api.warehouse_data import warehouse_data_router
-from src.api.expert_knowledge import (
+from src.features.chatbot.api.chatbot import chatbot_router
+from src.features.chatbot.api.chatbot_with_external import chatbot_with_external_router
+from src.features.report_generator.api.report_generator import report_generator_router
+from src.features.chatbot.api.warehouse_data import warehouse_data_router
+from src.features.chatbot.api.expert_knowledge import (
     expert_knowledge_analysis_router,
     expert_knowledge_anchor_router,
     expert_knowledge_entries_router,
 )
+from src.features.membership.api.system_controller import membership_system_router
+from src.features.membership.api.auth_controller import membership_auth_router
+from src.features.membership.api.menu_controller import menu_router
+from src.features.membership.api.rbac_controller import rbac_router
+from src.features.membership.api.user_controller import membership_user_router
+from src.features.membership.api.organization_controller import organization_router
+from src.features.membership.api.notification_controller import membership_admin_router
+from src.features.membership.core.exceptions import MembershipError, membership_error_handler
 
 
 from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
@@ -61,7 +69,15 @@ api_router.include_router(warehouse_data_router)
 api_router.include_router(expert_knowledge_entries_router)
 api_router.include_router(expert_knowledge_anchor_router)
 api_router.include_router(expert_knowledge_analysis_router)
+api_router.include_router(membership_system_router)
+api_router.include_router(membership_auth_router)
+api_router.include_router(rbac_router)
+api_router.include_router(menu_router)
+api_router.include_router(membership_user_router)
+api_router.include_router(organization_router)
+api_router.include_router(membership_admin_router)
 app.include_router(api_router)
+app.add_exception_handler(MembershipError, membership_error_handler)
 logger = logging.getLogger(__name__)
 
 
@@ -80,6 +96,8 @@ def parse_cors_allow_origins() -> List[str]:
     return [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
         "https://aitc-credit-investigation-chat-bot.vercel.app",
         "https://aitc-credit-investigation-chat-bot-web-ashqnxvdk.vercel.app"
     ]

@@ -208,3 +208,9 @@ __marimo__/
 
 #report output
 generated-reports/credit-reports/
+
+# output
+output/
+
+# scripts
+scripts/

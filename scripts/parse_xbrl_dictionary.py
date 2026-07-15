@@ -542,17 +542,17 @@ def main() -> None:
     parser.add_argument("--calculation", help="Path to a calculation XML file.")
     parser.add_argument(
         "--output",
-        default="src/services/xbrl_data_dictionary.json",
+        default="src/features/chatbot/services/xbrl_data_dictionary.json",
         help="Output JSON path for the full dictionary.",
     )
     parser.add_argument(
         "--compact-output",
-        default="src/services/xbrl_account_title_compact.json",
+        default="src/features/chatbot/services/xbrl_account_title_compact.json",
         help="Output JSON path for the compact concept/label/code mapping.",
     )
     parser.add_argument(
         "--summary-output",
-        default="src/services/xbrl_dictionary_summary.json",
+        default="src/features/chatbot/services/xbrl_dictionary_summary.json",
         help="Output JSON path for parsing summary.",
     )
     args = parser.parse_args()
