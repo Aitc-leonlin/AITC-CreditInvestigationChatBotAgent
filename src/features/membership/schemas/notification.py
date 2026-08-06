@@ -54,6 +54,7 @@ class AuditLogResponse(BaseModel):
     id: str
     actorUserId: str | None
     actorDisplayName: str | None
+    actorEmail: str | None
     action: str
     resourceType: str
     resourceId: str
@@ -70,6 +71,24 @@ class AuditLogListResponse(BaseModel):
     page: int
     pageSize: int
     offset: int
+
+
+class AuditRetentionUpdateCommand(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    retentionDays: int = Field(ge=1, le=3650)
+
+
+class AuditRetentionResponse(BaseModel):
+    retentionDays: int
+    scheduleTimeZone: str
+    lastRunAt: str | None
+    lastArchiveAt: str | None
+    lastArchivedCount: int
+    lastCutoffAt: str | None
+    lastArchiveFilename: str
+    lastError: str
+    updatedAt: str
 
 
 class AdminDashboardResponse(BaseModel):

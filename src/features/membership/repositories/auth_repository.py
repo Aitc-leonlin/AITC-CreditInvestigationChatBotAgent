@@ -90,7 +90,12 @@ class AuthRepository:
                 outcome="FAILURE",
                 ip_address=ip_address,
                 user_agent=user_agent,
-                metadata={"failedLoginCount": failed_count, "lockedUntil": locked_until},
+                metadata={
+                    "module": "登入與帳號",
+                    "actionLabel": "登入失敗",
+                    "failedLoginCount": failed_count,
+                    "lockedUntil": locked_until,
+                },
             )
             self._insert_notification(
                 connection,
@@ -153,7 +158,7 @@ class AuthRepository:
                 outcome="SUCCESS",
                 ip_address=ip_address,
                 user_agent=user_agent,
-                metadata={},
+                metadata={"module": "登入與帳號", "actionLabel": "登入成功"},
             )
 
     def create_session_and_refresh_token(

@@ -1,4 +1,4 @@
-from src.features.membership.models.entities import MenuItem, OrganizationUnit, Permission, Role, User
+from src.features.membership.models.entities import OrganizationUnit, Role, User
 from src.features.membership.repositories.base import BaseRepository
 
 
@@ -15,13 +15,3 @@ class UserRepository(BaseRepository[User]):
 class RoleRepository(BaseRepository[Role]):
     table_name = "membership_role"
     model_class = Role
-
-
-class PermissionRepository(BaseRepository[Permission]):
-    table_name = "membership_permission"
-    model_class = Permission
-
-
-class MenuItemRepository(BaseRepository[MenuItem]):
-    table_name = "membership_menu_item"
-    model_class = MenuItem

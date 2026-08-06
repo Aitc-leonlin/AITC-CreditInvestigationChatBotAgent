@@ -39,36 +39,73 @@ class UserManagementService:
         return user
 
     def create_user(self, payload: dict[str, Any]) -> dict[str, Any]:
-        self._validate_organization(payload.get("organizationId"))
+        department_id = payload.get("departmentId") or payload.get("organizationId")
+        manager_user_id = payload.get("managerUserId")
+        self._validate_organization(department_id)
+        self._validate_manager_user(manager_user_id)
+        role_ids = list(dict.fromkeys(payload.get("roleIds") or ["role-default-user"]))
+        if not self.repository.role_ids_exist(role_ids):
+            raise ValidationFailureError("One or more roles do not exist.", {"roleIds": role_ids})
         self._validate_unique_identity(
             username=payload["username"],
             email=str(payload["email"]),
         )
         try:
-            return self.repository.create_user_with_credential(
+            created = self.repository.create_user_with_credential(
                 user_values=self._to_user_values(payload),
                 password_hash=hash_password(payload["password"]),
                 password_algorithm=PASSWORD_ALGORITHM,
                 must_change_password=bool(payload.get("mustChangePassword", True)),
+                role_ids=role_ids,
             )
+            self.repository.replace_primary_department_mapping(created["id"], department_id)
+            self.repository.replace_manager_relation(created["id"], manager_user_id, department_id)
+            return self.get_user(created["id"])
         except sqlite3.IntegrityError as exc:
             raise ConflictError("User identity already exists.") from exc
 
     def update_user(self, user_id: str, payload: dict[str, Any]) -> dict[str, Any]:
-        self.get_user(user_id)
-        self._validate_organization(payload.get("organizationId"))
-        self._validate_unique_identity(
-            username=payload["username"],
-            email=str(payload["email"]),
-            exclude_user_id=user_id,
-        )
-        updated = self.repository.update_user_values(
-            user_id,
-            self._to_user_values(payload),
-        )
-        if updated is None:
-            raise ResourceNotFoundError("User not found.", {"id": user_id})
-        return updated
+        
+        try:
+            self.get_user(user_id)
+            department_id = payload.get("departmentId") or payload.get("organizationId")
+            manager_user_id = payload.get("managerUserId")
+            self._validate_organization(department_id)
+            self._validate_manager_user(manager_user_id, user_id=user_id)
+            role_ids = payload.get("roleIds")
+            unique_role_ids: list[str] = []
+            if role_ids is not None:
+                unique_role_ids = list(dict.fromkeys(role_ids or ["role-default-user"]))
+                if not self.repository.role_ids_exist(unique_role_ids):
+                    raise ValidationFailureError("One or more roles do not exist.", {"roleIds": unique_role_ids})
+
+            self._validate_unique_identity(
+                username=payload["username"],
+                email=str(payload["email"]),
+                exclude_user_id=user_id,
+            )
+
+            user_values = self._to_user_values(payload)
+            updated = self.repository.update_user_values(
+                user_id,
+                user_values,
+            )
+            if updated is None:
+                raise ResourceNotFoundError("User not found.", {"id": user_id})
+
+            if role_ids is not None:
+                self.repository.replace_user_roles(
+                    user_id,
+                    unique_role_ids,
+                    department_id,
+                )
+
+            self.repository.replace_primary_department_mapping(user_id, department_id)
+            self.repository.replace_manager_relation(user_id, manager_user_id, department_id)
+
+            return self.get_user(user_id)
+        except Exception as exc:
+            raise
 
     def update_profile(self, user_id: str, payload: dict[str, Any]) -> dict[str, Any]:
         self.get_user(user_id)
@@ -186,6 +223,14 @@ class UserManagementService:
                 {"organizationId": organization_id},
             )
 
+    def _validate_manager_user(self, manager_user_id: str | None, *, user_id: str | None = None) -> None:
+        if not manager_user_id:
+            return
+        if user_id and manager_user_id == user_id:
+            raise ValidationFailureError("Manager and user cannot be the same user.", {"managerUserId": manager_user_id})
+        if not self.repository.user_exists(manager_user_id):
+            raise ValidationFailureError("Manager user does not exist or is inactive.", {"managerUserId": manager_user_id})
+
     def _validate_unique_identity(
         self,
         *,
@@ -213,7 +258,7 @@ class UserManagementService:
             "email": str(payload["email"]),
             "display_name": payload["displayName"],
             "employee_no": payload.get("employeeNo", ""),
-            "organization_id": payload.get("organizationId"),
+            "organization_id": payload.get("departmentId") or payload.get("organizationId"),
             "status": payload.get("status", "ACTIVE"),
             "locale": payload.get("locale", "zh-TW"),
             "timezone": payload.get("timezone", "Asia/Taipei"),

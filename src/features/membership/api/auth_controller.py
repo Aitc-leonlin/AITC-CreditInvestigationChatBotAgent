@@ -117,8 +117,13 @@ async def forgot_password(payload: ForgotPasswordCommand, request: Request):
     "/reset-password",
     response_model=StandardResponse[dict[str, bool]],
 )
-async def reset_password(payload: ResetPasswordCommand):
-    return ok(auth_service().reset_password(token=payload.token, new_password=payload.newPassword))
+async def reset_password(payload: ResetPasswordCommand, request: Request):
+    return ok(auth_service().reset_password(
+        token=payload.token,
+        new_password=payload.newPassword,
+        ip_address=request_ip(request),
+        user_agent=request_user_agent(request),
+    ))
 
 
 @membership_auth_router.post(
@@ -142,5 +147,9 @@ async def request_email_verification(
     "/email-verification/verify",
     response_model=StandardResponse[dict[str, bool]],
 )
-async def verify_email(payload: EmailVerificationCommand):
-    return ok(auth_service().verify_email(token=payload.token))
+async def verify_email(payload: EmailVerificationCommand, request: Request):
+    return ok(auth_service().verify_email(
+        token=payload.token,
+        ip_address=request_ip(request),
+        user_agent=request_user_agent(request),
+    ))

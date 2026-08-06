@@ -212,5 +212,9 @@ generated-reports/credit-reports/
 # output
 output/
 
+# Generated Audit Log TXT archives (keep the directory itself in source control)
+storage/audit_log_archives/*
+!storage/audit_log_archives/.gitkeep
+
 # scripts
 scripts/

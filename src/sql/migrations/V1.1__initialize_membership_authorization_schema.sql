@@ -88,32 +88,6 @@ CREATE TABLE IF NOT EXISTS membership_role (
     deleted_at TEXT
 );
 
-CREATE TABLE IF NOT EXISTS membership_permission_group (
-    id TEXT PRIMARY KEY,
-    code TEXT NOT NULL UNIQUE,
-    name TEXT NOT NULL,
-    description TEXT NOT NULL DEFAULT '',
-    status TEXT NOT NULL DEFAULT 'ACTIVE',
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TEXT
-);
-
-CREATE TABLE IF NOT EXISTS membership_permission (
-    id TEXT PRIMARY KEY,
-    code TEXT NOT NULL UNIQUE,
-    name TEXT NOT NULL,
-    description TEXT NOT NULL DEFAULT '',
-    action TEXT NOT NULL,
-    group_id TEXT,
-    status TEXT NOT NULL DEFAULT 'ACTIVE',
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TEXT,
-
-    FOREIGN KEY (group_id) REFERENCES membership_permission_group(id)
-);
-
 CREATE TABLE IF NOT EXISTS membership_user_role (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
@@ -134,50 +108,14 @@ CREATE TABLE IF NOT EXISTS membership_user_role (
 CREATE TABLE IF NOT EXISTS membership_role_permission (
     id TEXT PRIMARY KEY,
     role_id TEXT NOT NULL,
-    permission_id TEXT NOT NULL,
+    permission_code TEXT NOT NULL DEFAULT '',
     effect TEXT NOT NULL DEFAULT 'ALLOW',
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_at TEXT,
 
-    UNIQUE (role_id, permission_id),
-    FOREIGN KEY (role_id) REFERENCES membership_role(id),
-    FOREIGN KEY (permission_id) REFERENCES membership_permission(id)
-);
-
-CREATE TABLE IF NOT EXISTS membership_menu_item (
-    id TEXT PRIMARY KEY,
-    code TEXT NOT NULL UNIQUE,
-    title TEXT NOT NULL,
-    parent_id TEXT,
-    route_path TEXT NOT NULL DEFAULT '',
-    component_key TEXT NOT NULL DEFAULT '',
-    icon TEXT NOT NULL DEFAULT '',
-    sort_order INTEGER NOT NULL DEFAULT 0,
-    status TEXT NOT NULL DEFAULT 'ACTIVE',
-    required_permission_code TEXT,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TEXT,
-
-    FOREIGN KEY (parent_id) REFERENCES membership_menu_item(id)
-);
-
-CREATE TABLE IF NOT EXISTS membership_role_menu_permission (
-    id TEXT PRIMARY KEY,
-    role_id TEXT NOT NULL,
-    menu_item_id TEXT NOT NULL,
-    can_view INTEGER NOT NULL DEFAULT 1,
-    can_create INTEGER NOT NULL DEFAULT 0,
-    can_update INTEGER NOT NULL DEFAULT 0,
-    can_delete INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TEXT,
-
-    UNIQUE (role_id, menu_item_id),
-    FOREIGN KEY (role_id) REFERENCES membership_role(id),
-    FOREIGN KEY (menu_item_id) REFERENCES membership_menu_item(id)
+    UNIQUE (role_id, permission_code),
+    FOREIGN KEY (role_id) REFERENCES membership_role(id)
 );
 
 CREATE TABLE IF NOT EXISTS membership_data_scope (
@@ -439,15 +377,7 @@ ON membership_role_permission(role_id)
 WHERE deleted_at IS NULL;
 
 CREATE INDEX IF NOT EXISTS idx_membership_role_permission_permission
-ON membership_role_permission(permission_id)
-WHERE deleted_at IS NULL;
-
-CREATE INDEX IF NOT EXISTS idx_membership_permission_group
-ON membership_permission(group_id)
-WHERE deleted_at IS NULL;
-
-CREATE INDEX IF NOT EXISTS idx_membership_menu_parent
-ON membership_menu_item(parent_id, sort_order)
+ON membership_role_permission(permission_code)
 WHERE deleted_at IS NULL;
 
 CREATE INDEX IF NOT EXISTS idx_membership_session_user

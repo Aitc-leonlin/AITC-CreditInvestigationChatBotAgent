@@ -6,7 +6,7 @@
 
 from fastapi import Depends, Query, status
 
-from src.features.membership.core.auth_middleware import require_authenticated_user, require_permission
+from src.features.membership.core.auth_middleware import require_any_permission, require_authenticated_user, require_permission
 from src.features.membership.api.base import create_membership_router
 from src.features.membership.core.responses import ok
 from src.features.membership.schemas.common import StandardResponse
@@ -46,7 +46,7 @@ async def list_users(
     status: str = Query(default=""),
     organizationId: str = Query(default=""),
     locked: bool | None = Query(default=None),
-    _: dict = Depends(require_permission("membership.read")),
+    _: dict = Depends(require_any_permission(["membership.read", "membership.user-roles"])),
 ):
     return ok(
         user_service().list_users(

@@ -16,6 +16,45 @@ This project is a backend server for a Credit Investigation ChatBot, implemented
 
 If you want a single command similar to `package.json` scripts, use the included `Makefile`. `make start` will create `venv`, install `requirements.txt`, then run `app.py`. If dependencies are already installed and you only want to start the app, use `make run`.
 
+## LLM Provider
+
+The backend uses `src/features/chatbot/core/providers/chat_openAI_provider.py` as the shared chat model provider. Existing behavior remains OpenAI by default:
+
+```bash
+LLM_PROVIDER=openai
+OPENAI_API_KEY=your-openai-api-key
+OPENAI_MODEL_NAME=gpt-5-mini
+```
+
+To use an OpenAI-compatible local LLM server, switch only the environment variables:
+
+```bash
+LLM_PROVIDER=local
+LOCAL_LLM_BASE_URL=http://192.168.20.169:8004/v1
+LOCAL_LLM_MODEL_NAME=JunHowie/Qwen3-30B-A3B-Instruct-2507-GPTQ-Int4
+LOCAL_LLM_API_KEY=not-needed
+```
+
+`LOCAL_LLM_BASE_URL` may also be set to a full chat completions endpoint such as `http://192.168.20.169:8004/v1/chat/completions`; the provider normalizes it to the `/v1` base URL required by LangChain.
+
+## Regression Tests
+
+Run the backend regression suite with:
+
+```bash
+make test-regression
+```
+
+The runner first prints the current FastAPI API feature inventory, then executes contract and CRUD checks. It copies `FinancialStatementXBRL.db` to a temporary SQLite file and sets `SQLITE_DB_PATH` to that copy, so test writes do not modify the project database.
+
+To only list the current API features:
+
+```bash
+venv/bin/python scripts/run_regression_tests.py --list-only
+```
+
+The default suite avoids successful chatbot/report generation calls because those paths may invoke an external or local LLM. It still verifies protected chatbot auth behavior and local LLM provider URL normalization.
+
 ## Project Structure
 - `app.py`: Main entry point for the backend server.
 - `requirements.txt`: Python dependencies.

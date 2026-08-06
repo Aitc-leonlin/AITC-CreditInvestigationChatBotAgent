@@ -25,6 +25,7 @@ class ReportGeneratorRequest(BaseModel):
     companyCode: str = Field(min_length=1)
     companyLabel: str = ""
     year: int
+    generatedBy: str = ""
 
 
 def content_disposition(filename: str) -> str:
@@ -43,6 +44,7 @@ async def generate_report(request: ReportGeneratorRequest):
             company_code=request.companyCode.strip(),
             company_label=request.companyLabel.strip(),
             year=request.year,
+            generated_by=request.generatedBy.strip(),
         )
     except ReportGenerationError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error

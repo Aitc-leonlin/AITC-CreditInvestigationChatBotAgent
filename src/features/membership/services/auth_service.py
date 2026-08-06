@@ -10,6 +10,7 @@ from src.features.membership.core.tokens import generate_opaque_token, hash_toke
 from src.features.membership.core.time import utc_now_iso
 from src.features.membership.repositories.auth_repository import AuthRepository
 from src.features.membership.services.bootstrap_service import apply_membership_migration
+from src.features.membership.services.audit_service import AuditService
 
 
 ACCESS_TOKEN_TTL_SECONDS = int(os.getenv("MEMBERSHIP_ACCESS_TOKEN_TTL_SECONDS", "900"))
@@ -27,6 +28,7 @@ class AuthService:
     def __init__(self, repository: AuthRepository | None = None):
         apply_membership_migration()
         self.repository = repository or AuthRepository()
+        self.audit = AuditService()
 
     def login(
         self,
@@ -39,8 +41,31 @@ class AuthService:
     ) -> dict[str, Any]:
         user = self.repository.find_user_by_login(login)
         if user is None:
+            self.audit.record(
+                actor_user_id=None,
+                action="auth.login.failed",
+                resource_type="membership_user",
+                resource_id=login.strip(),
+                outcome="FAILURE",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                metadata={"module": "登入與帳號", "actionLabel": "登入失敗", "reason": "ACCOUNT_NOT_FOUND"},
+            )
             raise UnauthorizedError("Invalid username/email or password.")
-        self._assert_user_can_login(user)
+        try:
+            self._assert_user_can_login(user)
+        except Exception as exc:
+            self.audit.record(
+                actor_user_id=user["id"],
+                action="auth.login.failed",
+                resource_type="membership_user",
+                resource_id=user["id"],
+                outcome="FAILURE",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                metadata={"module": "登入與帳號", "actionLabel": "登入失敗", "reason": type(exc).__name__},
+            )
+            raise
 
         if not verify_password(password, user["password_hash"]):
             failed_count = int(user.get("failed_login_count") or 0) + 1
@@ -131,6 +156,15 @@ class AuthService:
         # 並把 token 回傳給前端供開發測試；正式產品應改由 mail worker 寄出重設連結。
         user = self.repository.find_user_by_login(email)
         if user is None:
+            self.audit.record(
+                actor_user_id=None,
+                action="auth.password.forgot",
+                resource_type="membership_user",
+                resource_id=email.strip().lower(),
+                ip_address=ip_address,
+                user_agent=user_agent,
+                metadata={"module": "登入與帳號", "actionLabel": "忘記密碼", "accountFound": False},
+            )
             return {"accepted": True, "resetToken": None}
         token = generate_opaque_token()
         self.repository.create_password_reset_token(
@@ -140,13 +174,41 @@ class AuthService:
             ip_address=ip_address,
             user_agent=user_agent,
         )
+        self.audit.record(
+            actor_user_id=None,
+            action="auth.password.forgot",
+            resource_type="membership_user",
+            resource_id=user["id"],
+            ip_address=ip_address,
+            user_agent=user_agent,
+            metadata={"module": "登入與帳號", "actionLabel": "忘記密碼", "accountFound": True},
+        )
         return {"accepted": True, "resetToken": token}
 
-    def reset_password(self, *, token: str, new_password: str) -> dict[str, bool]:
+    def reset_password(self, *, token: str, new_password: str, ip_address: str = "", user_agent: str = "") -> dict[str, bool]:
         token_row = self.repository.get_password_reset_token(hash_token(token))
         if token_row is None:
+            self.audit.record(
+                actor_user_id=None,
+                action="auth.password.reset",
+                resource_type="membership_user",
+                outcome="FAILURE",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                metadata={"module": "登入與帳號", "actionLabel": "重設密碼", "reason": "INVALID_TOKEN"},
+            )
             raise ValidationFailureError("Invalid password reset token.")
         if self._is_past(token_row["expires_at"]):
+            self.audit.record(
+                actor_user_id=None,
+                action="auth.password.reset",
+                resource_type="membership_user",
+                resource_id=token_row["user_id"],
+                outcome="FAILURE",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                metadata={"module": "登入與帳號", "actionLabel": "重設密碼", "reason": "EXPIRED_TOKEN"},
+            )
             raise ValidationFailureError("Password reset token expired.")
         self.repository.update_password(
             user_id=token_row["user_id"],
@@ -154,6 +216,15 @@ class AuthService:
             password_algorithm=PASSWORD_ALGORITHM,
         )
         self.repository.mark_password_reset_used(token_row["id"])
+        self.audit.record(
+            actor_user_id=None,
+            action="auth.password.reset",
+            resource_type="membership_user",
+            resource_id=token_row["user_id"],
+            ip_address=ip_address,
+            user_agent=user_agent,
+            metadata={"module": "登入與帳號", "actionLabel": "重設密碼"},
+        )
         return {"reset": True}
 
     def request_email_verification(
@@ -178,17 +249,54 @@ class AuthService:
             ip_address=ip_address,
             user_agent=user_agent,
         )
+        self.audit.record(
+            actor_user_id=user_id,
+            action="auth.email_verification.request",
+            resource_type="membership_user",
+            resource_id=user_id,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            metadata={"module": "登入與帳號", "actionLabel": "Email驗證", "phase": "REQUEST"},
+        )
         return {"accepted": True, "verificationToken": token}
 
-    def verify_email(self, *, token: str) -> dict[str, bool]:
+    def verify_email(self, *, token: str, ip_address: str = "", user_agent: str = "") -> dict[str, bool]:
         token_row = self.repository.get_email_verification_token(hash_token(token))
         if token_row is None:
+            self.audit.record(
+                actor_user_id=None,
+                action="auth.email_verification.verify",
+                resource_type="membership_user",
+                outcome="FAILURE",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                metadata={"module": "登入與帳號", "actionLabel": "Email驗證", "phase": "VERIFY", "reason": "INVALID_TOKEN"},
+            )
             raise ValidationFailureError("Invalid email verification token.")
         if self._is_past(token_row["expires_at"]):
+            self.audit.record(
+                actor_user_id=None,
+                action="auth.email_verification.verify",
+                resource_type="membership_user",
+                resource_id=token_row["user_id"],
+                outcome="FAILURE",
+                ip_address=ip_address,
+                user_agent=user_agent,
+                metadata={"module": "登入與帳號", "actionLabel": "Email驗證", "phase": "VERIFY", "reason": "EXPIRED_TOKEN"},
+            )
             raise ValidationFailureError("Email verification token expired.")
         self.repository.mark_email_verified(
             token_id=token_row["id"],
             user_id=token_row["user_id"],
+        )
+        self.audit.record(
+            actor_user_id=None,
+            action="auth.email_verification.verify",
+            resource_type="membership_user",
+            resource_id=token_row["user_id"],
+            ip_address=ip_address,
+            user_agent=user_agent,
+            metadata={"module": "登入與帳號", "actionLabel": "Email驗證", "phase": "VERIFY"},
         )
         return {"verified": True}
 

@@ -7,7 +7,7 @@
 from fastapi import Depends, Query
 
 from src.features.membership.api.base import create_membership_router
-from src.features.membership.core.auth_middleware import require_authenticated_user, require_permission
+from src.features.membership.core.auth_middleware import require_any_permission, require_authenticated_user, require_permission
 from src.features.membership.core.responses import ok
 from src.features.membership.schemas.common import StandardResponse
 from src.features.membership.schemas.rbac import (
@@ -38,6 +38,7 @@ RBAC_VIEW = "rbac.view"
 RBAC_ADD = "rbac.add"
 RBAC_EDIT = "rbac.edit"
 RBAC_DELETE = "rbac.delete"
+USER_ROLES_ALL = "membership.user-roles"
 
 
 @rbac_router.get(
@@ -55,7 +56,7 @@ async def get_my_permissions(user: dict = Depends(require_authenticated_user)):
 async def list_roles(
     keyword: str = Query(default=""),
     status: str = Query(default=""),
-    _: dict = Depends(require_permission(RBAC_VIEW)),
+    _: dict = Depends(require_any_permission([RBAC_VIEW, USER_ROLES_ALL])),
 ):
     return ok(rbac_service().list_roles(keyword=keyword, status_filter=status))
 
@@ -151,7 +152,7 @@ async def set_role_permissions(
 )
 async def get_user_roles(
     user_id: str,
-    _: dict = Depends(require_permission(RBAC_VIEW)),
+    _: dict = Depends(require_any_permission([RBAC_VIEW, USER_ROLES_ALL])),
 ):
     return ok(rbac_service().get_user_roles(user_id))
 
@@ -163,7 +164,7 @@ async def get_user_roles(
 async def set_user_roles(
     user_id: str,
     payload: UserRolesCommand,
-    _: dict = Depends(require_permission(RBAC_EDIT)),
+    _: dict = Depends(require_any_permission([RBAC_EDIT, USER_ROLES_ALL])),
 ):
     return ok(
         rbac_service().set_user_roles(

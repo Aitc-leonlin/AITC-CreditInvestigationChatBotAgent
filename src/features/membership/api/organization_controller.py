@@ -8,7 +8,7 @@ field rule、masking rule。資料權限規則目前是設定資料，尚未套�
 from fastapi import Depends, Query, status
 
 from src.features.membership.api.base import create_membership_router
-from src.features.membership.core.auth_middleware import require_authenticated_user, require_permission
+from src.features.membership.core.auth_middleware import require_any_permission, require_authenticated_user, require_permission
 from src.features.membership.core.responses import ok
 from src.features.membership.schemas.common import StandardResponse
 from src.features.membership.schemas.organization import (
@@ -54,7 +54,7 @@ async def list_units(
     keyword: str = Query(default=""),
     unitType: str = Query(default=""),
     status: str = Query(default=""),
-    _: dict = Depends(require_permission(ORG_SCOPE_VIEW)),
+    _: dict = Depends(require_any_permission([ORG_SCOPE_VIEW, "membership.write"])),
 ):
     return ok(organization_service().list_units(keyword=keyword, unit_type=unitType, status_filter=status))
 

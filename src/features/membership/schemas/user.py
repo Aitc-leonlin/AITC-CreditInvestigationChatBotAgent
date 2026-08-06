@@ -26,11 +26,14 @@ class UserCreateCommand(BaseModel):
     displayName: str = Field(min_length=1, max_length=100)
     employeeNo: str = Field(default="", max_length=50)
     organizationId: str | None = None
+    departmentId: str | None = None
+    managerUserId: str | None = None
     status: UserStatus = "ACTIVE"
     locale: str = Field(default="zh-TW", max_length=20)
     timezone: str = Field(default="Asia/Taipei", max_length=60)
     password: str = Field(min_length=8, max_length=128)
     mustChangePassword: bool = True
+    roleIds: list[str] = Field(default_factory=lambda: ["role-default-user"])
 
     @field_validator("username")
     @classmethod
@@ -54,9 +57,12 @@ class UserUpdateCommand(BaseModel):
     displayName: str = Field(min_length=1, max_length=100)
     employeeNo: str = Field(default="", max_length=50)
     organizationId: str | None = None
+    departmentId: str | None = None
+    managerUserId: str | None = None
     status: UserStatus = "ACTIVE"
     locale: str = Field(default="zh-TW", max_length=20)
     timezone: str = Field(default="Asia/Taipei", max_length=60)
+    roleIds: list[str] | None = None
 
     @field_validator("username")
     @classmethod
@@ -120,6 +126,10 @@ class UserResponse(BaseModel):
     employeeNo: str
     organizationId: str | None
     organizationName: str | None
+    departmentId: str | None = None
+    departmentName: str | None = None
+    managerUserId: str | None = None
+    managerDisplayName: str | None = None
     status: str
     locale: str
     timezone: str

@@ -1165,6 +1165,7 @@ def insert_report_history(
     company_label: str,
     year: int,
     generated_at: datetime,
+    generated_by: str,
     file_path: Path,
 ) -> dict[str, Any]:
     file_size = format_file_size(file_path.stat().st_size)
@@ -1205,7 +1206,7 @@ def insert_report_history(
                 REPORT_TYPE,
                 generated_at_iso,
                 generated_at_display,
-                REPORT_GENERATED_BY,
+                generated_by,
                 REPORT_STATUS_DONE,
                 file_size,
                 file_path.name,
@@ -1434,6 +1435,7 @@ def generate_and_store_credit_report(
     company_code: str,
     company_label: str,
     year: int,
+    generated_by: str = "",
 ) -> tuple[bytes, str, dict[str, Any], dict[str, Any]]:
     report_result = generate_credit_report_docx(
         company_code=company_code,
@@ -1443,9 +1445,10 @@ def generate_and_store_credit_report(
     report_bytes = report_result["report_bytes"]
     generated_at = datetime.now()
     company_name = company_full_name_from_label(company_label, company_code)
+    report_generated_by = generated_by.strip() or REPORT_GENERATED_BY
     title = f"{year} 年度徵審報告"
     timestamp = generated_at.strftime("%Y%m%d_%H%M%S")
-    file_stem = sanitize_filename(f"{company_name}{year}徵審報告_{timestamp}_{REPORT_GENERATED_BY}")
+    file_stem = sanitize_filename(f"{company_name}{year}徵審報告_{timestamp}_{report_generated_by}")
     file_name = f"{file_stem}.docx"
     file_path = generated_reports_dir() / file_name
     file_path.write_bytes(report_bytes)
@@ -1457,6 +1460,7 @@ def generate_and_store_credit_report(
         company_label=company_label,
         year=year,
         generated_at=generated_at,
+        generated_by=report_generated_by,
         file_path=file_path,
     )
     dashboard_item = upsert_report_dashboard(

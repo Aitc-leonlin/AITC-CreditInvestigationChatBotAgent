@@ -21,13 +21,29 @@ class NotificationAdminService:
         action: str,
         resource_type: str,
         outcome: str,
+        actions: list[str] | None = None,
     ) -> dict[str, Any]:
         return self.repository.list_audit_logs(
             page=page,
             page_size=page_size,
             action=action,
+            actions=actions,
             resource_type=resource_type,
             outcome=outcome,
+        )
+
+    def get_audit_retention_setting(self) -> dict[str, Any]:
+        return self.repository.get_audit_retention_setting()
+
+    def update_audit_retention_setting(
+        self,
+        *,
+        retention_days: int,
+        updated_by_user_id: str,
+    ) -> dict[str, Any]:
+        return self.repository.update_audit_retention_setting(
+            retention_days=retention_days,
+            updated_by_user_id=updated_by_user_id,
         )
 
     def list_templates(self) -> list[dict[str, Any]]:

@@ -48,6 +48,10 @@ class MembershipUserRepository(UserRepository):
                 SELECT
                     u.*,
                     o.name AS organization_name,
+                    department_mapping.organization_id AS department_id,
+                    department.name AS department_name,
+                    manager_relation.manager_user_id,
+                    manager.display_name AS manager_display_name,
                     c.locked_until,
                     c.failed_login_count,
                     c.must_change_password,
@@ -57,6 +61,29 @@ class MembershipUserRepository(UserRepository):
                     ON c.user_id = u.id AND c.deleted_at IS NULL
                 LEFT JOIN membership_organization_unit o
                     ON o.id = u.organization_id AND o.deleted_at IS NULL
+                LEFT JOIN membership_user_department_mapping department_mapping
+                    ON department_mapping.id = (
+                        SELECT dm.id
+                        FROM membership_user_department_mapping dm
+                        WHERE dm.user_id = u.id
+                          AND dm.deleted_at IS NULL
+                        ORDER BY dm.is_primary DESC, dm.updated_at DESC, dm.created_at DESC
+                        LIMIT 1
+                    )
+                LEFT JOIN membership_organization_unit department
+                    ON department.id = department_mapping.organization_id AND department.deleted_at IS NULL
+                LEFT JOIN membership_user_manager_relation manager_relation
+                    ON manager_relation.id = (
+                        SELECT mr.id
+                        FROM membership_user_manager_relation mr
+                        WHERE mr.employee_user_id = u.id
+                          AND mr.deleted_at IS NULL
+                          AND mr.status = 'ACTIVE'
+                        ORDER BY mr.updated_at DESC, mr.created_at DESC
+                        LIMIT 1
+                    )
+                LEFT JOIN membership_user manager
+                    ON manager.id = manager_relation.manager_user_id AND manager.deleted_at IS NULL
                 WHERE u.deleted_at IS NULL
                 {where_sql}
                 ORDER BY u.created_at DESC, u.id DESC
@@ -83,6 +110,10 @@ class MembershipUserRepository(UserRepository):
                 SELECT
                     u.*,
                     o.name AS organization_name,
+                    department_mapping.organization_id AS department_id,
+                    department.name AS department_name,
+                    manager_relation.manager_user_id,
+                    manager.display_name AS manager_display_name,
                     c.locked_until,
                     c.failed_login_count,
                     c.must_change_password,
@@ -92,6 +123,29 @@ class MembershipUserRepository(UserRepository):
                     ON c.user_id = u.id AND c.deleted_at IS NULL
                 LEFT JOIN membership_organization_unit o
                     ON o.id = u.organization_id AND o.deleted_at IS NULL
+                LEFT JOIN membership_user_department_mapping department_mapping
+                    ON department_mapping.id = (
+                        SELECT dm.id
+                        FROM membership_user_department_mapping dm
+                        WHERE dm.user_id = u.id
+                          AND dm.deleted_at IS NULL
+                        ORDER BY dm.is_primary DESC, dm.updated_at DESC, dm.created_at DESC
+                        LIMIT 1
+                    )
+                LEFT JOIN membership_organization_unit department
+                    ON department.id = department_mapping.organization_id AND department.deleted_at IS NULL
+                LEFT JOIN membership_user_manager_relation manager_relation
+                    ON manager_relation.id = (
+                        SELECT mr.id
+                        FROM membership_user_manager_relation mr
+                        WHERE mr.employee_user_id = u.id
+                          AND mr.deleted_at IS NULL
+                          AND mr.status = 'ACTIVE'
+                        ORDER BY mr.updated_at DESC, mr.created_at DESC
+                        LIMIT 1
+                    )
+                LEFT JOIN membership_user manager
+                    ON manager.id = manager_relation.manager_user_id AND manager.deleted_at IS NULL
                 WHERE u.id = ? AND u.deleted_at IS NULL
                 """,
                 [user_id],
@@ -122,6 +176,7 @@ class MembershipUserRepository(UserRepository):
         password_hash: str,
         password_algorithm: str,
         must_change_password: bool,
+        role_ids: list[str] | None = None,
     ) -> dict[str, Any]:
         user_id = str(user_values.get("id") or uuid.uuid4())
         now = utc_now_iso()
@@ -150,6 +205,18 @@ class MembershipUserRepository(UserRepository):
         with membership_transaction() as connection:
             self._insert(connection, "membership_user", user_payload)
             self._insert(connection, "membership_user_credential", credential_payload)
+            for role_id in role_ids or []:
+                self._insert(connection, "membership_user_role", {
+                    "id": f"user-role-{user_id}-{role_id}",
+                    "user_id": user_id,
+                    "role_id": role_id,
+                    "organization_id": user_values.get("organization_id"),
+                    "effective_from": now,
+                    "effective_to": None,
+                    "created_at": now,
+                    "updated_at": now,
+                    "deleted_at": None,
+                })
 
         created = self.get_user_detail(user_id)
         if created is None:
@@ -173,6 +240,85 @@ class MembershipUserRepository(UserRepository):
             if cursor.rowcount == 0:
                 return None
         return self.get_user_detail(user_id)
+
+    def replace_primary_department_mapping(self, user_id: str, organization_id: str | None) -> None:
+        now = utc_now_iso()
+        with membership_transaction() as connection:
+            connection.execute(
+                """
+                UPDATE membership_user_department_mapping
+                SET deleted_at = ?, updated_at = ?
+                WHERE user_id = ? AND deleted_at IS NULL
+                """,
+                [now, now, user_id],
+            )
+            if organization_id:
+                self._insert(connection, "membership_user_department_mapping", {
+                    "id": str(uuid.uuid4()),
+                    "user_id": user_id,
+                    "organization_id": organization_id,
+                    "position_id": None,
+                    "is_primary": 1,
+                    "effective_from": now,
+                    "effective_to": None,
+                    "created_at": now,
+                    "updated_at": now,
+                    "deleted_at": None,
+                })
+            connection.execute(
+                """
+                UPDATE membership_user
+                SET organization_id = ?, updated_at = ?
+                WHERE id = ? AND deleted_at IS NULL
+                """,
+                [organization_id, now, user_id],
+            )
+
+    def replace_manager_relation(self, user_id: str, manager_user_id: str | None, organization_id: str | None) -> None:
+        now = utc_now_iso()
+        with membership_transaction() as connection:
+            connection.execute(
+                """
+                UPDATE membership_user_manager_relation
+                SET deleted_at = ?, updated_at = ?
+                WHERE employee_user_id = ? AND deleted_at IS NULL
+                """,
+                [now, now, user_id],
+            )
+            if manager_user_id:
+                connection.execute(
+                    """
+                    INSERT OR REPLACE INTO membership_user_manager_relation (
+                        id, manager_user_id, employee_user_id, organization_id,
+                        relation_type, status, created_at, updated_at, deleted_at
+                    )
+                    VALUES (?, ?, ?, ?, 'DIRECT', 'ACTIVE', ?, ?, NULL)
+                    """,
+                    [str(uuid.uuid4()), manager_user_id, user_id, organization_id, now, now],
+                )
+
+    def replace_user_roles(self, user_id: str, role_ids: list[str], organization_id: str | None) -> None:
+        now = utc_now_iso()
+        with membership_transaction() as connection:
+            connection.execute(
+                """
+                UPDATE membership_user_role
+                SET deleted_at = ?, updated_at = ?
+                WHERE user_id = ? AND deleted_at IS NULL
+                """,
+                [now, now, user_id],
+            )
+            for role_id in role_ids:
+                connection.execute(
+                    """
+                    INSERT OR REPLACE INTO membership_user_role (
+                        id, user_id, role_id, organization_id, effective_from,
+                        effective_to, created_at, updated_at, deleted_at
+                    )
+                    VALUES (?, ?, ?, ?, ?, NULL, ?, ?, NULL)
+                    """,
+                    [f"user-role-{user_id}-{role_id}", user_id, role_id, organization_id, now, now, now],
+                )
 
     def update_credential_values(self, user_id: str, values: dict[str, Any]) -> bool:
         payload = {**values, "updated_at": utc_now_iso()}
@@ -277,9 +423,46 @@ class MembershipUserRepository(UserRepository):
                 """,
                 [organization_id],
             ).fetchone()
-            return row is not None
         finally:
             connection.close()
+        return row is not None
+
+    def user_exists(self, user_id: str | None) -> bool:
+        if not user_id:
+            return True
+        connection = get_membership_connection()
+        try:
+            row = connection.execute(
+                """
+                SELECT id
+                FROM membership_user
+                WHERE id = ? AND deleted_at IS NULL AND status = 'ACTIVE'
+                """,
+                [user_id],
+            ).fetchone()
+        finally:
+            connection.close()
+        return row is not None
+
+    def role_ids_exist(self, role_ids: list[str]) -> bool:
+        if not role_ids:
+            return True
+        placeholders = ", ".join("?" for _ in role_ids)
+        connection = get_membership_connection()
+        try:
+            count = connection.execute(
+                f"""
+                SELECT COUNT(*) AS total
+                FROM membership_role
+                WHERE id IN ({placeholders})
+                  AND deleted_at IS NULL
+                  AND status = 'ACTIVE'
+                """,
+                role_ids,
+            ).fetchone()["total"]
+        finally:
+            connection.close()
+        return count == len(set(role_ids))
 
     def _build_user_filter_clause(
         self,
@@ -336,6 +519,10 @@ class MembershipUserRepository(UserRepository):
             "employeeNo": row["employee_no"],
             "organizationId": row["organization_id"],
             "organizationName": row["organization_name"],
+            "departmentId": row["department_id"],
+            "departmentName": row["department_name"],
+            "managerUserId": row["manager_user_id"],
+            "managerDisplayName": row["manager_display_name"],
             "status": row["status"],
             "locale": row["locale"],
             "timezone": row["timezone"],

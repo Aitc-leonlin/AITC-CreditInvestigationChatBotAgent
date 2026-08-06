@@ -4,6 +4,13 @@ import uuid
 from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
+from src.features.membership.core.permission_registry import (
+    PERMISSION_CODE_TO_LEGACY_ID,
+    permission_by_code,
+    permission_exists,
+    permission_group_rows,
+    permission_rows,
+)
 from src.features.membership.core.time import utc_now_iso
 
 
@@ -15,7 +22,7 @@ class RbacRepository:
                 f"""
                 SELECT r.*,
                        COUNT(DISTINCT ur.user_id) AS user_count,
-                       COUNT(DISTINCT rp.permission_id) AS permission_count
+                       COUNT(DISTINCT rp.permission_code) AS permission_count
                 FROM membership_role r
                 LEFT JOIN membership_user_role ur
                     ON ur.role_id = r.id AND ur.deleted_at IS NULL
@@ -36,7 +43,7 @@ class RbacRepository:
                 """
                 SELECT r.*,
                        COUNT(DISTINCT ur.user_id) AS user_count,
-                       COUNT(DISTINCT rp.permission_id) AS permission_count
+                       COUNT(DISTINCT rp.permission_code) AS permission_count
                 FROM membership_role r
                 LEFT JOIN membership_user_role ur
                     ON ur.role_id = r.id AND ur.deleted_at IS NULL
@@ -54,7 +61,7 @@ class RbacRepository:
         now = utc_now_iso()
         payload = {
             "id": role_id,
-            "code": values["code"],
+            "code": self._build_role_code(role_id, values["name"]),
             "name": values["name"],
             "description": values.get("description", ""),
             "role_type": values.get("roleType", "BUSINESS"),
@@ -70,7 +77,7 @@ class RbacRepository:
 
     def update_role(self, role_id: str, values: dict[str, Any]) -> dict[str, Any] | None:
         payload = {
-            "code": values["code"],
+            "code": self._build_role_code(role_id, values["name"]),
             "name": values["name"],
             "description": values.get("description", ""),
             "role_type": values.get("roleType", "BUSINESS"),
@@ -101,183 +108,51 @@ class RbacRepository:
             return cursor.rowcount > 0
 
     def list_permission_groups(self) -> list[dict[str, Any]]:
-        with get_membership_connection() as connection:
-            rows = connection.execute(
-                """
-                SELECT g.*,
-                       COUNT(p.id) AS permission_count
-                FROM membership_permission_group g
-                LEFT JOIN membership_permission p
-                    ON p.group_id = g.id AND p.deleted_at IS NULL
-                WHERE g.deleted_at IS NULL
-                GROUP BY g.id
-                ORDER BY g.code ASC
-                """
-            ).fetchall()
-        return [self.permission_group_row(row) for row in rows]
+        return permission_group_rows()
 
     def create_permission_group(self, values: dict[str, Any]) -> dict[str, Any]:
-        group_id = str(uuid.uuid4())
-        now = utc_now_iso()
-        payload = {
-            "id": group_id,
-            "code": values["code"],
-            "name": values["name"],
-            "description": values.get("description", ""),
-            "status": values.get("status", "ACTIVE"),
-            "created_at": now,
-            "updated_at": now,
-            "deleted_at": None,
-        }
-        with membership_transaction() as connection:
-            self._insert(connection, "membership_permission_group", payload)
-        return self.get_permission_group(group_id) or payload
+        raise RuntimeError("Permission groups are code-defined and cannot be stored in DB.")
 
     def get_permission_group(self, group_id: str) -> dict[str, Any] | None:
-        with get_membership_connection() as connection:
-            row = connection.execute(
-                """
-                SELECT g.*,
-                       COUNT(p.id) AS permission_count
-                FROM membership_permission_group g
-                LEFT JOIN membership_permission p
-                    ON p.group_id = g.id AND p.deleted_at IS NULL
-                WHERE g.id = ? AND g.deleted_at IS NULL
-                GROUP BY g.id
-                """,
-                [group_id],
-            ).fetchone()
-        return self.permission_group_row(row) if row else None
+        return next((group for group in permission_group_rows() if group["id"] == group_id), None)
 
     def update_permission_group(self, group_id: str, values: dict[str, Any]) -> dict[str, Any] | None:
-        payload = {
-            "code": values["code"],
-            "name": values["name"],
-            "description": values.get("description", ""),
-            "status": values.get("status", "ACTIVE"),
-            "updated_at": utc_now_iso(),
-        }
-        assignments = ", ".join(f"{column} = ?" for column in payload)
-        with membership_transaction() as connection:
-            cursor = connection.execute(
-                f"UPDATE membership_permission_group SET {assignments} WHERE id = ? AND deleted_at IS NULL",
-                [*payload.values(), group_id],
-            )
-            if cursor.rowcount == 0:
-                return None
-        return self.get_permission_group(group_id)
+        raise RuntimeError("Permission groups are code-defined and cannot be stored in DB.")
 
     def delete_permission_group(self, group_id: str) -> bool:
-        now = utc_now_iso()
-        with membership_transaction() as connection:
-            cursor = connection.execute(
-                """
-                UPDATE membership_permission_group
-                SET deleted_at = ?, updated_at = ?
-                WHERE id = ? AND deleted_at IS NULL
-                """,
-                [now, now, group_id],
-            )
-            return cursor.rowcount > 0
+        raise RuntimeError("Permission groups are code-defined and cannot be stored in DB.")
 
     def list_permissions(self, *, keyword: str = "", group_id: str = "", status_filter: str = "") -> list[dict[str, Any]]:
-        where_sql, params = self._build_permission_filter(keyword, group_id, status_filter)
-        with get_membership_connection() as connection:
-            rows = connection.execute(
-                f"""
-                SELECT p.*,
-                       g.code AS group_code,
-                       g.name AS group_name
-                FROM membership_permission p
-                LEFT JOIN membership_permission_group g
-                    ON g.id = p.group_id AND g.deleted_at IS NULL
-                WHERE p.deleted_at IS NULL
-                {where_sql}
-                ORDER BY COALESCE(g.code, 'ZZZZZZZZ'), p.action, p.code
-                """,
-                params,
-            ).fetchall()
-        return [self.permission_row(row) for row in rows]
+        return permission_rows(keyword=keyword, group_id=group_id, status_filter=status_filter)
 
     def get_permission(self, permission_id: str) -> dict[str, Any] | None:
-        with get_membership_connection() as connection:
-            row = connection.execute(
-                """
-                SELECT p.*,
-                       g.code AS group_code,
-                       g.name AS group_name
-                FROM membership_permission p
-                LEFT JOIN membership_permission_group g
-                    ON g.id = p.group_id AND g.deleted_at IS NULL
-                WHERE p.id = ? AND p.deleted_at IS NULL
-                """,
-                [permission_id],
-            ).fetchone()
-        return self.permission_row(row) if row else None
+        return permission_by_code(permission_id)
 
     def create_permission(self, values: dict[str, Any]) -> dict[str, Any]:
-        permission_id = str(uuid.uuid4())
-        now = utc_now_iso()
-        payload = {
-            "id": permission_id,
-            "code": values["code"],
-            "name": values["name"],
-            "description": values.get("description", ""),
-            "action": values["action"],
-            "status": values.get("status", "ACTIVE"),
-            "group_id": values.get("groupId"),
-            "created_at": now,
-            "updated_at": now,
-            "deleted_at": None,
-        }
-        with membership_transaction() as connection:
-            self._insert(connection, "membership_permission", payload)
-        return self.get_permission(permission_id) or payload
+        raise RuntimeError("Permissions are code-defined and cannot be stored in DB.")
 
     def update_permission(self, permission_id: str, values: dict[str, Any]) -> dict[str, Any] | None:
-        payload = {
-            "code": values["code"],
-            "name": values["name"],
-            "description": values.get("description", ""),
-            "action": values["action"],
-            "status": values.get("status", "ACTIVE"),
-            "group_id": values.get("groupId"),
-            "updated_at": utc_now_iso(),
-        }
-        assignments = ", ".join(f"{column} = ?" for column in payload)
-        with membership_transaction() as connection:
-            cursor = connection.execute(
-                f"UPDATE membership_permission SET {assignments} WHERE id = ? AND deleted_at IS NULL",
-                [*payload.values(), permission_id],
-            )
-            if cursor.rowcount == 0:
-                return None
-        return self.get_permission(permission_id)
+        raise RuntimeError("Permissions are code-defined and cannot be stored in DB.")
 
     def delete_permission(self, permission_id: str) -> bool:
-        now = utc_now_iso()
-        with membership_transaction() as connection:
-            cursor = connection.execute(
-                """
-                UPDATE membership_permission
-                SET deleted_at = ?, updated_at = ?
-                WHERE id = ? AND deleted_at IS NULL
-                """,
-                [now, now, permission_id],
-            )
-            return cursor.rowcount > 0
+        raise RuntimeError("Permissions are code-defined and cannot be stored in DB.")
 
-    def get_role_permission_ids(self, role_id: str) -> list[str]:
+    def get_role_permission_codes(self, role_id: str) -> list[str]:
         with get_membership_connection() as connection:
             rows = connection.execute(
                 """
-                SELECT permission_id
+                SELECT permission_code
                 FROM membership_role_permission
-                WHERE role_id = ? AND deleted_at IS NULL AND effect = 'ALLOW'
+                WHERE role_id = ?
+                  AND permission_code IS NOT NULL
+                  AND permission_code != ''
+                  AND deleted_at IS NULL
+                  AND effect = 'ALLOW'
+                ORDER BY permission_code
                 """,
                 [role_id],
             ).fetchall()
-        return [row["permission_id"] for row in rows]
+        return [row["permission_code"] for row in rows]
 
     def set_role_permissions(self, role_id: str, permission_ids: list[str]) -> list[str]:
         now = utc_now_iso()
@@ -290,16 +165,20 @@ class RbacRepository:
                 """,
                 [now, now, role_id],
             )
+            columns = self._table_columns(connection, "membership_role_permission")
             for permission_id in permission_ids:
-                connection.execute(
-                    """
-                    INSERT OR REPLACE INTO membership_role_permission (
-                        id, role_id, permission_id, effect, created_at, updated_at, deleted_at
-                    )
-                    VALUES (?, ?, ?, 'ALLOW', ?, ?, NULL)
-                    """,
-                    [f"role-permission-{role_id}-{permission_id}", role_id, permission_id, now, now],
-                )
+                payload = {
+                    "id": f"role-permission-{role_id}-{permission_id}",
+                    "role_id": role_id,
+                    "permission_code": permission_id,
+                    "effect": "ALLOW",
+                    "created_at": now,
+                    "updated_at": now,
+                    "deleted_at": None,
+                }
+                if "permission_id" in columns:
+                    payload["permission_id"] = PERMISSION_CODE_TO_LEGACY_ID.get(permission_id, permission_id)
+                self._insert_or_replace(connection, "membership_role_permission", payload)
             self._insert_notification(
                 connection,
                 recipient_user_id=None,
@@ -309,7 +188,7 @@ class RbacRepository:
                     "changeType": "role_permissions",
                 },
             )
-        return self.get_role_permission_ids(role_id)
+        return self.get_role_permission_codes(role_id)
 
     def get_user_role_ids(self, user_id: str) -> list[str]:
         with get_membership_connection() as connection:
@@ -361,7 +240,7 @@ class RbacRepository:
         with get_membership_connection() as connection:
             rows = connection.execute(
                 """
-                SELECT DISTINCT p.code
+                SELECT DISTINCT rp.permission_code
                 FROM membership_user_role ur
                 JOIN membership_role r
                     ON r.id = ur.role_id
@@ -371,17 +250,15 @@ class RbacRepository:
                     ON rp.role_id = r.id
                    AND rp.deleted_at IS NULL
                    AND rp.effect = 'ALLOW'
-                JOIN membership_permission p
-                    ON p.id = rp.permission_id
-                   AND p.deleted_at IS NULL
-                   AND p.status = 'ACTIVE'
                 WHERE ur.user_id = ?
                   AND ur.deleted_at IS NULL
-                ORDER BY p.code
+                  AND rp.permission_code IS NOT NULL
+                  AND rp.permission_code != ''
+                ORDER BY rp.permission_code
                 """,
                 [user_id],
             ).fetchall()
-        return [row["code"] for row in rows]
+        return [row["permission_code"] for row in rows]
 
     def has_permission(self, user_id: str, permission_code: str) -> bool:
         return permission_code in self.list_user_permissions(user_id)
@@ -390,34 +267,48 @@ class RbacRepository:
         return self.get_role(role_id) is not None
 
     def permission_ids_exist(self, permission_ids: list[str]) -> bool:
-        if not permission_ids:
-            return True
-        placeholders = ", ".join("?" for _ in permission_ids)
-        with get_membership_connection() as connection:
-            count = connection.execute(
-                f"""
-                SELECT COUNT(*) AS total
-                FROM membership_permission
-                WHERE id IN ({placeholders}) AND deleted_at IS NULL
-                """,
-                permission_ids,
-            ).fetchone()["total"]
-        return count == len(set(permission_ids))
+        return all(permission_exists(permission_id) for permission_id in permission_ids)
 
     def role_ids_exist(self, role_ids: list[str]) -> bool:
         if not role_ids:
+            print("[membership.rbac.role_ids_exist]", {"role_ids": [], "exists": True}, flush=True)
             return True
         placeholders = ", ".join("?" for _ in role_ids)
         with get_membership_connection() as connection:
-            count = connection.execute(
+            rows = connection.execute(
                 f"""
-                SELECT COUNT(*) AS total
+                SELECT id, code, name, status, deleted_at
                 FROM membership_role
                 WHERE id IN ({placeholders}) AND deleted_at IS NULL
                 """,
                 role_ids,
-            ).fetchone()["total"]
-        return count == len(set(role_ids))
+            ).fetchall()
+        found_ids = {row["id"] for row in rows}
+        unique_role_ids = set(role_ids)
+        missing_ids = sorted(unique_role_ids - found_ids)
+        exists = len(found_ids) == len(unique_role_ids)
+        print(
+            "[membership.rbac.role_ids_exist]",
+            {
+                "role_ids": role_ids,
+                "unique_role_ids": sorted(unique_role_ids),
+                "found_count": len(found_ids),
+                "expected_count": len(unique_role_ids),
+                "missing_ids": missing_ids,
+                "found_roles": [
+                    {
+                        "id": row["id"],
+                        "code": row["code"],
+                        "name": row["name"],
+                        "status": row["status"],
+                    }
+                    for row in rows
+                ],
+                "exists": exists,
+            },
+            flush=True,
+        )
+        return exists
 
     def user_exists(self, user_id: str) -> bool:
         with get_membership_connection() as connection:
@@ -467,6 +358,7 @@ class RbacRepository:
             "code": row["code"],
             "name": row["name"],
             "description": row["description"],
+            "moduleName": row["module_name"],
             "status": row["status"],
             "permissionCount": row["permission_count"],
             "createdAt": row["created_at"],
@@ -529,6 +421,24 @@ class RbacRepository:
             f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})",
             [payload[column] for column in columns],
         )
+
+    def _insert_or_replace(self, connection: sqlite3.Connection, table_name: str, payload: dict[str, Any]) -> None:
+        columns = list(payload.keys())
+        placeholders = ", ".join("?" for _ in columns)
+        connection.execute(
+            f"INSERT OR REPLACE INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})",
+            [payload[column] for column in columns],
+        )
+
+    def _table_columns(self, connection: sqlite3.Connection, table_name: str) -> set[str]:
+        return {
+            row["name"]
+            for row in connection.execute(f"PRAGMA table_info({table_name})").fetchall()
+        }
+
+    def _build_role_code(self, role_id: str, name: str) -> str:
+        normalized_name = "_".join(name.split())
+        return f"{role_id}_{normalized_name}"
 
     def _insert_notification(
         self,

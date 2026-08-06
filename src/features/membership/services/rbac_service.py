@@ -2,6 +2,12 @@ import sqlite3
 from typing import Any
 
 from src.features.membership.core.exceptions import ConflictError, ResourceNotFoundError, ValidationFailureError
+from src.features.membership.core.permission_registry import (
+    permission_by_code,
+    permission_exists,
+    permission_group_rows,
+    permission_rows,
+)
 from src.features.membership.repositories.rbac_repository import RbacRepository
 from src.features.membership.services.bootstrap_service import apply_membership_migration
 
@@ -21,7 +27,6 @@ class RbacService:
         return role
 
     def create_role(self, payload: dict[str, Any]) -> dict[str, Any]:
-        self._ensure_unique_code("membership_role", payload["code"])
         try:
             return self.repository.create_role(payload)
         except sqlite3.IntegrityError as exc:
@@ -29,7 +34,6 @@ class RbacService:
 
     def update_role(self, role_id: str, payload: dict[str, Any]) -> dict[str, Any]:
         self.get_role(role_id)
-        self._ensure_unique_code("membership_role", payload["code"], exclude_id=role_id)
         role = self.repository.update_role(role_id, payload)
         if role is None:
             raise ResourceNotFoundError("Role not found.", {"id": role_id})
@@ -43,7 +47,7 @@ class RbacService:
             raise ResourceNotFoundError("Role not found.", {"id": role_id})
 
     def list_permission_groups(self) -> list[dict[str, Any]]:
-        return self.repository.list_permission_groups()
+        return permission_group_rows()
 
     def create_permission_group(self, payload: dict[str, Any]) -> dict[str, Any]:
         raise ValidationFailureError(
@@ -69,14 +73,14 @@ class RbacService:
         group_id: str = "",
         status_filter: str = "",
     ) -> list[dict[str, Any]]:
-        return self.repository.list_permissions(
+        return permission_rows(
             keyword=keyword,
             group_id=group_id,
             status_filter=status_filter,
         )
 
     def get_permission(self, permission_id: str) -> dict[str, Any]:
-        permission = self.repository.get_permission(permission_id)
+        permission = permission_by_code(permission_id)
         if permission is None:
             raise ResourceNotFoundError("Permission not found.", {"id": permission_id})
         return permission
@@ -102,13 +106,13 @@ class RbacService:
         self.get_role(role_id)
         return {
             "roleId": role_id,
-            "permissionIds": self.repository.get_role_permission_ids(role_id),
+            "permissionIds": self.repository.get_role_permission_codes(role_id),
         }
 
     def set_role_permissions(self, role_id: str, permission_ids: list[str]) -> dict[str, Any]:
         self.get_role(role_id)
         unique_permission_ids = list(dict.fromkeys(permission_ids))
-        if not self.repository.permission_ids_exist(unique_permission_ids):
+        if not all(permission_exists(permission_id) for permission_id in unique_permission_ids):
             raise ValidationFailureError("One or more permissions do not exist.")
         return {
             "roleId": role_id,

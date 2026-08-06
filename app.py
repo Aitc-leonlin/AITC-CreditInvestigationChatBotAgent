@@ -1,6 +1,7 @@
 import os
 import sys
 import asyncio
+from contextlib import suppress
 import json
 import logging
 from time import perf_counter
@@ -33,6 +34,7 @@ from src.shared.database.db_path import build_sqlite_db_diagnostics
 # import api routers
 from src.features.chatbot.api.chatbot import chatbot_router
 from src.features.chatbot.api.chatbot_with_external import chatbot_with_external_router
+from src.features.chatbot.api.conversation_history import conversation_history_router
 from src.features.report_generator.api.report_generator import report_generator_router
 from src.features.chatbot.api.warehouse_data import warehouse_data_router
 from src.features.chatbot.api.expert_knowledge import (
@@ -48,6 +50,8 @@ from src.features.membership.api.user_controller import membership_user_router
 from src.features.membership.api.organization_controller import organization_router
 from src.features.membership.api.notification_controller import membership_admin_router
 from src.features.membership.core.exceptions import MembershipError, membership_error_handler
+from src.features.membership.core.audit_middleware import audit_http_middleware
+from src.features.membership.services.audit_retention_service import run_audit_retention_scheduler
 
 
 from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
@@ -61,9 +65,11 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 
 app = FastAPI()
+app.middleware("http")(audit_http_middleware)
 api_router = APIRouter()
 api_router.include_router(chatbot_router)
 api_router.include_router(chatbot_with_external_router)
+api_router.include_router(conversation_history_router)
 api_router.include_router(report_generator_router)
 api_router.include_router(warehouse_data_router)
 api_router.include_router(expert_knowledge_entries_router)
@@ -79,6 +85,27 @@ api_router.include_router(membership_admin_router)
 app.include_router(api_router)
 app.add_exception_handler(MembershipError, membership_error_handler)
 logger = logging.getLogger(__name__)
+audit_retention_scheduler_task: asyncio.Task | None = None
+
+
+@app.on_event("startup")
+async def start_audit_retention_scheduler() -> None:
+    global audit_retention_scheduler_task
+    audit_retention_scheduler_task = asyncio.create_task(
+        run_audit_retention_scheduler(),
+        name="audit-log-retention-scheduler",
+    )
+
+
+@app.on_event("shutdown")
+async def stop_audit_retention_scheduler() -> None:
+    global audit_retention_scheduler_task
+    if audit_retention_scheduler_task is None:
+        return
+    audit_retention_scheduler_task.cancel()
+    with suppress(asyncio.CancelledError):
+        await audit_retention_scheduler_task
+    audit_retention_scheduler_task = None
 
 
 def env_flag_enabled(name: str, default: bool = False) -> bool:

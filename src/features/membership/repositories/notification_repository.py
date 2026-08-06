@@ -4,10 +4,38 @@ import uuid
 from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
+from src.features.membership.core.permission_registry import all_permission_codes
 from src.features.membership.core.time import utc_now_iso
 
 
 class NotificationRepository:
+    def get_audit_retention_setting(self) -> dict[str, Any]:
+        with get_membership_connection() as connection:
+            row = connection.execute(
+                "SELECT * FROM membership_audit_retention_setting WHERE id = 1"
+            ).fetchone()
+        if row is None:
+            raise RuntimeError("Audit retention setting is not initialized.")
+        return self.audit_retention_row(row)
+
+    def update_audit_retention_setting(
+        self,
+        *,
+        retention_days: int,
+        updated_by_user_id: str,
+    ) -> dict[str, Any]:
+        now = utc_now_iso()
+        with membership_transaction() as connection:
+            connection.execute(
+                """
+                UPDATE membership_audit_retention_setting
+                SET retention_days = ?, updated_by_user_id = ?, updated_at = ?
+                WHERE id = 1
+                """,
+                [retention_days, updated_by_user_id, now],
+            )
+        return self.get_audit_retention_setting()
+
     def list_templates(self) -> list[dict[str, Any]]:
         with get_membership_connection() as connection:
             rows = connection.execute(
@@ -137,6 +165,7 @@ class NotificationRepository:
         page: int,
         page_size: int,
         action: str = "",
+        actions: list[str] | None = None,
         resource_type: str = "",
         outcome: str = "",
     ) -> dict[str, Any]:
@@ -148,6 +177,11 @@ class NotificationRepository:
         if action:
             clauses.append("a.action LIKE ?")
             params.append(f"%{action}%")
+        selected_actions = list(dict.fromkeys(item.strip() for item in (actions or []) if item.strip()))
+        if selected_actions:
+            placeholders = ", ".join("?" for _ in selected_actions)
+            clauses.append(f"a.action IN ({placeholders})")
+            params.extend(selected_actions)
         if resource_type:
             clauses.append("a.resource_type = ?")
             params.append(resource_type)
@@ -167,7 +201,9 @@ class NotificationRepository:
             ).fetchone()["total"]
             rows = connection.execute(
                 f"""
-                SELECT a.*, u.display_name AS actor_display_name
+                SELECT a.*,
+                       u.display_name AS actor_display_name,
+                       u.email AS actor_email
                 FROM membership_audit_log a
                 LEFT JOIN membership_user u ON u.id = a.actor_user_id AND u.deleted_at IS NULL
                 WHERE a.deleted_at IS NULL
@@ -208,11 +244,11 @@ class NotificationRepository:
                 """
                 SELECT
                     (SELECT COUNT(*) FROM membership_role WHERE deleted_at IS NULL) AS roles,
-                    (SELECT COUNT(*) FROM membership_permission WHERE deleted_at IS NULL) AS permissions,
                     (SELECT COUNT(*) FROM membership_role_permission WHERE deleted_at IS NULL) AS rolePermissions,
                     (SELECT COUNT(*) FROM membership_user_role WHERE deleted_at IS NULL) AS userRoles
                 """
             ).fetchone())
+            permission_overview["permissions"] = len(all_permission_codes())
             login_stats = dict(connection.execute(
                 """
                 SELECT
@@ -278,6 +314,7 @@ class NotificationRepository:
             "id": row["id"],
             "actorUserId": row["actor_user_id"],
             "actorDisplayName": row["actor_display_name"],
+            "actorEmail": row["actor_email"],
             "action": row["action"],
             "resourceType": row["resource_type"],
             "resourceId": row["resource_id"],
@@ -286,6 +323,19 @@ class NotificationRepository:
             "userAgent": row["user_agent"],
             "metadata": self._json(row["metadata_json"], {}),
             "createdAt": row["created_at"],
+        }
+
+    def audit_retention_row(self, row: sqlite3.Row) -> dict[str, Any]:
+        return {
+            "retentionDays": row["retention_days"],
+            "scheduleTimeZone": "Asia/Taipei",
+            "lastRunAt": row["last_run_at"],
+            "lastArchiveAt": row["last_archive_at"],
+            "lastArchivedCount": row["last_archived_count"],
+            "lastCutoffAt": row["last_cutoff_at"],
+            "lastArchiveFilename": row["last_archive_filename"],
+            "lastError": row["last_error"],
+            "updatedAt": row["updated_at"],
         }
 
     def _find_template(self, code: str) -> dict[str, Any] | None:

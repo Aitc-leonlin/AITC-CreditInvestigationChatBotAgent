@@ -4,27 +4,21 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 Status = Literal["ACTIVE", "INACTIVE"]
-RoleType = Literal["SYSTEM", "BUSINESS"]
-
-
-def normalize_code(value: str) -> str:
-    return value.strip().upper().replace(" ", "_")
+RoleType = Literal["SYSTEM", "BUSINESS", "USER"]
 
 
 class RoleCommand(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
 
-    code: str = Field(min_length=2, max_length=100)
     name: str = Field(min_length=1, max_length=100)
     description: str = ""
     roleType: RoleType = "BUSINESS"
     status: Status = "ACTIVE"
     isSystem: bool = False
 
-    @field_validator("code")
-    @classmethod
-    def normalize_role_code(cls, value: str) -> str:
-        return normalize_code(value)
+
+def normalize_code(value: str) -> str:
+    return value.strip().upper().replace(" ", "_")
 
 
 class PermissionGroupCommand(BaseModel):
@@ -33,6 +27,7 @@ class PermissionGroupCommand(BaseModel):
     code: str = Field(min_length=2, max_length=100)
     name: str = Field(min_length=1, max_length=100)
     description: str = ""
+    moduleName: str = ""
     status: Status = "ACTIVE"
 
     @field_validator("code")
@@ -89,6 +84,7 @@ class PermissionGroupResponse(BaseModel):
     code: str
     name: str
     description: str
+    moduleName: str
     status: str
     permissionCount: int
     createdAt: str
