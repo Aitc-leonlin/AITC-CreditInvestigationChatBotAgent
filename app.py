@@ -117,19 +117,21 @@ def env_flag_enabled(name: str, default: bool = False) -> bool:
     return value.strip().upper() == "TRUE"
 
 
+DEFAULT_CORS_ALLOW_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3001",
+    "https://aitc-credit-investigation-chat-bot.vercel.app",
+    "https://aitc-credit-investigation-chat-bot-web-ashqnxvdk.vercel.app",
+    "https://aitc-creditinvestigationchatbotwebui.onrender.com",
+]
+
+
 def parse_cors_allow_origins() -> List[str]:
     configured = os.getenv("CORS_ALLOW_ORIGINS", "")
-    origins = [origin.strip() for origin in configured.split(",") if origin.strip()]
-    if origins:
-        return origins
-    return [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3001",
-        "https://aitc-credit-investigation-chat-bot.vercel.app",
-        "https://aitc-credit-investigation-chat-bot-web-ashqnxvdk.vercel.app"
-    ]
+    configured_origins = [origin.strip() for origin in configured.split(",") if origin.strip()]
+    return list(dict.fromkeys([*DEFAULT_CORS_ALLOW_ORIGINS, *configured_origins]))
 
 
 allow_origins = parse_cors_allow_origins()
