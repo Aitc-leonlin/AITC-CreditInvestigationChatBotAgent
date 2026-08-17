@@ -13,7 +13,7 @@ migrations/V{major}.{minor}__{description}.sql
 Example:
 
 ```text
-migrations/V1.0__initialize_financial_statement_xbrl_schema.sql
+migrations/sqlite/V1.0__initialize_financial_statement_xbrl_schema.sql
 ```
 
 ## Current Schema
@@ -64,3 +64,22 @@ These counts were observed when `V1.0` was created:
 - It does not add foreign keys because the current database does not define them.
 - It includes a `schema_migrations` table for future migration tracking.
 - The report generator currently stores history in `FinancialStatementXBRL.db`, while report source data is read from `FinancialStatements.db` unless `REPORT_GENERATOR_DB_PATH` is set.
+
+## Database-specific migrations
+
+Migration files are separated by database engine:
+
+```text
+migrations/
+├── sqlite/
+│   ├── V1.0__initialize_financial_statement_xbrl_schema.sql
+│   └── V1.1__... through V1.6__...
+└── postgresql/
+    ├── V1.0__initialize_financial_statement_xbrl_schema.sql
+    └── V1.1__... through V1.6__...
+```
+
+`DATABASE_MODE=sqlite` selects `migrations/sqlite`; `DATABASE_MODE=postgresql`
+selects `migrations/postgresql`. Membership migrations V1.1 through V1.6 are
+applied automatically. V1.0 is the XBRL/report schema baseline and is kept
+separate from the automatic membership migration sequence.

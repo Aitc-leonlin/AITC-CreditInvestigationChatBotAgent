@@ -1,4 +1,4 @@
--- Remove the discontinued data-scope, row/field permission, and masking features.
+-- SQLite: remove the discontinued data-scope, row/field permission, and masking features.
 
 PRAGMA foreign_keys = ON;
 

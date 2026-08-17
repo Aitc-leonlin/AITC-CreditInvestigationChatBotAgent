@@ -1,4 +1,5 @@
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -38,8 +39,10 @@ class DatabaseSettings:
     username: str = ""
     password: str = ""
     sslmode: str = "require"
+    sslrootcert: str = ""
     connect_timeout_seconds: int = 10
     application_name: str = "aitc-credit-investigation-backend"
+    schema: str = "public"
 
     @classmethod
     def from_env(cls) -> "DatabaseSettings":
@@ -83,6 +86,24 @@ class DatabaseSettings:
                 + ", ".join(env_names[name] for name in missing)
             )
 
+        schema = _env("DATABASE_SCHEMA", "public")
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", schema):
+            raise RuntimeError("DATABASE_SCHEMA must be a valid PostgreSQL identifier.")
+
+        sslmode = _env("DATABASE_SSLMODE", "require").lower()
+        allowed_ssl_modes = {
+            "disable",
+            "allow",
+            "prefer",
+            "require",
+            "verify-ca",
+            "verify-full",
+        }
+        if sslmode not in allowed_ssl_modes:
+            raise RuntimeError(
+                "DATABASE_SSLMODE must be one of: " + ", ".join(sorted(allowed_ssl_modes))
+            )
+
         return cls(
             mode="postgresql",
             host=values["host"],
@@ -90,11 +111,13 @@ class DatabaseSettings:
             database=values["database"],
             username=values["username"],
             password=values["password"],
-            sslmode=_env("DATABASE_SSLMODE", "require"),
+            sslmode=sslmode,
+            sslrootcert=_env("DATABASE_SSLROOTCERT"),
             connect_timeout_seconds=_positive_int("DATABASE_CONNECT_TIMEOUT_SECONDS", 10),
             application_name=_env(
                 "DATABASE_APPLICATION_NAME", "aitc-credit-investigation-backend"
             ),
+            schema=schema,
         )
 
     def diagnostics(self) -> dict[str, object]:
@@ -115,8 +138,10 @@ class DatabaseSettings:
             "database": self.database,
             "username": self.username,
             "sslmode": self.sslmode,
+            "sslRootCertificateConfigured": bool(self.sslrootcert),
             "connectTimeoutSeconds": self.connect_timeout_seconds,
             "applicationName": self.application_name,
+            "schema": self.schema,
             "passwordConfigured": bool(self.password),
         }
 

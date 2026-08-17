@@ -58,13 +58,15 @@ DATABASE_NAME=aitc_credit_investigation
 DATABASE_USER=aitc_app
 DATABASE_PASSWORD=replace-with-a-secret
 DATABASE_SSLMODE=require
+DATABASE_SSLROOTCERT=
 DATABASE_CONNECT_TIMEOUT_SECONDS=10
 DATABASE_APPLICATION_NAME=aitc-credit-investigation-backend
+DATABASE_SCHEMA=public
 ```
 
 Database passwords are read only from the environment and are excluded from startup diagnostics. Copy `.env.example` to `.env` for local development; never commit `.env`.
 
-The shared connection layer supports both connection modes. Existing repositories and migrations still contain SQLite-specific SQL, so keep `DATABASE_MODE=sqlite` until their SQL dialect migration to PostgreSQL is complete.
+The shared connection layer and membership migration runner support both connection modes. Migration files are separated under `src/sql/migrations/sqlite` and `src/sql/migrations/postgresql`, and V1.1 through V1.6 are selected automatically from `DATABASE_MODE`. Some runtime repositories still contain SQLite-specific query syntax and require a separate SQL-dialect conversion before every feature can operate on PostgreSQL.
 
 ## Regression Tests
 

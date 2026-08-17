@@ -15,23 +15,43 @@ def open_database_connection(settings: DatabaseSettings | None = None) -> Any:
 
     try:
         import psycopg
+        from psycopg import sql
         from psycopg.rows import dict_row
     except ImportError as exc:
         raise RuntimeError(
             "PostgreSQL mode requires psycopg. Install dependencies from requirements.txt."
         ) from exc
 
-    return psycopg.connect(
-        host=resolved.host,
-        port=resolved.port,
-        dbname=resolved.database,
-        user=resolved.username,
-        password=resolved.password,
-        sslmode=resolved.sslmode,
-        connect_timeout=resolved.connect_timeout_seconds,
-        application_name=resolved.application_name,
-        row_factory=dict_row,
+    connection_parameters = {
+        "host": resolved.host,
+        "port": resolved.port,
+        "dbname": resolved.database,
+        "user": resolved.username,
+        "password": resolved.password,
+        "sslmode": resolved.sslmode,
+        "connect_timeout": resolved.connect_timeout_seconds,
+        "application_name": resolved.application_name,
+        "row_factory": dict_row,
+    }
+    if resolved.sslrootcert:
+        connection_parameters["sslrootcert"] = resolved.sslrootcert
+
+    connection = psycopg.connect(
+        **connection_parameters,
     )
+    schema_exists = connection.execute(
+        "SELECT 1 FROM information_schema.schemata WHERE schema_name = %s",
+        [resolved.schema],
+    ).fetchone()
+    if schema_exists is None:
+        connection.close()
+        raise RuntimeError(
+            f"PostgreSQL schema {resolved.schema!r} does not exist or is not accessible."
+        )
+    connection.execute(
+        sql.SQL("SET search_path TO {}").format(sql.Identifier(resolved.schema))
+    )
+    return connection
 
 
 def test_database_connection(settings: DatabaseSettings | None = None) -> None:

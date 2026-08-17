@@ -10,44 +10,65 @@ from src.features.membership.core.permission_registry import (
     all_permission_codes,
 )
 from src.features.membership.seeds.default_seed_data import DEFAULT_USER_ROLE_ID, default_seed_data
+from src.shared.database.config import get_database_settings
 from src.shared.database.db_path import PROJECT_ROOT
 
 
 MIGRATION_VERSION = "V1.6"
-MIGRATION_FILES = [
-    PROJECT_ROOT / "src/sql/migrations/V1.1__initialize_membership_authorization_schema.sql",
-    PROJECT_ROOT / "src/sql/migrations/V1.2__add_audit_log_retention.sql",
-    PROJECT_ROOT / "src/sql/migrations/V1.3__add_chat_conversation_history.sql",
-    PROJECT_ROOT / "src/sql/migrations/V1.4__normalize_chat_message_references.sql",
-    PROJECT_ROOT / "src/sql/migrations/V1.5__add_membership_groups.sql",
-    PROJECT_ROOT / "src/sql/migrations/V1.6__remove_data_scope_and_masking.sql",
+MEMBERSHIP_MIGRATION_NAMES = [
+    "V1.1__initialize_membership_authorization_schema.sql",
+    "V1.2__add_audit_log_retention.sql",
+    "V1.3__add_chat_conversation_history.sql",
+    "V1.4__normalize_chat_message_references.sql",
+    "V1.5__add_membership_groups.sql",
+    "V1.6__remove_data_scope_and_masking.sql",
 ]
 
 
+def membership_migration_files(database_mode: str | None = None) -> list[Path]:
+    mode = database_mode or get_database_settings().mode
+    migration_directory = PROJECT_ROOT / "src/sql/migrations" / mode
+    files = [migration_directory / name for name in MEMBERSHIP_MIGRATION_NAMES]
+    missing_files = [str(path) for path in files if not path.is_file()]
+    if missing_files:
+        raise RuntimeError(
+            f"Missing {mode} membership migration files: " + ", ".join(missing_files)
+        )
+    return files
+
+
 def apply_membership_migration() -> None:
+    settings = get_database_settings()
+    migration_files = membership_migration_files(settings.mode)
     with membership_transaction() as connection:
         migration_table_ready = False
-        for migration_file in MIGRATION_FILES:
+        for migration_file in migration_files:
             version = migration_file.name.split("__", 1)[0]
-            if migration_table_ready and _migration_applied(connection, version):
+            if migration_table_ready and _migration_applied(connection, version, settings.mode):
                 continue
-            if version == "V1.1":
+            if settings.mode == "sqlite" and version == "V1.1":
                 _prepare_consolidated_baseline(connection)
             migration_sql = Path(migration_file).read_text(encoding="utf-8")
-            connection.executescript(migration_sql)
+            if settings.mode == "sqlite":
+                connection.executescript(migration_sql)
+            else:
+                connection.execute(migration_sql, prepare=False)
             if version == "V1.1":
                 migration_table_ready = True
+        if settings.mode == "postgresql":
+            return
         _ensure_membership_schema_latest(connection)
         _ensure_permission_code_authorization(connection)
         _drop_permission_definition_tables(connection)
 
 
-def _migration_applied(connection: Any, version: str) -> bool:
+def _migration_applied(connection: Any, version: str, database_mode: str) -> bool:
+    placeholder = "?" if database_mode == "sqlite" else "%s"
     row = connection.execute(
-        """
+        f"""
         SELECT 1
         FROM membership_schema_migrations
-        WHERE version = ?
+        WHERE version = {placeholder}
         LIMIT 1
         """,
         [version],
@@ -432,7 +453,23 @@ def _rebuild_role_permission_code_table(connection: Any) -> None:
     )
 
 
-def _insert_role_permission_code(connection: Any, role_id: str, permission_code: str) -> None:
+def _insert_role_permission_code(connection: Any, role_id: str, permission_code: str) -> int:
+    if get_database_settings().mode == "postgresql":
+        cursor = connection.execute(
+            """
+            INSERT INTO membership_role_permission (
+                id, role_id, permission_code, effect, created_at, updated_at, deleted_at
+            )
+            VALUES (%s, %s, %s, 'ALLOW', CURRENT_TIMESTAMP::TEXT, CURRENT_TIMESTAMP::TEXT, NULL)
+            ON CONFLICT (role_id, permission_code) DO UPDATE
+            SET effect = EXCLUDED.effect,
+                updated_at = CURRENT_TIMESTAMP,
+                deleted_at = NULL
+            """,
+            [f"role-permission-{role_id}-{permission_code}", role_id, permission_code],
+        )
+        return max(cursor.rowcount, 0)
+
     now = "CURRENT_TIMESTAMP"
     columns = _table_columns(connection, "membership_role_permission")
     payload: dict[str, Any] = {
@@ -451,13 +488,15 @@ def _insert_role_permission_code(connection: Any, role_id: str, permission_code:
     column_names = list(payload.keys())
     values_sql = ", ".join("CURRENT_TIMESTAMP" if payload[column] == now else "?" for column in column_names)
     values = [payload[column] for column in column_names if payload[column] != now]
-    connection.execute(
+    cursor = connection.execute(
         f"INSERT OR REPLACE INTO membership_role_permission ({', '.join(column_names)}) VALUES ({values_sql})",
         values,
     )
+    return max(cursor.rowcount, 0)
 
 
 def seed_membership_data() -> dict[str, int]:
+    database_mode = get_database_settings().mode
     seed_data = default_seed_data()
     inserted_counts: dict[str, int] = {}
     with membership_transaction() as connection:
@@ -465,19 +504,21 @@ def seed_membership_data() -> dict[str, int]:
             inserted_counts[table_name] = 0
             for row in rows:
                 columns = list(row.keys())
-                placeholders = ", ".join("?" for _ in columns)
+                placeholder = "?" if database_mode == "sqlite" else "%s"
+                placeholders = ", ".join(placeholder for _ in columns)
                 column_sql = ", ".join(columns)
+                insert_prefix = "INSERT OR IGNORE" if database_mode == "sqlite" else "INSERT"
+                conflict_clause = "" if database_mode == "sqlite" else " ON CONFLICT DO NOTHING"
                 cursor = connection.execute(
-                    f"INSERT OR IGNORE INTO {table_name} ({column_sql}) VALUES ({placeholders})",
+                    f"{insert_prefix} INTO {table_name} ({column_sql}) VALUES ({placeholders}){conflict_clause}",
                     [row[column] for column in columns],
                 )
-                inserted_counts[table_name] += cursor.rowcount
+                inserted_counts[table_name] += max(cursor.rowcount, 0)
 
         for permission_code in all_permission_codes():
-            before = connection.total_changes
-            _insert_role_permission_code(connection, "role-super-admin", permission_code)
             inserted_counts["membership_role_permission"] = (
-                inserted_counts.get("membership_role_permission", 0) + (connection.total_changes - before)
+                inserted_counts.get("membership_role_permission", 0)
+                + _insert_role_permission_code(connection, "role-super-admin", permission_code)
             )
         default_user_permissions = [
             permission_code
@@ -486,10 +527,9 @@ def seed_membership_data() -> dict[str, int]:
             or permission_code.startswith("report-generator.")
         ]
         for permission_code in default_user_permissions:
-            before = connection.total_changes
-            _insert_role_permission_code(connection, DEFAULT_USER_ROLE_ID, permission_code)
             inserted_counts["membership_role_permission"] = (
-                inserted_counts.get("membership_role_permission", 0) + (connection.total_changes - before)
+                inserted_counts.get("membership_role_permission", 0)
+                + _insert_role_permission_code(connection, DEFAULT_USER_ROLE_ID, permission_code)
             )
 
     return inserted_counts
@@ -497,12 +537,11 @@ def seed_membership_data() -> dict[str, int]:
 
 def reset_membership_seed_data() -> dict[str, Any]:
     apply_membership_migration()
+    database_mode = get_database_settings().mode
     cleared_tables: list[str] = []
     with get_membership_connection() as connection:
-        tables = [
-            row["name"]
-            for row in connection.execute(
-                """
+        if database_mode == "sqlite":
+            table_query = """
                 SELECT name
                 FROM sqlite_master
                 WHERE type = 'table'
@@ -518,19 +557,41 @@ def reset_membership_seed_data() -> dict[str, Any]:
                   AND name != 'membership_schema_migrations'
                 ORDER BY name
                 """
-            ).fetchall()
-        ]
+        else:
+            table_query = """
+                SELECT tablename AS name
+                FROM pg_catalog.pg_tables
+                WHERE schemaname = current_schema()
+                  AND (
+                      tablename LIKE 'membership_%'
+                      OR tablename IN (
+                          'chat_conversation',
+                          'chat_conversation_message',
+                          'chat_message_expert_knowledge',
+                          'chat_message_external_data'
+                      )
+                  )
+                  AND tablename != 'membership_schema_migrations'
+                ORDER BY tablename
+                """
+        tables = [row["name"] for row in connection.execute(table_query).fetchall()]
         try:
-            connection.execute("PRAGMA foreign_keys = OFF")
-            for table_name in tables:
-                connection.execute(f"DELETE FROM {table_name}")
-                cleared_tables.append(table_name)
+            if database_mode == "sqlite":
+                connection.execute("PRAGMA foreign_keys = OFF")
+                for table_name in tables:
+                    connection.execute(f"DELETE FROM {table_name}")
+                    cleared_tables.append(table_name)
+            elif tables:
+                quoted_tables = ", ".join(f'"{table_name}"' for table_name in tables)
+                connection.execute(f"TRUNCATE TABLE {quoted_tables} RESTART IDENTITY CASCADE")
+                cleared_tables.extend(tables)
             connection.commit()
         except Exception:
             connection.rollback()
             raise
         finally:
-            connection.execute("PRAGMA foreign_keys = ON")
+            if database_mode == "sqlite":
+                connection.execute("PRAGMA foreign_keys = ON")
 
     seed_counts = seed_membership_data()
     return {
@@ -543,9 +604,10 @@ def reset_membership_seed_data() -> dict[str, Any]:
 def ensure_membership_infrastructure() -> dict[str, Any]:
     apply_membership_migration()
     seed_counts = seed_membership_data()
+    migration_files = membership_migration_files()
     return {
         "migrationVersion": MIGRATION_VERSION,
-        "migrationFile": str(MIGRATION_FILES[-1]),
-        "migrationFiles": [str(path) for path in MIGRATION_FILES],
+        "migrationFile": str(migration_files[-1]),
+        "migrationFiles": [str(path) for path in migration_files],
         "seedCounts": seed_counts,
     }

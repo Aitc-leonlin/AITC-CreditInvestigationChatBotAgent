@@ -1,4 +1,4 @@
--- Account-scoped chatbot conversation history.
+-- SQLite account-scoped chatbot conversation history.
 
 PRAGMA foreign_keys = ON;
 

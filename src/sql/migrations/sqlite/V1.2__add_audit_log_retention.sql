@@ -1,4 +1,4 @@
--- Audit log retention and archive schedule settings.
+-- SQLite audit log retention and archive schedule settings.
 
 PRAGMA foreign_keys = ON;
 

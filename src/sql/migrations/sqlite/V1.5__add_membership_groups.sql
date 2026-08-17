@@ -1,4 +1,4 @@
--- General-purpose membership groups and group members.
+-- SQLite general-purpose membership groups and group members.
 
 PRAGMA foreign_keys = ON;
 

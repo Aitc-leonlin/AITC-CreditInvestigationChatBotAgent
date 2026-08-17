@@ -1,4 +1,4 @@
--- Enterprise Membership & Authorization Module
+-- SQLite Enterprise Membership & Authorization Module
 -- Version: V1.1
 -- Purpose: Initialize the consolidated membership, authentication, RBAC,
 -- menu authorization, organization data-permission, audit, and notification

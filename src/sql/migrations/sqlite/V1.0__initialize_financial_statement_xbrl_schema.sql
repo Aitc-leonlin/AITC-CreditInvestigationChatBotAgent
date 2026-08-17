@@ -1,4 +1,4 @@
--- FinancialStatementXBRL.db schema migration
+-- SQLite FinancialStatementXBRL.db schema migration
 -- Version: V1.0
 -- Purpose: Initialize the current XBRL financial statement database schema.
 --
