@@ -13,12 +13,14 @@ from src.features.membership.seeds.default_seed_data import DEFAULT_USER_ROLE_ID
 from src.shared.database.db_path import PROJECT_ROOT
 
 
-MIGRATION_VERSION = "V1.4"
+MIGRATION_VERSION = "V1.6"
 MIGRATION_FILES = [
     PROJECT_ROOT / "src/sql/migrations/V1.1__initialize_membership_authorization_schema.sql",
     PROJECT_ROOT / "src/sql/migrations/V1.2__add_audit_log_retention.sql",
     PROJECT_ROOT / "src/sql/migrations/V1.3__add_chat_conversation_history.sql",
     PROJECT_ROOT / "src/sql/migrations/V1.4__normalize_chat_message_references.sql",
+    PROJECT_ROOT / "src/sql/migrations/V1.5__add_membership_groups.sql",
+    PROJECT_ROOT / "src/sql/migrations/V1.6__remove_data_scope_and_masking.sql",
 ]
 
 

@@ -1,19 +1,16 @@
-import sqlite3
 from collections.abc import Iterator
 from contextlib import contextmanager
+from typing import Any
 
-from src.shared.database.db_path import resolve_sqlite_db_path
+from src.shared.database.connection import open_database_connection
 
 
-def get_membership_connection() -> sqlite3.Connection:
-    connection = sqlite3.connect(resolve_sqlite_db_path())
-    connection.row_factory = sqlite3.Row
-    connection.execute("PRAGMA foreign_keys = ON")
-    return connection
+def get_membership_connection() -> Any:
+    return open_database_connection()
 
 
 @contextmanager
-def membership_transaction() -> Iterator[sqlite3.Connection]:
+def membership_transaction() -> Iterator[Any]:
     connection = get_membership_connection()
     try:
         yield connection

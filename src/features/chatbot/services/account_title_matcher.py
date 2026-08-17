@@ -13,7 +13,6 @@ XBRL_DATA_DIR = PROJECT_ROOT / "src" / "features" / "chatbot" / "services"
 DICTIONARY_PATH = XBRL_DATA_DIR / "xbrl_data_dictionary_all.json"
 MAPPING_PATH = XBRL_DATA_DIR / "xbrl_mapping" / "concept_mapping.json"
 SPLIT_DIR = XBRL_DATA_DIR / "xbrl_dictionary_splits"
-DB_PATH = resolve_sqlite_db_path()
 KNOWN_INDUSTRY_TYPES = ("basi", "bd", "ci", "fh", "ins", "mim")
 
 STATEMENT_FILTERS = {
@@ -106,9 +105,10 @@ def family_variants(family: str) -> List[str]:
 
 @lru_cache(maxsize=256)
 def get_company_families(company_code: str) -> tuple[str, ...]:
-    if not company_code or not DB_PATH.exists():
+    db_path = resolve_sqlite_db_path()
+    if not company_code or not db_path.exists():
         return ()
-    connection = sqlite3.connect(DB_PATH)
+    connection = sqlite3.connect(db_path)
     try:
         rows = connection.execute(
             """
@@ -140,7 +140,8 @@ def get_company_available_concepts(
     statement_type: str,
     industry_type: Optional[str] = None,
 ) -> tuple[str, ...]:
-    if not company_code or not DB_PATH.exists():
+    db_path = resolve_sqlite_db_path()
+    if not company_code or not db_path.exists():
         return ()
 
     conditions = [
@@ -166,7 +167,7 @@ def get_company_available_concepts(
         ORDER BY fmv.concept_id
     """
 
-    connection = sqlite3.connect(DB_PATH)
+    connection = sqlite3.connect(db_path)
     try:
         rows = connection.execute(query, params).fetchall()
         return tuple(row[0] for row in rows if row and row[0])

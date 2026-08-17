@@ -18,7 +18,6 @@ from src.features.chatbot.models.langgraph_state_types import OverallState
 
 
 logger = logging.getLogger(__name__)
-DB_PATH = resolve_sqlite_db_path()
 VALID_STATEMENT_TYPES = {
     "balance_sheet",
     "comprehensive_income_statement",
@@ -211,7 +210,7 @@ def resolve_company_profile(company_code: str) -> Dict[str, Optional[str]]:
     if not company_code:
         return profile
 
-    connection = sqlite3.connect(DB_PATH)
+    connection = sqlite3.connect(resolve_sqlite_db_path())
     connection.row_factory = sqlite3.Row
     try:
         row = connection.execute(
@@ -559,7 +558,7 @@ def fetch_financial_value(
     if statement_type not in VALID_STATEMENT_TYPES:
         return None
 
-    connection = sqlite3.connect(DB_PATH)
+    connection = sqlite3.connect(resolve_sqlite_db_path())
     connection.row_factory = sqlite3.Row
     try:
         query = """

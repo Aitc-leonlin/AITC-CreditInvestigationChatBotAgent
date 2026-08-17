@@ -1,9 +1,4 @@
-"""Membership 組織與資料權限 API。
-
-管理組織單位樹、職位、使用者部門關聯、主管關係，以及資料權限 policy、row rule、
-field rule、masking rule。資料權限規則目前是設定資料，尚未套用到其他業務 API 的查詢
-或遮罩 enforcement。
-"""
+"""Membership 組織管理 API。"""
 
 from fastapi import Depends, Query, status
 
@@ -12,20 +7,12 @@ from src.features.membership.core.auth_middleware import require_any_permission,
 from src.features.membership.core.responses import ok
 from src.features.membership.schemas.common import StandardResponse
 from src.features.membership.schemas.organization import (
-    DataPermissionPolicyCommand,
-    DataPermissionPolicyResponse,
-    FieldPermissionRuleCommand,
-    FieldPermissionRuleResponse,
     ManagerRelationCommand,
     ManagerRelationResponse,
-    MaskingRuleCommand,
-    MaskingRuleResponse,
     OrganizationUnitCommand,
     OrganizationUnitResponse,
     PositionCommand,
     PositionResponse,
-    RowPermissionRuleCommand,
-    RowPermissionRuleResponse,
     UserDepartmentMappingCommand,
     UserDepartmentMappingResponse,
 )
@@ -178,96 +165,4 @@ async def create_manager_relation(
 @organization_router.delete("/manager-relations/{relation_id}", response_model=StandardResponse[dict[str, bool]])
 async def delete_manager_relation(relation_id: str, _: dict = Depends(require_permission(ORG_SCOPE_DELETE))):
     organization_service().delete_manager_relation(relation_id)
-    return ok({"deleted": True})
-
-
-# NOTE: 以下資料權限 policy / row rule / field rule / masking rule 目前只提供管理與儲存。
-# 尚未串接到其他業務 API 的查詢過濾、欄位遮罩或寫入限制；後續導入時需在資料存取層套用這些規則。
-@organization_router.get("/data-policies", response_model=StandardResponse[list[DataPermissionPolicyResponse]])
-async def list_data_policies(
-    subjectType: str = Query(default=""),
-    subjectId: str = Query(default=""),
-    resourceCode: str = Query(default=""),
-    _: dict = Depends(require_permission(ORG_SCOPE_VIEW)),
-):
-    return ok(organization_service().list_data_policies(subject_type=subjectType, subject_id=subjectId, resource_code=resourceCode))
-
-
-@organization_router.post("/data-policies", response_model=StandardResponse[DataPermissionPolicyResponse])
-async def upsert_data_policy(
-    payload: DataPermissionPolicyCommand,
-    _: dict = Depends(require_permission(ORG_SCOPE_ADD)),
-):
-    return ok(organization_service().upsert_data_policy(payload.model_dump()))
-
-
-@organization_router.delete("/data-policies/{policy_id}", response_model=StandardResponse[dict[str, bool]])
-async def delete_data_policy(policy_id: str, _: dict = Depends(require_permission(ORG_SCOPE_DELETE))):
-    organization_service().delete_data_policy(policy_id)
-    return ok({"deleted": True})
-
-
-@organization_router.get("/row-rules", response_model=StandardResponse[list[RowPermissionRuleResponse]])
-async def list_row_rules(
-    policyId: str = Query(default=""),
-    _: dict = Depends(require_permission(ORG_SCOPE_VIEW)),
-):
-    return ok(organization_service().list_row_rules(policyId))
-
-
-@organization_router.post("/row-rules", response_model=StandardResponse[RowPermissionRuleResponse])
-async def create_row_rule(
-    payload: RowPermissionRuleCommand,
-    _: dict = Depends(require_permission(ORG_SCOPE_ADD)),
-):
-    return ok(organization_service().create_row_rule(payload.model_dump()))
-
-
-@organization_router.delete("/row-rules/{rule_id}", response_model=StandardResponse[dict[str, bool]])
-async def delete_row_rule(rule_id: str, _: dict = Depends(require_permission(ORG_SCOPE_DELETE))):
-    organization_service().delete_row_rule(rule_id)
-    return ok({"deleted": True})
-
-
-@organization_router.get("/field-rules", response_model=StandardResponse[list[FieldPermissionRuleResponse]])
-async def list_field_rules(
-    policyId: str = Query(default=""),
-    _: dict = Depends(require_permission(ORG_SCOPE_VIEW)),
-):
-    return ok(organization_service().list_field_rules(policyId))
-
-
-@organization_router.post("/field-rules", response_model=StandardResponse[FieldPermissionRuleResponse])
-async def upsert_field_rule(
-    payload: FieldPermissionRuleCommand,
-    _: dict = Depends(require_permission(ORG_SCOPE_ADD)),
-):
-    return ok(organization_service().upsert_field_rule(payload.model_dump()))
-
-
-@organization_router.delete("/field-rules/{rule_id}", response_model=StandardResponse[dict[str, bool]])
-async def delete_field_rule(rule_id: str, _: dict = Depends(require_permission(ORG_SCOPE_DELETE))):
-    organization_service().delete_field_rule(rule_id)
-    return ok({"deleted": True})
-
-
-@organization_router.get("/masking-rules", response_model=StandardResponse[list[MaskingRuleResponse]])
-async def list_masking_rules(
-    policyId: str = Query(default=""),
-    _: dict = Depends(require_permission(ORG_SCOPE_VIEW)),
-):
-    return ok(organization_service().list_masking_rules(policyId))
-
-
-@organization_router.post("/masking-rules", response_model=StandardResponse[MaskingRuleResponse])
-async def upsert_masking_rule(
-    payload: MaskingRuleCommand,
-    _: dict = Depends(require_permission(ORG_SCOPE_ADD)),
-):
-    return ok(organization_service().upsert_masking_rule(payload.model_dump()))
-
-
-@organization_router.delete("/masking-rules/{rule_id}", response_model=StandardResponse[dict[str, bool]])
-async def delete_masking_rule(rule_id: str, _: dict = Depends(require_permission(ORG_SCOPE_DELETE))):
-    organization_service().delete_masking_rule(rule_id)
     return ok({"deleted": True})

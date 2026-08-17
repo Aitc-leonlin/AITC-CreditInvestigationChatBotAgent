@@ -29,7 +29,7 @@ from src.features.chatbot.models.langgraph_state_types import OverallState
 
 # import graph
 from src.features.chatbot.core.agent.graph import graph
-from src.shared.database.db_path import build_sqlite_db_diagnostics
+from src.shared.database.db_path import build_database_diagnostics
 
 # import api routers
 from src.features.chatbot.api.chatbot import chatbot_router
@@ -49,6 +49,7 @@ from src.features.membership.api.rbac_controller import rbac_router
 from src.features.membership.api.user_controller import membership_user_router
 from src.features.membership.api.organization_controller import organization_router
 from src.features.membership.api.notification_controller import membership_admin_router
+from src.features.membership.api.group_controller import group_router
 from src.features.membership.core.exceptions import MembershipError, membership_error_handler
 from src.features.membership.core.audit_middleware import audit_http_middleware
 from src.features.membership.services.audit_retention_service import run_audit_retention_scheduler
@@ -82,6 +83,7 @@ api_router.include_router(menu_router)
 api_router.include_router(membership_user_router)
 api_router.include_router(organization_router)
 api_router.include_router(membership_admin_router)
+api_router.include_router(group_router)
 app.include_router(api_router)
 app.add_exception_handler(MembershipError, membership_error_handler)
 logger = logging.getLogger(__name__)
@@ -152,12 +154,12 @@ app.add_middleware(
 )
 
 
-def log_sqlite_db_diagnostics() -> None:
-    diagnostics = build_sqlite_db_diagnostics()
-    logger.warning("SQLite DB diagnostics:\n%s", json.dumps(diagnostics, ensure_ascii=False, indent=2))
+def log_database_diagnostics() -> None:
+    diagnostics = build_database_diagnostics()
+    logger.warning("Database diagnostics:\n%s", json.dumps(diagnostics, ensure_ascii=False, indent=2))
 
 
-log_sqlite_db_diagnostics()
+log_database_diagnostics()
 
 
 # 建立 VectorStore

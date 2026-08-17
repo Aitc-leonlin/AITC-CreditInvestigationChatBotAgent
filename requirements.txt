@@ -12,3 +12,4 @@ langchain-anthropic
 langgraph
 rpds-py
 python-docx
+psycopg[binary]>=3.2,<4

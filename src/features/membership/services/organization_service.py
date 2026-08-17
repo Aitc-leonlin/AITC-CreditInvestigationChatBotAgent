@@ -116,59 +116,6 @@ class OrganizationService:
         if not self.repository.delete_manager_relation(relation_id):
             raise ResourceNotFoundError("Manager relation not found.", {"id": relation_id})
 
-    def list_data_policies(self, *, subject_type: str = "", subject_id: str = "", resource_code: str = "") -> list[dict[str, Any]]:
-        return self.repository.list_data_policies(subject_type=subject_type, subject_id=subject_id, resource_code=resource_code)
-
-    def upsert_data_policy(self, payload: dict[str, Any]) -> dict[str, Any]:
-        self._validate_subject(payload["subjectType"], payload["subjectId"])
-        if payload.get("dataScope") == "CUSTOM":
-            for organization_id in payload.get("customScope", []):
-                self._validate_organization(organization_id)
-        return self.repository.upsert_data_policy(payload)
-
-    def delete_data_policy(self, policy_id: str) -> None:
-        if not self.repository.delete_data_policy(policy_id):
-            raise ResourceNotFoundError("Data permission policy not found.", {"id": policy_id})
-
-    def list_row_rules(self, policy_id: str = "") -> list[dict[str, Any]]:
-        return self.repository.list_row_rules(policy_id)
-
-    def create_row_rule(self, payload: dict[str, Any]) -> dict[str, Any]:
-        self._validate_policy(payload["policyId"])
-        return self.repository.create_row_rule(payload)
-
-    def delete_row_rule(self, rule_id: str) -> None:
-        if not self.repository.delete_row_rule(rule_id):
-            raise ResourceNotFoundError("Row permission rule not found.", {"id": rule_id})
-
-    def list_field_rules(self, policy_id: str = "") -> list[dict[str, Any]]:
-        return self.repository.list_field_rules(policy_id)
-
-    def upsert_field_rule(self, payload: dict[str, Any]) -> dict[str, Any]:
-        self._validate_policy(payload["policyId"])
-        try:
-            return self.repository.upsert_field_rule(payload)
-        except sqlite3.IntegrityError as exc:
-            raise ConflictError("Field permission rule already exists.") from exc
-
-    def delete_field_rule(self, rule_id: str) -> None:
-        if not self.repository.delete_field_rule(rule_id):
-            raise ResourceNotFoundError("Field permission rule not found.", {"id": rule_id})
-
-    def list_masking_rules(self, policy_id: str = "") -> list[dict[str, Any]]:
-        return self.repository.list_masking_rules(policy_id)
-
-    def upsert_masking_rule(self, payload: dict[str, Any]) -> dict[str, Any]:
-        self._validate_policy(payload["policyId"])
-        try:
-            return self.repository.upsert_masking_rule(payload)
-        except sqlite3.IntegrityError as exc:
-            raise ConflictError("Sensitive masking rule already exists.") from exc
-
-    def delete_masking_rule(self, rule_id: str) -> None:
-        if not self.repository.delete_masking_rule(rule_id):
-            raise ResourceNotFoundError("Sensitive masking rule not found.", {"id": rule_id})
-
     def _validate_unit_references(self, payload: dict[str, Any]) -> None:
         self._validate_organization(payload.get("parentId"))
         self._validate_organization(payload.get("companyId"))
@@ -185,15 +132,6 @@ class OrganizationService:
     def _validate_position(self, position_id: str | None) -> None:
         if not self.repository.entity_exists("membership_position", position_id):
             raise ValidationFailureError("Position does not exist.", {"positionId": position_id})
-
-    def _validate_policy(self, policy_id: str) -> None:
-        if not self.repository.entity_exists("membership_data_permission_policy", policy_id):
-            raise ValidationFailureError("Data permission policy does not exist.", {"policyId": policy_id})
-
-    def _validate_subject(self, subject_type: str, subject_id: str) -> None:
-        table_name = "membership_role" if subject_type == "ROLE" else "membership_user"
-        if not self.repository.entity_exists(table_name, subject_id):
-            raise ValidationFailureError("Policy subject does not exist.", {"subjectId": subject_id})
 
     def _ensure_unique_code(self, table_name: str, code: str, exclude_id: str | None = None) -> None:
         if self.repository.code_exists(table_name, code, exclude_id=exclude_id):

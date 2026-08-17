@@ -44,10 +44,20 @@ MENU_ITEMS: tuple[MenuDefinition, ...] = (
         code="MEMBERSHIP_USERS",
         title="會員帳號",
         parentId="menu-membership",
+        routePath="",
+        componentKey="MembershipUsersSection",
+        icon="Users",
+        sortOrder=20,
+    ),
+    MenuDefinition(
+        id="menu-users-list",
+        code="MEMBERSHIP_USERS_LIST",
+        title="會員帳號管理",
+        parentId="menu-users",
         routePath="/membership/users",
         componentKey="MembershipUsersPage",
         icon="Users",
-        sortOrder=20,
+        sortOrder=10,
         requiredPermissionCode="membership.read",
     ),
     MenuDefinition(
@@ -65,11 +75,11 @@ MENU_ITEMS: tuple[MenuDefinition, ...] = (
         id="menu-user-roles",
         code="MEMBERSHIP_USER_ROLES",
         title="批次套用角色",
-        parentId="menu-membership",
+        parentId="menu-users",
         routePath="/membership/user-roles",
         componentKey="MembershipUserRolesPage",
         icon="UserCog",
-        sortOrder=40,
+        sortOrder=20,
         requiredPermissionCode="membership.user-roles",
     ),
     MenuDefinition(
@@ -84,9 +94,19 @@ MENU_ITEMS: tuple[MenuDefinition, ...] = (
         requiredPermissionCode="rbac.view",
     ),
     MenuDefinition(
+        id="menu-groups",
+        code="MEMBERSHIP_GROUPS",
+        title="群組管理",
+        parentId="menu-membership",
+        routePath="/membership/groups",
+        componentKey="MembershipGroupsPage",
+        icon="Users",
+        sortOrder=60,
+    ),
+    MenuDefinition(
         id="menu-organizations",
         code="MEMBERSHIP_ORGS",
-        title="組織資料權限",
+        title="組織管理",
         parentId="menu-membership",
         routePath="/membership/organizations",
         componentKey="MembershipOrganizationsPage",
@@ -137,7 +157,12 @@ def current_menu_rows(permission_codes: set[str]) -> list[dict[str, object]]:
     return [
         _menu_row(menu)
         for menu in MENU_ITEMS
-        if menu.id in visible_ids and (menu.requiredPermissionCode is not None or menu.id in child_parent_ids)
+        if menu.id in visible_ids
+        and (
+            menu.requiredPermissionCode is not None
+            or menu.id in child_parent_ids
+            or bool(menu.routePath)
+        )
     ]
 
 

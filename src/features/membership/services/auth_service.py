@@ -152,6 +152,7 @@ class AuthService:
         ip_address: str,
         user_agent: str,
     ) -> dict[str, Any]:
+        # TEMPORARY: 前端以紅字標示尚未完成，這是目前的權宜處理；完成寄信服務後應移除前後端標示。
         # NOTE: 目前尚未串接實際寄信服務。這裡只建立 reset token、寫入通知 outbox，
         # 並把 token 回傳給前端供開發測試；正式產品應改由 mail worker 寄出重設連結。
         user = self.repository.find_user_by_login(email)
@@ -234,6 +235,7 @@ class AuthService:
         ip_address: str,
         user_agent: str,
     ) -> dict[str, Any]:
+        # TEMPORARY: 前端以紅字標示尚未完成，這是目前的權宜處理；完成寄信服務後應移除前後端標示。
         # NOTE: 目前尚未串接實際寄信服務。這裡只建立 verification token、寫入通知 outbox，
         # 並把 token 回傳給前端供開發測試；正式產品應改由 mail worker 寄出驗證連結。
         payload = decode_jwt(access_token)

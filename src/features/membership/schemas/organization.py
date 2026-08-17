@@ -5,8 +5,6 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 Status = Literal["ACTIVE", "INACTIVE"]
 OrganizationUnitType = Literal["COMPANY", "DEPARTMENT", "TEAM"]
-DataScope = Literal["ONLY_MYSELF", "SAME_DEPARTMENT", "SUB_DEPARTMENT", "WHOLE_COMPANY", "CUSTOM"]
-SubjectType = Literal["ROLE", "USER"]
 
 
 def normalize_code(value: str) -> str:
@@ -69,58 +67,6 @@ class ManagerRelationCommand(BaseModel):
     status: Status = "ACTIVE"
 
 
-class DataPermissionPolicyCommand(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
-
-    subjectType: SubjectType = "ROLE"
-    subjectId: str
-    resourceCode: str = Field(min_length=1, max_length=120)
-    dataScope: DataScope = "ONLY_MYSELF"
-    customScope: list[str] = Field(default_factory=list)
-    rowRule: dict = Field(default_factory=dict)
-    fieldRule: dict = Field(default_factory=dict)
-    maskingRule: dict = Field(default_factory=dict)
-    status: Status = "ACTIVE"
-
-    @field_validator("resourceCode")
-    @classmethod
-    def normalize_resource_code(cls, value: str) -> str:
-        return value.strip().lower()
-
-
-class RowPermissionRuleCommand(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
-
-    policyId: str
-    resourceCode: str
-    ruleName: str = Field(min_length=1, max_length=120)
-    expression: dict = Field(default_factory=dict)
-    effect: Literal["ALLOW", "DENY"] = "ALLOW"
-    status: Status = "ACTIVE"
-
-
-class FieldPermissionRuleCommand(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
-
-    policyId: str
-    resourceCode: str
-    fieldName: str = Field(min_length=1, max_length=120)
-    canRead: bool = True
-    canWrite: bool = False
-    status: Status = "ACTIVE"
-
-
-class MaskingRuleCommand(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
-
-    policyId: str
-    resourceCode: str
-    fieldName: str = Field(min_length=1, max_length=120)
-    maskingType: str = "PARTIAL"
-    maskingPattern: str = ""
-    status: Status = "ACTIVE"
-
-
 class OrganizationUnitResponse(BaseModel):
     id: str
     code: str
@@ -178,58 +124,6 @@ class ManagerRelationResponse(BaseModel):
     organizationId: str | None
     organizationName: str | None
     relationType: str
-    status: str
-    createdAt: str
-    updatedAt: str
-
-
-class DataPermissionPolicyResponse(BaseModel):
-    id: str
-    subjectType: str
-    subjectId: str
-    subjectName: str | None
-    resourceCode: str
-    dataScope: str
-    customScope: list[str]
-    rowRule: dict
-    fieldRule: dict
-    maskingRule: dict
-    status: str
-    createdAt: str
-    updatedAt: str
-
-
-class RowPermissionRuleResponse(BaseModel):
-    id: str
-    policyId: str
-    resourceCode: str
-    ruleName: str
-    expression: dict
-    effect: str
-    status: str
-    createdAt: str
-    updatedAt: str
-
-
-class FieldPermissionRuleResponse(BaseModel):
-    id: str
-    policyId: str
-    resourceCode: str
-    fieldName: str
-    canRead: bool
-    canWrite: bool
-    status: str
-    createdAt: str
-    updatedAt: str
-
-
-class MaskingRuleResponse(BaseModel):
-    id: str
-    policyId: str
-    resourceCode: str
-    fieldName: str
-    maskingType: str
-    maskingPattern: str
     status: str
     createdAt: str
     updatedAt: str

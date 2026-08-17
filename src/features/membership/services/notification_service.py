@@ -68,6 +68,7 @@ class NotificationAdminService:
         )
 
     def dispatch_outbox(self, outbox_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+        # TEMPORARY: 前端以紅字標示尚未完成，這是目前的權宜處理；完成 mail worker 後應移除前後端標示。
         # NOTE: 目前 dispatch 只更新 outbox 狀態為 SENT/FAILED，沒有真的呼叫 SMTP 或第三方寄信服務。
         # 後續若要完成寄信，應由 mail worker 讀取 outbox、送信後再回寫狀態。
         updated = self.repository.mark_outbox(

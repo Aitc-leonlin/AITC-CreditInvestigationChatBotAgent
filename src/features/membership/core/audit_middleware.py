@@ -47,8 +47,7 @@ AUDIT_ROUTES = [
     route("DELETE", r"^/api/membership/rbac/roles/(?P<id>[^/]+)$", "membership.role.delete", "membership_role", "會員管理", "角色刪除"),
     route("PUT", r"^/api/membership/rbac/roles/(?P<id>[^/]+)/permissions$", "membership.role.permissions.update", "membership_role", "會員管理", "角色權限修改"),
     route("PUT", r"^/api/membership/rbac/users/(?P<id>[^/]+)/roles$", "membership.user_roles.batch_assign", "membership_user", "會員管理", "批次指派角色"),
-    route("(?:POST|PUT|DELETE)", r"^/api/membership/organizations/(?!masking-rules)(?P<section>units|positions|user-departments|manager-relations|data-policies|row-rules|field-rules)(?:/(?P<id>[^/]+))?$", "membership.organization_scope.change", "organization_data_scope", "會員管理", "組織/資料範圍"),
-    route("(?:POST|DELETE)", r"^/api/membership/organizations/masking-rules(?:/(?P<id>[^/]+))?$", "membership.data_masking.change", "data_masking_rule", "會員管理", "資料遮罩規則"),
+    route("(?:POST|PUT|DELETE)", r"^/api/membership/organizations/(?P<section>units|positions|user-departments|manager-relations)(?:/(?P<id>[^/]+))?$", "membership.organization_scope.change", "organization", "會員管理", "組織管理"),
     route("POST", r"^/api/membership/admin/notification-templates$", "membership.notification_template.update", "notification_template", "會員管理", "通知範本修改"),
     route("PUT", r"^/api/membership/admin/audit-retention$", "membership.audit_retention.update", "audit_retention", "會員管理", "Audit Log 保留天數修改"),
 ]
