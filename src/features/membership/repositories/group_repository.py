@@ -259,11 +259,11 @@ class GroupRepository:
         with get_membership_connection() as connection:
             count = connection.execute(
                 f"""
-                SELECT COUNT(*) FROM membership_user
+                SELECT COUNT(*) AS total FROM membership_user
                 WHERE id IN ({placeholders}) AND deleted_at IS NULL
                 """,
                 unique_ids,
-            ).fetchone()[0]
+            ).fetchone()["total"]
             return count == len(unique_ids)
 
     def is_master(self, group_id: str, user_id: str) -> bool:

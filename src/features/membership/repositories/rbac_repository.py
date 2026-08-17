@@ -12,6 +12,7 @@ from src.features.membership.core.permission_registry import (
     permission_rows,
 )
 from src.features.membership.core.time import utc_now_iso
+from src.shared.database.connection import get_table_columns, is_postgresql
 
 
 class RbacRepository:
@@ -214,16 +215,17 @@ class RbacRepository:
                 [now, now, user_id],
             )
             for role_id in role_ids:
-                connection.execute(
-                    """
-                    INSERT OR REPLACE INTO membership_user_role (
-                        id, user_id, role_id, organization_id, effective_from,
-                        effective_to, created_at, updated_at, deleted_at
-                    )
-                    VALUES (?, ?, ?, ?, ?, NULL, ?, ?, NULL)
-                    """,
-                    [f"user-role-{user_id}-{role_id}", user_id, role_id, organization_id, now, now, now],
-                )
+                self._insert_or_replace(connection, "membership_user_role", {
+                    "id": f"user-role-{user_id}-{role_id}",
+                    "user_id": user_id,
+                    "role_id": role_id,
+                    "organization_id": organization_id,
+                    "effective_from": now,
+                    "effective_to": None,
+                    "created_at": now,
+                    "updated_at": now,
+                    "deleted_at": None,
+                })
             self._insert_notification(
                 connection,
                 recipient_user_id=user_id,
@@ -425,16 +427,24 @@ class RbacRepository:
     def _insert_or_replace(self, connection: sqlite3.Connection, table_name: str, payload: dict[str, Any]) -> None:
         columns = list(payload.keys())
         placeholders = ", ".join("?" for _ in columns)
+        if is_postgresql():
+            update_columns = [column for column in columns if column != "id"]
+            assignments = ", ".join(
+                f"{column} = EXCLUDED.{column}" for column in update_columns
+            )
+            connection.execute(
+                f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders}) "
+                f"ON CONFLICT (id) DO UPDATE SET {assignments}",
+                [payload[column] for column in columns],
+            )
+            return
         connection.execute(
             f"INSERT OR REPLACE INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})",
             [payload[column] for column in columns],
         )
 
     def _table_columns(self, connection: sqlite3.Connection, table_name: str) -> set[str]:
-        return {
-            row["name"]
-            for row in connection.execute(f"PRAGMA table_info({table_name})").fetchall()
-        }
+        return get_table_columns(connection, table_name)
 
     def _build_role_code(self, role_id: str, name: str) -> str:
         normalized_name = "_".join(name.split())

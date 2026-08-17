@@ -1,9 +1,9 @@
-import sqlite3
 import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from src.shared.database.db_path import resolve_sqlite_db_path
+from src.features.membership.services.bootstrap_service import apply_xbrl_migration
+from src.shared.database.connection import get_table_columns, is_postgresql, open_database_connection
 
 
 ALL_COMPANY_VALUE = "All"
@@ -35,13 +35,14 @@ def build_source_schema_key(data_source: str, industry: str, company_label: str)
     )
 
 
-def get_connection() -> sqlite3.Connection:
-    connection = sqlite3.connect(resolve_sqlite_db_path())
-    connection.row_factory = sqlite3.Row
-    return connection
+def get_connection() -> Any:
+    return open_database_connection()
 
 
 def ensure_expert_knowledge_schema() -> None:
+    if is_postgresql():
+        apply_xbrl_migration()
+        return
     now = utc_now_iso()
     with get_connection() as connection:
         connection.execute(
@@ -62,10 +63,7 @@ def ensure_expert_knowledge_schema() -> None:
             )
             """
         )
-        columns = {
-            row["name"]
-            for row in connection.execute("PRAGMA table_info(expert_knowledge_entry)")
-        }
+        columns = get_table_columns(connection, "expert_knowledge_entry")
         if "created_at" not in columns:
             connection.execute(
                 "ALTER TABLE expert_knowledge_entry ADD COLUMN created_at TEXT NOT NULL DEFAULT ''"
@@ -115,7 +113,7 @@ def ensure_expert_knowledge_schema() -> None:
         )
 
 
-def row_to_entry(row: sqlite3.Row) -> dict[str, str]:
+def row_to_entry(row: Any) -> dict[str, str]:
     return {
         "id": row["id"],
         "title": row["title"],

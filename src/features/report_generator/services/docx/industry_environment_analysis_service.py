@@ -34,6 +34,8 @@ def connection_rows(db: Any, sql: str, params: tuple[Any, ...] = ()) -> list[dic
     except Exception:
         return []
     rows = cursor.fetchall()
+    if rows and isinstance(rows[0], dict):
+        return [dict(row) for row in rows]
     keys = [column[0] for column in cursor.description or []]
     return [dict(zip(keys, row)) for row in rows]
 

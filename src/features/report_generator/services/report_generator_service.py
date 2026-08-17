@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Any
 
 from src.shared.database.db_path import PROJECT_ROOT, resolve_sqlite_db_path
+from src.shared.database.connection import get_table_columns, is_postgresql, open_database_connection
+from src.features.membership.services.bootstrap_service import apply_xbrl_migration
 from src.features.report_generator.services.docx.document_merge_service import merge_all_chapters
 from src.features.report_generator.services.report_llm_conclusion_service import generate_report_llm_conclusion
 
@@ -405,20 +407,26 @@ def generated_reports_dir() -> Path:
     return directory.resolve()
 
 
-def report_history_db_path() -> Path:
+def report_history_db_path() -> Path | None:
+    if is_postgresql():
+        return None
     return resolve_sqlite_db_path()
 
 
-def connect_report_history_db() -> sqlite3.Connection:
+def connect_report_history_db() -> Any:
     db_path = report_history_db_path()
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    connection = sqlite3.connect(db_path)
-    connection.row_factory = sqlite3.Row
+    if db_path is not None:
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+    else:
+        apply_xbrl_migration()
+    connection = open_database_connection()
     ensure_report_history_table(connection)
     return connection
 
 
-def ensure_report_history_table(connection: sqlite3.Connection) -> None:
+def ensure_report_history_table(connection: Any) -> None:
+    if is_postgresql():
+        return
     connection.execute(
         f"""
         CREATE TABLE IF NOT EXISTS {REPORT_HISTORY_TABLE} (
@@ -443,10 +451,7 @@ def ensure_report_history_table(connection: sqlite3.Connection) -> None:
         )
         """
     )
-    columns = {
-        row["name"]
-        for row in connection.execute(f"PRAGMA table_info({REPORT_HISTORY_TABLE})").fetchall()
-    }
+    columns = get_table_columns(connection, REPORT_HISTORY_TABLE)
     if "public_id" not in columns:
         connection.execute(f"ALTER TABLE {REPORT_HISTORY_TABLE} ADD COLUMN public_id TEXT")
 
@@ -480,10 +485,7 @@ def ensure_report_history_table(connection: sqlite3.Connection) -> None:
         )
         """
     )
-    dashboard_columns = {
-        row["name"]
-        for row in connection.execute(f"PRAGMA table_info({REPORT_DASHBOARD_TABLE})").fetchall()
-    }
+    dashboard_columns = get_table_columns(connection, REPORT_DASHBOARD_TABLE)
     if "financial_trends_json" not in dashboard_columns:
         connection.execute(
             f"ALTER TABLE {REPORT_DASHBOARD_TABLE} "
@@ -497,12 +499,11 @@ def ensure_report_history_table(connection: sqlite3.Connection) -> None:
 
 
 class FinancialStatementsDocxAdapter:
-    def __init__(self, db_path: Path, company_code: str, company_label: str):
+    def __init__(self, db_path: Path | None, company_code: str, company_label: str):
         self.db_path = db_path
         self.company_code = company_code
         self.company_label = company_label
-        self.connection = sqlite3.connect(db_path)
-        self.connection.row_factory = sqlite3.Row
+        self.connection = open_database_connection()
         self._report_context_cache: dict[tuple[int, str | None], sqlite3.Row | None] = {}
 
     def close(self) -> None:
@@ -1101,7 +1102,9 @@ class FinancialStatementsDocxAdapter:
         ]
 
 
-def get_financial_statements_db_path() -> Path:
+def get_financial_statements_db_path() -> Path | None:
+    if is_postgresql():
+        return None
     configured_path = os.getenv("REPORT_GENERATOR_DB_PATH")
     if configured_path:
         return Path(configured_path).resolve()
@@ -1115,7 +1118,7 @@ def generate_credit_report_docx(
     year: int,
 ) -> dict[str, Any]:
     db_path = get_financial_statements_db_path()
-    if not db_path.exists():
+    if db_path is not None and not db_path.exists():
         raise FileNotFoundError(f"SQLite database not found: {db_path}")
 
     adapter = FinancialStatementsDocxAdapter(
@@ -1173,6 +1176,7 @@ def insert_report_history(
     generated_at_display = generated_at.strftime("%Y/%m/%d %H:%M")
 
     with connect_report_history_db() as connection:
+        returning_sql = " RETURNING id" if is_postgresql() else ""
         cursor = connection.execute(
             f"""
             INSERT INTO {REPORT_HISTORY_TABLE} (
@@ -1194,6 +1198,7 @@ def insert_report_history(
                 mime_type,
                 created_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            {returning_sql}
             """,
             (
                 generate_report_public_id(),
@@ -1215,8 +1220,13 @@ def insert_report_history(
                 generated_at_iso,
             ),
         )
+        returned_row = cursor.fetchone() if is_postgresql() else None
         connection.commit()
-        report_id = int(cursor.lastrowid)
+        report_id = (
+            int(returned_row["id"])
+            if is_postgresql()
+            else int(cursor.lastrowid)
+        )
 
     return get_report_history_item(report_id) or {}
 

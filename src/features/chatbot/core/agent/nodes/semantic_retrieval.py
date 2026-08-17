@@ -1,7 +1,6 @@
 import json
 import logging
 import re
-import sqlite3
 from time import perf_counter
 from typing import Dict, List, Literal, Optional
 
@@ -12,7 +11,7 @@ from pydantic import BaseModel, Field, field_validator
 from src.features.chatbot.core.mappings.company_stock_code_array import CompanyStockCodeArray
 from src.features.chatbot.core.providers.chat_openAI_provider import chat_model, get_message_text
 from src.features.chatbot.services.account_title_matcher import find_candidates
-from src.shared.database.db_path import resolve_sqlite_db_path
+from src.shared.database.connection import open_database_connection
 from src.features.chatbot.models.langgraph_state_types import OverallState
 
 
@@ -339,8 +338,7 @@ def resolve_company(identifiers: object) -> Optional[Dict]:
 
 
 def list_company_reports(company_code: str) -> List[Dict]:
-    connection = sqlite3.connect(resolve_sqlite_db_path())
-    connection.row_factory = sqlite3.Row
+    connection = open_database_connection()
     try:
         cursor = connection.execute(
             """
@@ -426,8 +424,7 @@ def fetch_financial_value(
         return None
     effective_quarter = 4 if quarter is None else quarter
 
-    connection = sqlite3.connect(resolve_sqlite_db_path())
-    connection.row_factory = sqlite3.Row
+    connection = open_database_connection()
     try:
         query = """
             SELECT

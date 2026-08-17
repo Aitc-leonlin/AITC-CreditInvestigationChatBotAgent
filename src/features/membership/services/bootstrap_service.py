@@ -23,6 +23,38 @@ MEMBERSHIP_MIGRATION_NAMES = [
     "V1.5__add_membership_groups.sql",
     "V1.6__remove_data_scope_and_masking.sql",
 ]
+XBRL_MIGRATION_NAME = "V1.0__initialize_financial_statement_xbrl_schema.sql"
+
+
+def apply_xbrl_migration() -> None:
+    settings = get_database_settings()
+    migration_file = PROJECT_ROOT / "src/sql/migrations" / settings.mode / XBRL_MIGRATION_NAME
+    if not migration_file.is_file():
+        raise RuntimeError(f"Missing {settings.mode} XBRL migration file: {migration_file}")
+    with membership_transaction() as connection:
+        if settings.mode == "sqlite":
+            migration_table_exists = connection.execute(
+                "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'schema_migrations'"
+            ).fetchone()
+        else:
+            migration_table_exists = connection.execute(
+                """
+                SELECT 1 FROM information_schema.tables
+                WHERE table_schema = current_schema() AND table_name = 'schema_migrations'
+                """
+            ).fetchone()
+        if migration_table_exists:
+            applied = connection.execute(
+                "SELECT 1 FROM schema_migrations WHERE version = ? LIMIT 1",
+                ["V1.0"],
+            ).fetchone()
+            if applied:
+                return
+        migration_sql = migration_file.read_text(encoding="utf-8")
+        if settings.mode == "sqlite":
+            connection.executescript(migration_sql)
+        else:
+            connection.execute(migration_sql, prepare=False)
 
 
 def membership_migration_files(database_mode: str | None = None) -> list[Path]:
@@ -38,6 +70,7 @@ def membership_migration_files(database_mode: str | None = None) -> list[Path]:
 
 
 def apply_membership_migration() -> None:
+    apply_xbrl_migration()
     settings = get_database_settings()
     migration_files = membership_migration_files(settings.mode)
     with membership_transaction() as connection:
@@ -463,7 +496,7 @@ def _insert_role_permission_code(connection: Any, role_id: str, permission_code:
             VALUES (%s, %s, %s, 'ALLOW', CURRENT_TIMESTAMP::TEXT, CURRENT_TIMESTAMP::TEXT, NULL)
             ON CONFLICT (role_id, permission_code) DO UPDATE
             SET effect = EXCLUDED.effect,
-                updated_at = CURRENT_TIMESTAMP,
+                updated_at = CURRENT_TIMESTAMP::TEXT,
                 deleted_at = NULL
             """,
             [f"role-permission-{role_id}-{permission_code}", role_id, permission_code],

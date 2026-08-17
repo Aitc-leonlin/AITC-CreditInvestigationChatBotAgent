@@ -5,6 +5,7 @@ from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.time import utc_now_iso
+from src.shared.database.connection import is_postgresql
 from src.features.membership.repositories.membership_repositories import UserRepository
 
 
@@ -286,15 +287,44 @@ class MembershipUserRepository(UserRepository):
                 [now, now, user_id],
             )
             if manager_user_id:
+                relation_id = f"manager-relation-{user_id}"
+                if is_postgresql():
+                    existing_relation = connection.execute(
+                        """
+                        SELECT id
+                        FROM membership_user_manager_relation
+                        WHERE manager_user_id = ?
+                          AND employee_user_id = ?
+                          AND organization_id IS NOT DISTINCT FROM ?
+                        ORDER BY updated_at DESC, created_at DESC
+                        LIMIT 1
+                        """,
+                        [manager_user_id, user_id, organization_id],
+                    ).fetchone()
+                    if existing_relation:
+                        relation_id = existing_relation["id"]
+                insert_prefix = "INSERT INTO" if is_postgresql() else "INSERT OR REPLACE INTO"
+                conflict_sql = """
+                    ON CONFLICT (id) DO UPDATE SET
+                        manager_user_id = EXCLUDED.manager_user_id,
+                        employee_user_id = EXCLUDED.employee_user_id,
+                        organization_id = EXCLUDED.organization_id,
+                        relation_type = EXCLUDED.relation_type,
+                        status = EXCLUDED.status,
+                        created_at = EXCLUDED.created_at,
+                        updated_at = EXCLUDED.updated_at,
+                        deleted_at = EXCLUDED.deleted_at
+                """ if is_postgresql() else ""
                 connection.execute(
-                    """
-                    INSERT OR REPLACE INTO membership_user_manager_relation (
+                    f"""
+                    {insert_prefix} membership_user_manager_relation (
                         id, manager_user_id, employee_user_id, organization_id,
                         relation_type, status, created_at, updated_at, deleted_at
                     )
                     VALUES (?, ?, ?, ?, 'DIRECT', 'ACTIVE', ?, ?, NULL)
+                    {conflict_sql}
                     """,
-                    [str(uuid.uuid4()), manager_user_id, user_id, organization_id, now, now],
+                    [relation_id, manager_user_id, user_id, organization_id, now, now],
                 )
 
     def replace_user_roles(self, user_id: str, role_ids: list[str], organization_id: str | None) -> None:
@@ -309,13 +339,26 @@ class MembershipUserRepository(UserRepository):
                 [now, now, user_id],
             )
             for role_id in role_ids:
+                insert_prefix = "INSERT INTO" if is_postgresql() else "INSERT OR REPLACE INTO"
+                conflict_sql = """
+                    ON CONFLICT (id) DO UPDATE SET
+                        user_id = EXCLUDED.user_id,
+                        role_id = EXCLUDED.role_id,
+                        organization_id = EXCLUDED.organization_id,
+                        effective_from = EXCLUDED.effective_from,
+                        effective_to = EXCLUDED.effective_to,
+                        created_at = EXCLUDED.created_at,
+                        updated_at = EXCLUDED.updated_at,
+                        deleted_at = EXCLUDED.deleted_at
+                """ if is_postgresql() else ""
                 connection.execute(
-                    """
-                    INSERT OR REPLACE INTO membership_user_role (
+                    f"""
+                    {insert_prefix} membership_user_role (
                         id, user_id, role_id, organization_id, effective_from,
                         effective_to, created_at, updated_at, deleted_at
                     )
                     VALUES (?, ?, ?, ?, ?, NULL, ?, ?, NULL)
+                    {conflict_sql}
                     """,
                     [f"user-role-{user_id}-{role_id}", user_id, role_id, organization_id, now, now, now],
                 )

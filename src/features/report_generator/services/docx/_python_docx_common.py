@@ -49,11 +49,15 @@ def execute_query(db: Any, sql: str) -> list[dict[str, Any]]:
     if hasattr(db, "execute"):
         cursor = db.execute(sql)
         rows = cursor.fetchall()
+        if rows and isinstance(rows[0], dict):
+            return [dict(row) for row in rows]
         keys = [column[0] for column in cursor.description or []]
         return [dict(zip(keys, row)) for row in rows]
     if hasattr(db, "connection") and hasattr(db.connection, "execute"):
         cursor = db.connection.execute(sql)
         rows = cursor.fetchall()
+        if rows and isinstance(rows[0], dict):
+            return [dict(row) for row in rows]
         keys = [column[0] for column in cursor.description or []]
         return [dict(zip(keys, row)) for row in rows]
     raise TypeError("db must expose _execute(), run(), execute(), or connection.execute().")

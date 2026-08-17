@@ -1,7 +1,6 @@
 import json
 import logging
 import re
-import sqlite3
 from difflib import SequenceMatcher
 from time import perf_counter
 from typing import Dict, List, Optional
@@ -13,7 +12,7 @@ from pydantic import BaseModel, Field
 from src.features.chatbot.core.mappings.company_stock_code_array import CompanyStockCodeArray
 from src.features.chatbot.core.providers.chat_openAI_provider import chat_model, get_message_text
 from src.features.chatbot.services.account_title_matcher import find_candidates, search_item_source_paths
-from src.shared.database.db_path import resolve_sqlite_db_path
+from src.shared.database.connection import open_database_connection
 from src.features.chatbot.models.langgraph_state_types import OverallState
 
 
@@ -210,8 +209,7 @@ def resolve_company_profile(company_code: str) -> Dict[str, Optional[str]]:
     if not company_code:
         return profile
 
-    connection = sqlite3.connect(resolve_sqlite_db_path())
-    connection.row_factory = sqlite3.Row
+    connection = open_database_connection()
     try:
         row = connection.execute(
             """
@@ -558,8 +556,7 @@ def fetch_financial_value(
     if statement_type not in VALID_STATEMENT_TYPES:
         return None
 
-    connection = sqlite3.connect(resolve_sqlite_db_path())
-    connection.row_factory = sqlite3.Row
+    connection = open_database_connection()
     try:
         query = """
         SELECT

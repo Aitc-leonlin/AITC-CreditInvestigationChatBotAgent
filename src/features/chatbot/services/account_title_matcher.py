@@ -1,11 +1,11 @@
 import json
 import re
-import sqlite3
 from difflib import SequenceMatcher
 from functools import lru_cache
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from src.shared.database.connection import is_postgresql, open_database_connection
 from src.shared.database.db_path import PROJECT_ROOT, resolve_sqlite_db_path
 
 
@@ -105,18 +105,25 @@ def family_variants(family: str) -> List[str]:
 
 @lru_cache(maxsize=256)
 def get_company_families(company_code: str) -> tuple[str, ...]:
-    db_path = resolve_sqlite_db_path()
-    if not company_code or not db_path.exists():
+    if not company_code:
         return ()
-    connection = sqlite3.connect(db_path)
+    if not is_postgresql() and not resolve_sqlite_db_path().exists():
+        return ()
+    family_expression = (
+        "CASE WHEN POSITION(':' IN tc.taxonomy_id) > 0 "
+        "THEN SUBSTRING(tc.taxonomy_id FROM POSITION(':' IN tc.taxonomy_id) + 1) "
+        "ELSE tc.taxonomy_id END"
+        if is_postgresql()
+        else "CASE WHEN instr(tc.taxonomy_id, ':') > 0 "
+        "THEN substr(tc.taxonomy_id, instr(tc.taxonomy_id, ':') + 1) "
+        "ELSE tc.taxonomy_id END"
+    )
+    connection = open_database_connection()
     try:
         rows = connection.execute(
-            """
+            f"""
             SELECT DISTINCT
-                   CASE
-                       WHEN instr(tc.taxonomy_id, ':') > 0 THEN substr(tc.taxonomy_id, instr(tc.taxonomy_id, ':') + 1)
-                       ELSE tc.taxonomy_id
-                   END AS family
+                   {family_expression} AS family
             FROM financial_metric_value AS fmv
             JOIN report_instance AS ri
               ON ri.report_id = fmv.report_id
@@ -129,7 +136,7 @@ def get_company_families(company_code: str) -> tuple[str, ...]:
             """,
             (company_code,),
         ).fetchall()
-        return tuple(row[0] for row in rows if row and row[0])
+        return tuple(row["family"] for row in rows if row and row["family"])
     finally:
         connection.close()
 
@@ -140,8 +147,9 @@ def get_company_available_concepts(
     statement_type: str,
     industry_type: Optional[str] = None,
 ) -> tuple[str, ...]:
-    db_path = resolve_sqlite_db_path()
-    if not company_code or not db_path.exists():
+    if not company_code:
+        return ()
+    if not is_postgresql() and not resolve_sqlite_db_path().exists():
         return ()
 
     conditions = [
@@ -167,10 +175,10 @@ def get_company_available_concepts(
         ORDER BY fmv.concept_id
     """
 
-    connection = sqlite3.connect(db_path)
+    connection = open_database_connection()
     try:
         rows = connection.execute(query, params).fetchall()
-        return tuple(row[0] for row in rows if row and row[0])
+        return tuple(row["concept_id"] for row in rows if row and row["concept_id"])
     finally:
         connection.close()
 

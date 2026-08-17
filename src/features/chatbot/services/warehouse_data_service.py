@@ -1,9 +1,9 @@
-import sqlite3
 import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from src.shared.database.db_path import resolve_sqlite_db_path
+from src.features.membership.services.bootstrap_service import apply_xbrl_migration
+from src.shared.database.connection import get_table_columns, is_postgresql, open_database_connection
 
 
 def utc_now_iso() -> str:
@@ -18,13 +18,14 @@ def preserve_text(value: Any) -> str:
     return str(value or "").strip()
 
 
-def get_connection() -> sqlite3.Connection:
-    connection = sqlite3.connect(resolve_sqlite_db_path())
-    connection.row_factory = sqlite3.Row
-    return connection
+def get_connection() -> Any:
+    return open_database_connection()
 
 
 def ensure_warehouse_data_schema() -> None:
+    if is_postgresql():
+        apply_xbrl_migration()
+        return
     now = utc_now_iso()
     with get_connection() as connection:
         connection.execute(
@@ -46,10 +47,7 @@ def ensure_warehouse_data_schema() -> None:
             )
             """
         )
-        columns = {
-            row["name"]
-            for row in connection.execute("PRAGMA table_info(warehouse_data_entry)")
-        }
+        columns = get_table_columns(connection, "warehouse_data_entry")
         if "record_updated_at" not in columns:
             connection.execute(
                 "ALTER TABLE warehouse_data_entry ADD COLUMN record_updated_at TEXT NOT NULL DEFAULT ''"
@@ -112,7 +110,7 @@ def ensure_warehouse_data_schema() -> None:
         )
 
 
-def row_to_entry(row: sqlite3.Row) -> dict[str, str]:
+def row_to_entry(row: Any) -> dict[str, str]:
     return {
         "id": row["id"],
         "category": row["category"],

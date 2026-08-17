@@ -18,6 +18,7 @@ from src.features.membership.core.database import get_membership_connection, mem
 from src.features.membership.core.time import utc_now_iso
 from src.features.membership.services.bootstrap_service import apply_membership_migration
 from src.shared.database.db_path import PROJECT_ROOT
+from src.shared.database.connection import is_postgresql
 
 
 logger = logging.getLogger(__name__)
@@ -58,11 +59,16 @@ class AuditRetentionService:
             now = datetime.now(timezone.utc)
             cutoff = now - timedelta(days=int(setting["retention_days"]))
             cutoff_iso = cutoff.isoformat()
+            cutoff_expression = (
+                "created_at::timestamptz < ?::timestamptz"
+                if is_postgresql()
+                else "datetime(created_at) < datetime(?)"
+            )
             rows = connection.execute(
-                """
+                f"""
                 SELECT *
                 FROM membership_audit_log
-                WHERE datetime(created_at) < datetime(?)
+                WHERE {cutoff_expression}
                 ORDER BY created_at ASC, id ASC
                 """,
                 [cutoff_iso],
@@ -73,7 +79,7 @@ class AuditRetentionService:
                 archive_path = self._write_archive(rows, cutoff=cutoff, archived_at=now)
                 filename = archive_path.name
                 connection.execute(
-                    "DELETE FROM membership_audit_log WHERE datetime(created_at) < datetime(?)",
+                    f"DELETE FROM membership_audit_log WHERE {cutoff_expression}",
                     [cutoff_iso],
                 )
 

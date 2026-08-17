@@ -53,6 +53,7 @@ from src.features.membership.api.group_controller import group_router
 from src.features.membership.core.exceptions import MembershipError, membership_error_handler
 from src.features.membership.core.audit_middleware import audit_http_middleware
 from src.features.membership.services.audit_retention_service import run_audit_retention_scheduler
+from src.features.membership.services.bootstrap_service import ensure_membership_infrastructure
 
 
 from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
@@ -93,6 +94,7 @@ audit_retention_scheduler_task: asyncio.Task | None = None
 @app.on_event("startup")
 async def start_audit_retention_scheduler() -> None:
     global audit_retention_scheduler_task
+    ensure_membership_infrastructure()
     audit_retention_scheduler_task = asyncio.create_task(
         run_audit_retention_scheduler(),
         name="audit-log-retention-scheduler",

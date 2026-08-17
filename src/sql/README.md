@@ -80,6 +80,6 @@ migrations/
 ```
 
 `DATABASE_MODE=sqlite` selects `migrations/sqlite`; `DATABASE_MODE=postgresql`
-selects `migrations/postgresql`. Membership migrations V1.1 through V1.6 are
-applied automatically. V1.0 is the XBRL/report schema baseline and is kept
-separate from the automatic membership migration sequence.
+selects `migrations/postgresql`. Backend startup automatically applies the
+XBRL/report V1.0 migration followed by membership migrations V1.1 through V1.6,
+then inserts missing default membership seed records.
