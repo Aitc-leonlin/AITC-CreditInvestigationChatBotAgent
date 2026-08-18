@@ -1,9 +1,9 @@
-import json
 from typing import Any
 
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from src.features.chatbot.core.providers.chat_openAI_provider import chat_model, get_message_text
+from src.shared.database.serialization import database_json_dumps
 
 
 NO_ANALYSIS_DATA_MESSAGE = "資料不足，無法產生分析。"
@@ -29,7 +29,7 @@ def build_report_section_prompt(
     analysis_goal: str,
     context: dict[str, Any],
 ) -> str:
-    context_text = json.dumps(context, ensure_ascii=False, indent=2)
+    context_text = database_json_dumps(context, ensure_ascii=False, indent=2)
     return (
         f"請根據下列 DB 資料產生「{section_title}」。\n"
         f"分析目標：{analysis_goal}\n"

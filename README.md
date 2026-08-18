@@ -64,9 +64,14 @@ DATABASE_APPLICATION_NAME=aitc-credit-investigation-backend
 DATABASE_SCHEMA=public
 ```
 
+Render or another provider may supply one `DATABASE_URL` instead of
+`DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USER`, and
+`DATABASE_PASSWORD`. `DATABASE_MODE=postgresql` is still required. Explicit
+`DATABASE_SSLMODE` and `DATABASE_SCHEMA` settings continue to apply.
+
 Database passwords are read only from the environment and are excluded from startup diagnostics. Copy `.env.example` to `.env` for local development; never commit `.env`.
 
-The shared connection layer and runtime repositories support both connection modes. Migration files are separated under `src/sql/migrations/sqlite` and `src/sql/migrations/postgresql`; V1.0 through V1.6 are selected automatically from `DATABASE_MODE` and applied when the backend starts. Startup initialization also inserts missing default membership seed records without replacing existing records.
+The shared connection layer and runtime repositories support both connection modes. Migration files are separated under `src/sql/migrations/sqlite` and `src/sql/migrations/postgresql`; XBRL migrations V1.0 and V2.0 plus membership migrations V1.1 through V1.7 are selected automatically from `DATABASE_MODE` and applied when the backend starts. Startup initialization also inserts missing default membership seed records without replacing existing records.
 
 ## Regression Tests
 
@@ -147,9 +152,40 @@ python3 scripts/build_xbrl_sql.py \
   --sql-output ./output/report_import.sql
 ```
 
+### PostgreSQL XBRL parser
+
+When `DATABASE_MODE=postgresql`, the common `scripts/build_xbrl_sql.py` command
+automatically delegates to `scripts/build_xbrl_sql_postgresql.py`. The latter
+can also be called directly. It reads connection settings from the database ENV
+variables and generates idempotent PostgreSQL UPSERT statements.
+
+First import, including taxonomy metadata:
+
+```bash
+venv/bin/python scripts/build_xbrl_sql_postgresql.py \
+  --taxonomy-root "/path/to/tifrs-20200630" \
+  --instance-dir "/path/to/financial-report-folder" \
+  --sql-output output/xbrl_import_postgresql.sql \
+  --load-db
+```
+
+After taxonomy data already exists in PostgreSQL:
+
+```bash
+venv/bin/python scripts/build_xbrl_sql_postgresql.py \
+  --taxonomy-from-db \
+  --instance "/path/to/company-report.html" \
+  --sql-output output/company_report_postgresql.sql \
+  --load-db
+```
+
+Omit `--load-db` to generate the SQL file without changing the database. The
+PostgreSQL XBRL schema migrations V1.0 and V2.0 must exist first; normal
+backend startup applies them automatically.
+
 ## 財務報表解析匯入流程
 
-如果要把下載好的財務報表 XBRL/iXBRL 檔案匯入 `FinancialStatementXBRL.db`，主要使用 `scripts/build_xbrl_sql.py`。這個 script 會解析財報檔案，並寫入 `report_instance`、`xbrl_fact`、`financial_metric_value` 等查詢報告會用到的資料表。
+如果要把下載好的財務報表 XBRL/iXBRL 檔案匯入資料庫，主要使用 `scripts/build_xbrl_sql.py`。它會依 `DATABASE_MODE` 產生 SQLite 或 PostgreSQL 語法，並寫入 `report_instance`、`xbrl_fact`、`financial_metric_value` 等查詢報告會用到的資料表。
 
 ### 1. 準備財報檔案
 
@@ -241,7 +277,7 @@ python3 -c "import sqlite3; con=sqlite3.connect('FinancialStatementXBRL.db'); pr
 以下四支 script 都是人工執行的維護工具，不會由 FastAPI 啟動流程或 Chatbot API 自動呼叫：
 
 - `parse_xbrl_dictionary.py`、`build_xbrl_mapping_json.py`、`split_xbrl_dictionary.py` 只產生 JSON，不會產生 SQL 檔或修改 SQLite DB。
-- `import_listed_company_profile.py` 不會產生 SQL 檔，但會直接執行 SQLite `INSERT ... ON CONFLICT DO UPDATE`，修改 `company_profile`。
+- `import_listed_company_profile.py` 不會產生 SQL 檔，會依 `DATABASE_MODE` 連線並執行 `INSERT ... ON CONFLICT DO UPDATE`，直接修改 `company_profile`。
 - 真正會產生 XBRL SQL 檔的是 `scripts/build_xbrl_sql.py`。
 
 #### 6.1 `parse_xbrl_dictionary.py`
@@ -339,11 +375,12 @@ python3 scripts/split_xbrl_dictionary.py \
 
 ```bash
 python3 scripts/import_listed_company_profile.py \
-  /path/to/listed_company_profiles.json \
-  --db FinancialStatementXBRL.db
+  /path/to/listed_company_profiles.json
 ```
 
-`--db` 未指定時，使用 `SQLITE_DB_PATH` 指定的 DB；若環境變數也未設定，預設使用專案根目錄的 `FinancialStatementXBRL.db`。
+未指定 `--db` 時，會依 `DATABASE_MODE` 使用完整的 DB ENV 設定；SQLite
+預設為專案根目錄的 `FinancialStatementXBRL.db`。`--db` 僅供 SQLite
+臨時覆寫檔案路徑，PostgreSQL 模式不可使用。
 
 匯入以 `company_code` 為唯一鍵：公司已存在時更新資料，不存在時新增。這支 script 會直接修改 DB，執行前應確認 JSON 與 DB 路徑。
 

@@ -4,6 +4,7 @@ from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.time import utc_now_iso
+from src.shared.database.serialization import database_json_dumps
 
 
 class ConversationHistoryRepository:
@@ -92,9 +93,9 @@ class ConversationHistoryRepository:
                         message_id,
                         conversation_id,
                         message.get("role") or "user",
-                        json.dumps(message.get("content", ""), ensure_ascii=False),
+                        database_json_dumps(message.get("content", ""), ensure_ascii=False),
                         index,
-                        json.dumps(data_sources.get(message_id, []), ensure_ascii=False),
+                        database_json_dumps(data_sources.get(message_id, []), ensure_ascii=False),
                         now,
                         now,
                     ],

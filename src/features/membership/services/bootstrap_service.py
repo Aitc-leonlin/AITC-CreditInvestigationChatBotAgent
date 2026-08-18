@@ -11,10 +11,11 @@ from src.features.membership.core.permission_registry import (
 )
 from src.features.membership.seeds.default_seed_data import DEFAULT_USER_ROLE_ID, default_seed_data
 from src.shared.database.config import get_database_settings
+from src.shared.database.connection import table_exists
 from src.shared.database.db_path import PROJECT_ROOT
 
 
-MIGRATION_VERSION = "V1.6"
+MIGRATION_VERSION = "V1.7"
 MEMBERSHIP_MIGRATION_NAMES = [
     "V1.1__initialize_membership_authorization_schema.sql",
     "V1.2__add_audit_log_retention.sql",
@@ -22,39 +23,42 @@ MEMBERSHIP_MIGRATION_NAMES = [
     "V1.4__normalize_chat_message_references.sql",
     "V1.5__add_membership_groups.sql",
     "V1.6__remove_data_scope_and_masking.sql",
+    "V1.7__repair_discontinued_data_scope_tables.sql",
 ]
-XBRL_MIGRATION_NAME = "V1.0__initialize_financial_statement_xbrl_schema.sql"
+XBRL_MIGRATION_NAMES = [
+    "V1.0__initialize_financial_statement_xbrl_schema.sql",
+    "V2.0__preserve_taxonomy_arc_rows.sql",
+]
 
 
 def apply_xbrl_migration() -> None:
     settings = get_database_settings()
-    migration_file = PROJECT_ROOT / "src/sql/migrations" / settings.mode / XBRL_MIGRATION_NAME
-    if not migration_file.is_file():
-        raise RuntimeError(f"Missing {settings.mode} XBRL migration file: {migration_file}")
+    migration_files = [
+        PROJECT_ROOT / "src/sql/migrations" / settings.mode / name
+        for name in XBRL_MIGRATION_NAMES
+    ]
+    missing_files = [str(path) for path in migration_files if not path.is_file()]
+    if missing_files:
+        raise RuntimeError(
+            f"Missing {settings.mode} XBRL migration files: " + ", ".join(missing_files)
+        )
     with membership_transaction() as connection:
-        if settings.mode == "sqlite":
-            migration_table_exists = connection.execute(
-                "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'schema_migrations'"
-            ).fetchone()
-        else:
-            migration_table_exists = connection.execute(
-                """
-                SELECT 1 FROM information_schema.tables
-                WHERE table_schema = current_schema() AND table_name = 'schema_migrations'
-                """
-            ).fetchone()
-        if migration_table_exists:
-            applied = connection.execute(
-                "SELECT 1 FROM schema_migrations WHERE version = ? LIMIT 1",
-                ["V1.0"],
-            ).fetchone()
-            if applied:
-                return
-        migration_sql = migration_file.read_text(encoding="utf-8")
-        if settings.mode == "sqlite":
-            connection.executescript(migration_sql)
-        else:
-            connection.execute(migration_sql, prepare=False)
+        migration_table_ready = table_exists(connection, "schema_migrations")
+        for migration_file in migration_files:
+            version = migration_file.name.split("__", 1)[0]
+            if migration_table_ready:
+                applied = connection.execute(
+                    "SELECT 1 FROM schema_migrations WHERE version = ? LIMIT 1",
+                    [version],
+                ).fetchone()
+                if applied:
+                    continue
+            migration_sql = migration_file.read_text(encoding="utf-8")
+            if settings.mode == "sqlite":
+                connection.executescript(migration_sql)
+            else:
+                connection.execute(migration_sql, prepare=False)
+            migration_table_ready = True
 
 
 def membership_migration_files(database_mode: str | None = None) -> list[Path]:
@@ -74,7 +78,10 @@ def apply_membership_migration() -> None:
     settings = get_database_settings()
     migration_files = membership_migration_files(settings.mode)
     with membership_transaction() as connection:
-        migration_table_ready = False
+        # V1.1 creates this table on a new database. On an existing database,
+        # completed migrations must be skipped; rerunning V1.1 used to recreate
+        # the discontinued tables removed by V1.6.
+        migration_table_ready = table_exists(connection, "membership_schema_migrations")
         for migration_file in migration_files:
             version = migration_file.name.split("__", 1)[0]
             if migration_table_ready and _migration_applied(connection, version, settings.mode):
@@ -86,8 +93,7 @@ def apply_membership_migration() -> None:
                 connection.executescript(migration_sql)
             else:
                 connection.execute(migration_sql, prepare=False)
-            if version == "V1.1":
-                migration_table_ready = True
+            migration_table_ready = True
         if settings.mode == "postgresql":
             return
         _ensure_membership_schema_latest(connection)

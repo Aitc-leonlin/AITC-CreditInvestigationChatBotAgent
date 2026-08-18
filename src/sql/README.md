@@ -73,13 +73,24 @@ Migration files are separated by database engine:
 migrations/
 ├── sqlite/
 │   ├── V1.0__initialize_financial_statement_xbrl_schema.sql
-│   └── V1.1__... through V1.6__...
+│   └── V1.1__... through V1.7__...
 └── postgresql/
     ├── V1.0__initialize_financial_statement_xbrl_schema.sql
-    └── V1.1__... through V1.6__...
+    └── V1.1__... through V1.7__...
 ```
 
 `DATABASE_MODE=sqlite` selects `migrations/sqlite`; `DATABASE_MODE=postgresql`
 selects `migrations/postgresql`. Backend startup automatically applies the
-XBRL/report V1.0 migration followed by membership migrations V1.1 through V1.6,
+XBRL/report migrations V1.0 and V2.0 followed by membership migrations V1.1 through V1.7,
 then inserts missing default membership seed records.
+
+The shared XBRL builder entry point also follows `DATABASE_MODE`:
+
+```bash
+venv/bin/python scripts/build_xbrl_sql.py --help
+```
+
+- `sqlite`: uses SQLite `INSERT OR REPLACE`, `--db-path`, and SQLite loading.
+- `postgresql`: delegates to `build_xbrl_sql_postgresql.py`, uses PostgreSQL
+  `ON CONFLICT`, and accepts `--load-db` to load through the PostgreSQL ENV
+  connection.

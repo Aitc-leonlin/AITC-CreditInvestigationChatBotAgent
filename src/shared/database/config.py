@@ -3,6 +3,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
+from urllib.parse import unquote, urlparse
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -33,6 +34,7 @@ def _positive_int(name: str, default: int) -> int:
 class DatabaseSettings:
     mode: Literal["sqlite", "postgresql"]
     sqlite_path: Path | None = None
+    connection_url: str = ""
     host: str = ""
     port: int = 5432
     database: str = ""
@@ -67,6 +69,11 @@ class DatabaseSettings:
                 sqlite_path = PROJECT_ROOT / sqlite_path
             return cls(mode="sqlite", sqlite_path=sqlite_path.resolve())
 
+        connection_url = _env("DATABASE_URL")
+        parsed_url = urlparse(connection_url) if connection_url else None
+        if parsed_url and parsed_url.scheme not in {"postgres", "postgresql"}:
+            raise RuntimeError("DATABASE_URL must use the postgres or postgresql scheme.")
+
         values = {
             "host": _env("DATABASE_HOST"),
             "database": _env("DATABASE_NAME"),
@@ -74,7 +81,7 @@ class DatabaseSettings:
             "password": _env("DATABASE_PASSWORD"),
         }
         missing = [name for name, value in values.items() if not value]
-        if missing:
+        if missing and not connection_url:
             env_names = {
                 "host": "DATABASE_HOST",
                 "database": "DATABASE_NAME",
@@ -106,11 +113,21 @@ class DatabaseSettings:
 
         return cls(
             mode="postgresql",
-            host=values["host"],
-            port=_positive_int("DATABASE_PORT", 5432),
-            database=values["database"],
-            username=values["username"],
-            password=values["password"],
+            connection_url=connection_url,
+            host=values["host"] or (parsed_url.hostname if parsed_url else ""),
+            port=_positive_int(
+                "DATABASE_PORT",
+                parsed_url.port if parsed_url and parsed_url.port else 5432,
+            ),
+            database=values["database"] or (
+                unquote(parsed_url.path.lstrip("/")) if parsed_url else ""
+            ),
+            username=values["username"] or (
+                unquote(parsed_url.username or "") if parsed_url else ""
+            ),
+            password=values["password"] or (
+                unquote(parsed_url.password or "") if parsed_url else ""
+            ),
             sslmode=sslmode,
             sslrootcert=_env("DATABASE_SSLROOTCERT"),
             connect_timeout_seconds=_positive_int("DATABASE_CONNECT_TIMEOUT_SECONDS", 10),
@@ -143,6 +160,7 @@ class DatabaseSettings:
             "applicationName": self.application_name,
             "schema": self.schema,
             "passwordConfigured": bool(self.password),
+            "connectionUrlConfigured": bool(self.connection_url),
         }
 
 

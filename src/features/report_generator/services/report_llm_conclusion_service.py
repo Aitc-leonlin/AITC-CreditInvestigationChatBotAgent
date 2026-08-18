@@ -5,6 +5,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 from src.features.chatbot.core.providers.chat_openAI_provider import chat_model, get_message_text
 from src.shared.database.db_path import PROJECT_ROOT
+from src.shared.database.serialization import database_json_dumps
 
 
 EVALUATION_RULE_PROMPT_PATH = PROJECT_ROOT / "system-prompts" / "EvaluationRulePrompt.json"
@@ -35,7 +36,7 @@ def has_required_ratio_data(ratio_data: dict[str, Any]) -> bool:
 
 def build_generating_answer_prompt(ratio_data: dict[str, Any]) -> str:
     rules = load_evaluation_rules()
-    ratio_data_text = json.dumps(ratio_data, ensure_ascii=False, indent=2)
+    ratio_data_text = database_json_dumps(ratio_data, ensure_ascii=False, indent=2)
     return (
         "If LLM cannot find the related data in the database, respond "
         f"`{OUT_OF_SCOPE_MESSAGE}` else "

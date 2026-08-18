@@ -218,3 +218,6 @@ storage/audit_log_archives/*
 
 # scripts
 scripts/
+!scripts/
+scripts/*
+!scripts/build_xbrl_sql_postgresql.py

@@ -12,6 +12,7 @@ from src.features.chatbot.core.mappings.company_stock_code_array import CompanyS
 from src.features.chatbot.core.providers.chat_openAI_provider import chat_model, get_message_text
 from src.features.chatbot.services.account_title_matcher import find_candidates
 from src.shared.database.connection import open_database_connection
+from src.shared.database.serialization import database_json_dumps, to_json_compatible
 from src.features.chatbot.models.langgraph_state_types import OverallState
 
 
@@ -1296,13 +1297,15 @@ def semantic_retrieval(state: OverallState) -> OverallState:
         retrieval_results.append(result)
     print(f"[timing] semantic_retrieval.retrieve_requirement_data_total took {perf_counter() - step_started_at:.3f}s")
 
-    llm_evidence_json = build_final_answer_evidence(
-        question=question,
-        plan=plan,
-        company=company,
-        retrieval_results=retrieval_results,
+    llm_evidence_json = to_json_compatible(
+        build_final_answer_evidence(
+            question=question,
+            plan=plan,
+            company=company,
+            retrieval_results=retrieval_results,
+        )
     )
-    evidence_json = {
+    evidence_json = to_json_compatible({
         "question": question,
         "analysis_goal": plan.get("analysis_goal"),
         "company": company,
@@ -1314,7 +1317,7 @@ def semantic_retrieval(state: OverallState) -> OverallState:
         "external_data_query_text": state.get("external_data_query_text") or "",
         "external_data_response": state.get("external_data_response") or "",
         "external_data_response_prompt": state.get("external_data_response_prompt") or "",
-    }
+    })
     # print("\n[semantic_retrieval] evidence_json:")
     # print(json.dumps(evidence_json, ensure_ascii=False, indent=2))
     # print("\n[semantic_retrieval] llm_evidence_json:")
@@ -1520,7 +1523,7 @@ def semantic_retrieval(state: OverallState) -> OverallState:
         {chr(10).join(prompt_reference_sections)}
 
         ### 財務報表資料來源
-        {json.dumps(llm_evidence_json, ensure_ascii=False, indent=2)}
+        {database_json_dumps(llm_evidence_json, ensure_ascii=False, indent=2)}
 
         """
     try:

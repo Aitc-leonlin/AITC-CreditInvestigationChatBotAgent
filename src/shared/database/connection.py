@@ -2,6 +2,7 @@ import sqlite3
 from typing import Any
 
 from src.shared.database.config import DatabaseSettings, get_database_settings
+from src.shared.database.serialization import normalize_database_value
 
 
 class DatabaseIntegrityError(sqlite3.IntegrityError):
@@ -10,6 +11,12 @@ class DatabaseIntegrityError(sqlite3.IntegrityError):
 
 def is_postgresql() -> bool:
     return get_database_settings().mode == "postgresql"
+
+
+def _is_integrity_error(exc: Exception) -> bool:
+    # psycopg raises specific subclasses such as UniqueViolation and
+    # ForeignKeyViolation; checking only the concrete class name misses them.
+    return any(base.__name__ == "IntegrityError" for base in type(exc).__mro__)
 
 
 def _postgresql_placeholders(query: str) -> str:
@@ -85,7 +92,7 @@ class PostgreSQLConnectionAdapter:
                 return self._connection.execute(query, **kwargs)
             return self._connection.execute(query, params, **kwargs)
         except Exception as exc:
-            if exc.__class__.__name__ == "IntegrityError":
+            if _is_integrity_error(exc):
                 raise DatabaseIntegrityError(str(exc)) from exc
             raise
 
@@ -95,7 +102,7 @@ class PostgreSQLConnectionAdapter:
             cursor.executemany(_postgresql_placeholders(query), params_seq, **kwargs)
             return cursor
         except Exception as exc:
-            if exc.__class__.__name__ == "IntegrityError":
+            if _is_integrity_error(exc):
                 raise DatabaseIntegrityError(str(exc)) from exc
             raise
 
@@ -108,6 +115,10 @@ class PostgreSQLConnectionAdapter:
 
     def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> Any:
         return self._connection.__exit__(exc_type, exc, traceback)
+
+
+def is_postgresql_connection(connection: Any) -> bool:
+    return isinstance(connection, PostgreSQLConnectionAdapter)
 
 
 def open_database_connection(settings: DatabaseSettings | None = None) -> Any:
@@ -125,26 +136,44 @@ def open_database_connection(settings: DatabaseSettings | None = None) -> Any:
         from psycopg.rows import dict_row
     except ImportError as exc:
         raise RuntimeError(
-            "PostgreSQL mode requires psycopg. Install dependencies from requirements.txt."
+            "PostgreSQL mode requires psycopg. Install dependencies with "
+            "`venv/bin/python -m pip install -r requirements.txt`."
         ) from exc
 
+    def sqlite_compatible_dict_row(cursor: Any) -> Any:
+        make_dict_row = dict_row(cursor)
+
+        def make_row(values: Any) -> dict[str, Any]:
+            return {
+                key: normalize_database_value(value)
+                for key, value in make_dict_row(values).items()
+            }
+
+        return make_row
+
     connection_parameters = {
-        "host": resolved.host,
-        "port": resolved.port,
-        "dbname": resolved.database,
-        "user": resolved.username,
-        "password": resolved.password,
         "sslmode": resolved.sslmode,
         "connect_timeout": resolved.connect_timeout_seconds,
         "application_name": resolved.application_name,
-        "row_factory": dict_row,
+        # PostgreSQL has native DATE/TIMESTAMP/NUMERIC Python values while this
+        # application historically received SQLite strings/numbers. Normalize
+        # result rows here so repositories behave the same in either ENV mode.
+        "row_factory": sqlite_compatible_dict_row,
     }
     if resolved.sslrootcert:
         connection_parameters["sslrootcert"] = resolved.sslrootcert
 
-    connection = psycopg.connect(
-        **connection_parameters,
-    )
+    if resolved.connection_url:
+        connection = psycopg.connect(resolved.connection_url, **connection_parameters)
+    else:
+        connection = psycopg.connect(
+            host=resolved.host,
+            port=resolved.port,
+            dbname=resolved.database,
+            user=resolved.username,
+            password=resolved.password,
+            **connection_parameters,
+        )
     schema_exists = connection.execute(
         "SELECT 1 FROM information_schema.schemata WHERE schema_name = %s",
         [resolved.schema],
@@ -162,7 +191,7 @@ def open_database_connection(settings: DatabaseSettings | None = None) -> Any:
 
 
 def get_table_columns(connection: Any, table_name: str) -> set[str]:
-    if is_postgresql():
+    if is_postgresql_connection(connection):
         rows = connection.execute(
             """
             SELECT column_name
@@ -176,6 +205,25 @@ def get_table_columns(connection: Any, table_name: str) -> set[str]:
         row["name"]
         for row in connection.execute(f"PRAGMA table_info({table_name})").fetchall()
     }
+
+
+def table_exists(connection: Any, table_name: str) -> bool:
+    if is_postgresql_connection(connection):
+        row = connection.execute(
+            """
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = current_schema() AND table_name = ?
+            LIMIT 1
+            """,
+            [table_name],
+        ).fetchone()
+    else:
+        row = connection.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ? LIMIT 1",
+            [table_name],
+        ).fetchone()
+    return row is not None
 
 
 def test_database_connection(settings: DatabaseSettings | None = None) -> None:

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import os
 import re
 import sqlite3
+import sys
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
@@ -1190,4 +1192,21 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    # Keep this historical command as the common entry point. The ENV switch
+    # selects the SQL dialect while each engine keeps its own implementation.
+    from dotenv import load_dotenv
+
+    project_root = Path(__file__).resolve().parents[1]
+    load_dotenv(project_root / ".env")
+    if os.getenv("DATABASE_MODE", "sqlite").strip().lower() in {
+        "postgres",
+        "postgresql",
+        "external",
+    }:
+        if str(project_root) not in sys.path:
+            sys.path.insert(0, str(project_root))
+        from scripts.build_xbrl_sql_postgresql import main as postgresql_main
+
+        postgresql_main()
+    else:
+        main()

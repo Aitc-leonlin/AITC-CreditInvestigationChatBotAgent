@@ -10,7 +10,13 @@ from pathlib import Path
 from typing import Any
 
 from src.shared.database.db_path import PROJECT_ROOT, resolve_sqlite_db_path
-from src.shared.database.connection import get_table_columns, is_postgresql, open_database_connection
+from src.shared.database.connection import (
+    get_table_columns,
+    is_postgresql,
+    open_database_connection,
+    table_exists,
+)
+from src.shared.database.serialization import database_json_dumps
 from src.features.membership.services.bootstrap_service import apply_xbrl_migration
 from src.features.report_generator.services.docx.document_merge_service import merge_all_chapters
 from src.features.report_generator.services.report_llm_conclusion_service import generate_report_llm_conclusion
@@ -567,18 +573,17 @@ class FinancialStatementsDocxAdapter:
         return str(row["company_name"]) if row and row["company_name"] else self.company_label
 
     def _listed_company_profile_row(self) -> sqlite3.Row | None:
-        try:
-            return self.connection.execute(
-                """
-                SELECT *
-                FROM company_profile
-                WHERE company_code = ?
-                LIMIT 1
-                """,
-                (self.company_code,),
-            ).fetchone()
-        except sqlite3.OperationalError:
+        if not table_exists(self.connection, "company_profile"):
             return None
+        return self.connection.execute(
+            """
+            SELECT *
+            FROM company_profile
+            WHERE company_code = ?
+            LIMIT 1
+            """,
+            (self.company_code,),
+        ).fetchone()
 
     def _format_yyyymmdd(self, value: Any) -> str:
         text = str(value or "").strip()
@@ -1260,21 +1265,21 @@ def upsert_report_dashboard(
 ) -> dict[str, Any]:
     now_iso = generated_at.isoformat(timespec="seconds")
     dashboard_payload = {
-        "summary_items_json": json.dumps(
+        "summary_items_json": database_json_dumps(
             normalize_summary_items(ai_summary_text, company_name, year),
             ensure_ascii=False,
         ),
-        "progress_items_json": json.dumps(
+        "progress_items_json": database_json_dumps(
             build_report_progress_items(),
             ensure_ascii=False,
         ),
         "progress_percent": 100,
         "metrics_title": f"關鍵財務指標（{year} Q1-Q4）",
-        "metrics_json": json.dumps(
+        "metrics_json": database_json_dumps(
             build_dashboard_metrics(ratio_row),
             ensure_ascii=False,
         ),
-        "financial_trends_json": json.dumps(
+        "financial_trends_json": database_json_dumps(
             build_dashboard_financial_trends(financial_trend_rows),
             ensure_ascii=False,
         ),
