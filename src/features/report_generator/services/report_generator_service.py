@@ -24,10 +24,17 @@ from src.features.report_generator.services.report_llm_conclusion_service import
 
 BALANCE_SHEET_FIELD_CODE_MAP = {
     "retained_earnings": ("ifrs-full_RetainedEarnings",),
-    "other_accounts_receivable": ("ifrs-full_OtherCurrentReceivables", "ifrs-full_OtherReceivables"),
+    "other_accounts_receivable": (
+        "ifrs-full_OtherCurrentReceivables",
+        "ifrs-full_OtherReceivables",
+        "tifrs-bsci-mim_OtherReceivables",
+    ),
     "other_current_assets": ("ifrs-full_OtherCurrentAssets",),
     "inventory": ("ifrs-full_Inventories",),
-    "accounts_receivable": ("tifrs-bsci-ci_AccountsReceivableNet",),
+    "accounts_receivable": (
+        "tifrs-bsci-ci_AccountsReceivableNet",
+        "tifrs-bsci-mim_AccountsReceivable",
+    ),
     "total_equity": ("ifrs-full_Equity",),
     "current_liabilities": ("ifrs-full_CurrentLiabilities",),
     "current_assets": ("ifrs-full_CurrentAssets",),
@@ -38,6 +45,35 @@ BALANCE_SHEET_FIELD_CODE_MAP = {
     "total_assets": ("ifrs-full_Assets",),
     "non_current_liabilities": ("ifrs-full_NoncurrentLiabilities",),
     "non_current_assets": ("ifrs-full_NoncurrentAssets",),
+}
+
+INSURANCE_BALANCE_SHEET_FIELD_CODE_MAP = {
+    "cash": ("ifrs-full_CashAndCashEquivalents",),
+    "investments": ("tifrs-bsci-ins_Investments",),
+    "receivables": ("tifrs-bsci-ins_Receivables",),
+    "reinsurance_assets": ("ifrs-full_ReinsuranceAssets",),
+    "financial_assets_at_fair_value_through_profit_or_loss": (
+        "ifrs-full_FinancialAssetsAtFairValueThroughProfitOrLoss",
+    ),
+    "financial_assets_at_amortised_cost": (
+        "ifrs-full_FinancialAssetsAtAmortisedCost",
+    ),
+    "investment_property": ("ifrs-full_InvestmentProperty",),
+    "property_plant_and_equipment": ("ifrs-full_PropertyPlantAndEquipment",),
+    "leased_assets": ("tifrs-bsci-ins_LeasedAssets",),
+    "intangible_assets": ("ifrs-full_IntangibleAssetsAndGoodwill",),
+    "other_assets": ("ifrs-full_OtherAssets",),
+    "total_assets": ("ifrs-full_Assets",),
+    "insurance_liabilities": ("ifrs-full_LiabilitiesArisingFromInsuranceContracts",),
+    "payables": ("ifrs-full_TradeAndOtherPayables",),
+    "lease_liabilities": ("tifrs-bsci-ins_LeaseLiabilities",),
+    "other_liabilities": ("ifrs-full_OtherLiabilities",),
+    "total_liabilities": ("ifrs-full_Liabilities",),
+    "capital_stock": ("ifrs-full_IssuedCapital",),
+    "capital_reserve": ("ifrs-full_CapitalReserve",),
+    "retained_earnings": ("ifrs-full_RetainedEarnings",),
+    "total_equity": ("ifrs-full_Equity",),
+    "total_liabilities_and_equity": ("ifrs-full_EquityAndLiabilities",),
 }
 
 INCOME_FIELD_MAP = {
@@ -899,9 +935,38 @@ class FinancialStatementsDocxAdapter:
 
         rows: list[dict[str, Any]] = []
         for quarter in (1, 2, 3, 4):
+            report_context = self._report_context(year, quarter)
+            industry_type = str(
+                report_context["industry_type"] or ""
+            ).strip().upper() if report_context else ""
+            field_code_map = (
+                INSURANCE_BALANCE_SHEET_FIELD_CODE_MAP
+                if industry_type == "INS"
+                else BALANCE_SHEET_FIELD_CODE_MAP
+            )
             row: dict[str, Any] = {"year": year, "quarter": quarter}
-            for field, code in BALANCE_SHEET_FIELD_CODE_MAP.items():
+            for field, code in field_code_map.items():
                 row[field] = self._metric_value("balance_sheet", year, quarter, code)
+
+            # 資本公積屬可為零的明細科目；若該季未申報此科目，按零呈現。
+            if row["capital_reserve"] is None:
+                row["capital_reserve"] = 0.0
+
+            if industry_type != "INS":
+                # 一般產業若未申報「其他應收款」獨立科目，代表該季沒有此項目。
+                if row["other_accounts_receivable"] is None:
+                    row["other_accounts_receivable"] = 0.0
+
+                # 部分公司未直接申報其他流動資產合計，以流動資產扣除報告中
+                # 已獨立呈現的流動資產科目，保留實際可核對的剩餘金額。
+                if row["other_current_assets"] is None:
+                    row["other_current_assets"] = safe_subtract(
+                        row["current_assets"],
+                        row["cash"],
+                        row["inventory"],
+                        row["accounts_receivable"],
+                        row["other_accounts_receivable"],
+                    )
             rows.append(row)
         return rows
 

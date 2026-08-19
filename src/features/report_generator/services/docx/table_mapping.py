@@ -55,6 +55,21 @@ BALANCE_SHEET_MAP = {
     "total_assets": "資產總額",
     "non_current_liabilities": "非流動負債合計",
     "non_current_assets": "非流動資產合計",
+    "investments": "投資",
+    "receivables": "應收款項",
+    "reinsurance_assets": "再保險合約資產淨額",
+    "financial_assets_at_fair_value_through_profit_or_loss": "透過損益按公允價值衡量之金融資產",
+    "financial_assets_at_amortised_cost": "按攤銷後成本衡量之金融資產",
+    "investment_property": "投資性不動產淨額",
+    "property_plant_and_equipment": "不動產、廠房及設備淨額",
+    "leased_assets": "使用權資產",
+    "intangible_assets": "無形資產淨額",
+    "other_assets": "其他資產",
+    "insurance_liabilities": "保險負債",
+    "payables": "應付款項",
+    "lease_liabilities": "租賃負債",
+    "other_liabilities": "其他負債",
+    "total_liabilities": "負債總額",
 }
 
 FINANCIAL_RATIOS_MAP = {
