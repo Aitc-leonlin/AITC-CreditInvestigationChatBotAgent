@@ -13,7 +13,7 @@ from src.features.report_generator.services.docx._python_docx_common import (
 from src.features.report_generator.services.docx.table_mapping import FINANCIAL_RATIOS_MAP, label
 
 
-FINANCIAL_RATIO_COLUMNS = (
+GENERAL_FINANCIAL_RATIO_COLUMNS = (
     "year,gui_no,average_collection_period,total_asset_turnover,roe,"
     "average_days_sales_outstanding,net_profit_margin,debt_to_asset_ratio,"
     "pre_tax_profit_to_capital_ratio,long_term_capital_to_fixed_assets_ratio,"
@@ -22,10 +22,25 @@ FINANCIAL_RATIO_COLUMNS = (
     "fixed_assets_turnover,inventory_turnover,cash_flow_ratio,eps"
 )
 
-FINANCIAL_RATIO_DISPLAY_KEYS = tuple(
+GENERAL_FINANCIAL_RATIO_DISPLAY_KEYS = tuple(
     key
-    for key in FINANCIAL_RATIO_COLUMNS.split(",")
+    for key in GENERAL_FINANCIAL_RATIO_COLUMNS.split(",")
     if key not in {"year", "gui_no"}
+)
+
+INSURANCE_FINANCIAL_RATIO_DISPLAY_KEYS = (
+    "debt_to_asset_ratio",
+    "insurance_liabilities_to_assets_ratio",
+    "insurance_liabilities_change_rate",
+    "net_worth_ratio",
+    "roa",
+    "roe",
+    "net_profit_margin",
+    "operating_profit_margin",
+    "pre_tax_profit_margin",
+    "net_profit_growth_rate",
+    "equity_growth_rate",
+    "eps",
 )
 
 
@@ -49,17 +64,21 @@ def establish_financial_ratios(
     document = document or Document()
     rows = execute_query(
         db,
-        f"SELECT {FINANCIAL_RATIO_COLUMNS} FROM financial_ratios "
-        f"WHERE year = {year} AND gui_no = {gui_no};",
+        f"SELECT * FROM financial_ratios WHERE year = {year} AND gui_no = {gui_no};",
     )
     ratio_row = rows[0] if rows else {}
+    display_keys = (
+        INSURANCE_FINANCIAL_RATIO_DISPLAY_KEYS
+        if str(ratio_row.get("industry_type") or "").strip().upper() == "INS"
+        else GENERAL_FINANCIAL_RATIO_DISPLAY_KEYS
+    )
 
     add_heading(document, "財稅比率分析", size=18)
     add_metric_table(
         document,
         [
             (label(FINANCIAL_RATIOS_MAP, key), ratio_display_value(ratio_row, key))
-            for key in FINANCIAL_RATIO_DISPLAY_KEYS
+            for key in display_keys
         ],
         value_header=f"{year}年",
     )

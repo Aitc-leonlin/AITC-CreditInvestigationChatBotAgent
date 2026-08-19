@@ -76,6 +76,23 @@ INSURANCE_BALANCE_SHEET_FIELD_CODE_MAP = {
     "total_liabilities_and_equity": ("ifrs-full_EquityAndLiabilities",),
 }
 
+INSURANCE_RATIO_FIELD_MAP = {
+    "insurance_liabilities": ("ifrs-full_LiabilitiesArisingFromInsuranceContracts",),
+    "separate_account_assets": ("tifrs-bsci-ins_AssetsOnInsuranceProductSeparatedAccount",),
+    "operating_revenue": ("tifrs-bsci-ins_OperatingRevenue",),
+    "operating_profit": ("tifrs-bsci-ins_NetOperatingIncomeLoss",),
+    "nonoperating_income": ("tifrs-bsci-ins_NonoperatingIncomeAndExpenses",),
+    "income_tax_expense": ("ifrs-full_IncomeTaxExpenseContinuingOperations",),
+    # 保險業目前沒有直接申報一般企業使用的利息費用欄位；現金流量表的
+    # 利息費用調整項目為同一報表期間可取得的最接近來源，放在最後作備援。
+    "interest_expense": (
+        "tifrs-notes_InterestExpense_n",
+        "ifrs-full_InterestExpense",
+        "tifrs-SCF_InterestExpense",
+        "ifrs-full_AdjustmentsForInterestExpense",
+    ),
+}
+
 INCOME_FIELD_MAP = {
     "revenue": ("ifrs-full_Revenue", "tifrs-bsci-ins_OperatingRevenue"),
     "gross_profit": ("tifrs-bsci-ci_GrossProfitLossFromOperations",),
@@ -359,6 +376,60 @@ def build_report_progress_items() -> list[dict[str, str]]:
 
 
 def build_dashboard_metrics(ratio_row: dict[str, Any]) -> list[dict[str, Any]]:
+    if str(ratio_row.get("industry_type") or "").strip().upper() == "INS":
+        return [
+            dashboard_metric(
+                label="ROE",
+                value=ratio_row.get("roe"),
+                suffix="%",
+                trend="稅後損益 / 平均權益",
+                icon_key="barChart",
+                calculation_reason=ratio_row.get("roe_calculation_reason", ""),
+            ),
+            dashboard_metric(
+                label="ROA",
+                value=ratio_row.get("roa"),
+                suffix="%",
+                trend="稅後損益及稅後利息 / 平均資產",
+                icon_key="trendingUp",
+                calculation_reason=ratio_row.get("roa_calculation_reason", ""),
+            ),
+            dashboard_metric(
+                label="負債占資產比率",
+                value=ratio_row.get("debt_to_asset_ratio"),
+                suffix="%",
+                trend="負債總額 / 資產總額",
+                icon_key="scale",
+                calculation_reason=ratio_row.get("debt_to_asset_ratio_calculation_reason", ""),
+            ),
+            dashboard_metric(
+                label="保險負債占資產比率",
+                value=ratio_row.get("insurance_liabilities_to_assets_ratio"),
+                suffix="%",
+                trend="保險負債 / 資產總額",
+                icon_key="shieldCheck",
+                calculation_reason=ratio_row.get(
+                    "insurance_liabilities_to_assets_ratio_calculation_reason",
+                    "",
+                ),
+            ),
+            dashboard_metric(
+                label="純益率",
+                value=ratio_row.get("net_profit_margin"),
+                suffix="%",
+                trend="稅後損益 / 營業收入",
+                icon_key="trendingUp",
+                calculation_reason=ratio_row.get("net_profit_margin_calculation_reason", ""),
+            ),
+            dashboard_metric(
+                label="每股盈餘 (EPS)",
+                value=ratio_row.get("eps"),
+                trend="XBRL EPS 欄位",
+                icon_key="dollarSign",
+                calculation_reason=ratio_row.get("eps_calculation_reason", ""),
+            ),
+        ]
+
     return [
         dashboard_metric(
             label="ROE",
@@ -1041,10 +1112,324 @@ class FinancialStatementsDocxAdapter:
                 previous_gross_profit = cumulative_gross_profit
         return rows
 
+    def _query_insurance_financial_ratios(self, year: int) -> list[dict[str, Any]]:
+        total_assets = self._year_metric_value(
+            "balance_sheet",
+            year,
+            BALANCE_SHEET_FIELD_CODE_MAP["total_assets"],
+        )
+        previous_total_assets = self._year_metric_value(
+            "balance_sheet",
+            year - 1,
+            BALANCE_SHEET_FIELD_CODE_MAP["total_assets"],
+        )
+        average_total_assets = safe_average(previous_total_assets, total_assets)
+        total_liabilities = self._year_metric_value(
+            "balance_sheet",
+            year,
+            ("ifrs-full_Liabilities",),
+        )
+        insurance_liabilities = self._year_metric_value(
+            "balance_sheet",
+            year,
+            INSURANCE_RATIO_FIELD_MAP["insurance_liabilities"],
+        )
+        previous_insurance_liabilities = self._year_metric_value(
+            "balance_sheet",
+            year - 1,
+            INSURANCE_RATIO_FIELD_MAP["insurance_liabilities"],
+        )
+        separate_account_assets = self._year_metric_value(
+            "balance_sheet",
+            year,
+            INSURANCE_RATIO_FIELD_MAP["separate_account_assets"],
+        )
+        assets_excluding_separate_account = safe_subtract(
+            total_assets,
+            separate_account_assets,
+        )
+        total_equity = self._year_metric_value(
+            "balance_sheet",
+            year,
+            BALANCE_SHEET_FIELD_CODE_MAP["total_equity"],
+        )
+        previous_total_equity = self._year_metric_value(
+            "balance_sheet",
+            year - 1,
+            BALANCE_SHEET_FIELD_CODE_MAP["total_equity"],
+        )
+        average_total_equity = safe_average(previous_total_equity, total_equity)
+        operating_revenue = self._year_metric_value(
+            "comprehensive_income_statement",
+            year,
+            INSURANCE_RATIO_FIELD_MAP["operating_revenue"],
+        )
+        operating_profit = self._year_metric_value(
+            "comprehensive_income_statement",
+            year,
+            INSURANCE_RATIO_FIELD_MAP["operating_profit"],
+        )
+        pre_tax_profit = self._year_metric_value(
+            "comprehensive_income_statement",
+            year,
+            INCOME_FIELD_MAP["pre_tax_profit"],
+        )
+        nonoperating_income = self._year_metric_value(
+            "comprehensive_income_statement",
+            year,
+            INSURANCE_RATIO_FIELD_MAP["nonoperating_income"],
+        )
+        pre_tax_profit_margin_denominator = safe_add(
+            operating_revenue,
+            nonoperating_income,
+        )
+        net_profit = self._year_metric_value(
+            "comprehensive_income_statement",
+            year,
+            INCOME_FIELD_MAP["net_profit"],
+        )
+        previous_net_profit = self._year_metric_value(
+            "comprehensive_income_statement",
+            year - 1,
+            INCOME_FIELD_MAP["net_profit"],
+        )
+        interest_expense = self._year_metric_value(
+            "comprehensive_income_statement",
+            year,
+            INSURANCE_RATIO_FIELD_MAP["interest_expense"],
+        )
+        income_tax_expense = self._year_metric_value(
+            "comprehensive_income_statement",
+            year,
+            INSURANCE_RATIO_FIELD_MAP["income_tax_expense"],
+        )
+        pre_tax_profit_number = first_number(pre_tax_profit)
+        income_tax_expense_number = first_number(income_tax_expense)
+        effective_tax_rate = (
+            income_tax_expense_number / pre_tax_profit_number
+            if income_tax_expense_number is not None
+            and pre_tax_profit_number not in (None, 0)
+            else None
+        )
+        interest_expense_number = first_number(interest_expense)
+        after_tax_interest_expense = (
+            interest_expense_number * (1 - effective_tax_rate)
+            if interest_expense_number is not None and effective_tax_rate is not None
+            else None
+        )
+        roa_numerator = safe_add(net_profit, after_tax_interest_expense)
+        eps = self._year_metric_value(
+            "comprehensive_income_statement",
+            year,
+            INCOME_FIELD_MAP["eps"],
+        )
+
+        debt_to_asset_ratio = safe_divide(total_liabilities, total_assets, 100)
+        insurance_liabilities_to_assets_ratio = safe_divide(
+            insurance_liabilities,
+            total_assets,
+            100,
+        )
+        insurance_liabilities_change_rate = safe_divide(
+            safe_subtract(insurance_liabilities, previous_insurance_liabilities),
+            previous_insurance_liabilities,
+            100,
+        )
+        net_worth_ratio = safe_divide(
+            total_equity,
+            assets_excluding_separate_account,
+            100,
+        )
+        roa = safe_divide(roa_numerator, average_total_assets, 100)
+        roe = safe_divide(net_profit, average_total_equity, 100)
+        net_profit_margin = safe_divide(net_profit, operating_revenue, 100)
+        operating_profit_margin = safe_divide(
+            operating_profit,
+            operating_revenue,
+            100,
+        )
+        pre_tax_profit_margin = safe_divide(
+            pre_tax_profit,
+            pre_tax_profit_margin_denominator,
+            100,
+        )
+        net_profit_growth_rate = safe_divide(
+            safe_subtract(net_profit, previous_net_profit),
+            abs(previous_net_profit) if first_number(previous_net_profit) is not None else None,
+            100,
+        )
+        equity_growth_rate = safe_divide(
+            safe_subtract(total_equity, previous_total_equity),
+            abs(previous_total_equity) if first_number(previous_total_equity) is not None else None,
+            100,
+        )
+
+        debt_to_asset_ratio_calculation_reason = missing_formula_reason(
+            value=debt_to_asset_ratio,
+            formula="負債總額 / 資產總額 * 100",
+            required_values={"負債總額": total_liabilities, "資產總額": total_assets},
+            denominator_values={"資產總額": total_assets},
+        )
+        insurance_liabilities_to_assets_ratio_calculation_reason = missing_formula_reason(
+            value=insurance_liabilities_to_assets_ratio,
+            formula="保險負債 / 資產總額 * 100",
+            required_values={"保險負債": insurance_liabilities, "資產總額": total_assets},
+            denominator_values={"資產總額": total_assets},
+        )
+        insurance_liabilities_change_rate_calculation_reason = missing_formula_reason(
+            value=insurance_liabilities_change_rate,
+            formula="(本期保險負債 - 前期保險負債) / 前期保險負債 * 100",
+            required_values={
+                f"{year} 年保險負債": insurance_liabilities,
+                f"{year - 1} 年保險負債": previous_insurance_liabilities,
+            },
+            denominator_values={f"{year - 1} 年保險負債": previous_insurance_liabilities},
+        )
+        net_worth_ratio_calculation_reason = missing_formula_reason(
+            value=net_worth_ratio,
+            formula="權益 / (資產總額 - 投資型保險商品專設帳簿資產) * 100",
+            required_values={
+                "權益": total_equity,
+                "資產總額": total_assets,
+                "投資型保險商品專設帳簿資產": separate_account_assets,
+            },
+            denominator_values={
+                "排除投資型專設帳簿後資產": assets_excluding_separate_account,
+            },
+        )
+        roa_calculation_reason = missing_formula_reason(
+            value=roa,
+            formula="[稅後損益 + 利息費用 * (1 - 稅率)] / 平均資產 * 100；稅率 = 所得稅費用 / 稅前損益",
+            required_values={
+                "稅後損益": net_profit,
+                "利息費用": interest_expense,
+                "所得稅費用": income_tax_expense,
+                "稅前損益": pre_tax_profit,
+                f"{year - 1} 年資產總額": previous_total_assets,
+                f"{year} 年資產總額": total_assets,
+            },
+            denominator_values={
+                "稅前損益": pre_tax_profit,
+                "平均資產": average_total_assets,
+            },
+        )
+        roe_calculation_reason = missing_formula_reason(
+            value=roe,
+            formula="稅後損益 / 平均權益 * 100",
+            required_values={
+                "稅後損益": net_profit,
+                f"{year - 1} 年權益": previous_total_equity,
+                f"{year} 年權益": total_equity,
+            },
+            denominator_values={"平均權益": average_total_equity},
+        )
+        net_profit_margin_calculation_reason = missing_formula_reason(
+            value=net_profit_margin,
+            formula="稅後損益 / 營業收入 * 100",
+            required_values={"稅後損益": net_profit, "營業收入": operating_revenue},
+            denominator_values={"營業收入": operating_revenue},
+        )
+        operating_profit_margin_calculation_reason = missing_formula_reason(
+            value=operating_profit_margin,
+            formula="營業利益 / 營業收入 * 100",
+            required_values={"營業利益": operating_profit, "營業收入": operating_revenue},
+            denominator_values={"營業收入": operating_revenue},
+        )
+        pre_tax_profit_margin_calculation_reason = missing_formula_reason(
+            value=pre_tax_profit_margin,
+            formula="稅前純益 / (營業收入 + 營業外收入) * 100",
+            required_values={
+                "稅前純益": pre_tax_profit,
+                "營業收入": operating_revenue,
+                "營業外收入": nonoperating_income,
+            },
+            denominator_values={
+                "營業收入加營業外收入": pre_tax_profit_margin_denominator,
+            },
+        )
+        net_profit_growth_rate_calculation_reason = missing_formula_reason(
+            value=net_profit_growth_rate,
+            formula="(本期淨利 - 前期淨利) / ABS(前期淨利) * 100",
+            required_values={
+                f"{year} 年淨利": net_profit,
+                f"{year - 1} 年淨利": previous_net_profit,
+            },
+            denominator_values={f"{year - 1} 年淨利絕對值": abs(previous_net_profit) if first_number(previous_net_profit) is not None else None},
+        )
+        equity_growth_rate_calculation_reason = missing_formula_reason(
+            value=equity_growth_rate,
+            formula="(本期權益 - 前期權益) / ABS(前期權益) * 100",
+            required_values={
+                f"{year} 年權益": total_equity,
+                f"{year - 1} 年權益": previous_total_equity,
+            },
+            denominator_values={f"{year - 1} 年權益絕對值": abs(previous_total_equity) if first_number(previous_total_equity) is not None else None},
+        )
+        eps_calculation_reason = missing_formula_reason(
+            value=eps,
+            formula="稅後損益 / 加權平均流通股數（沿用 XBRL 直接申報之每股盈餘）",
+            required_values={"每股盈餘": eps},
+        )
+
+        return [
+            {
+                "year": year,
+                "gui_no": self.company_code,
+                "industry_type": "INS",
+                "debt_to_asset_ratio": debt_to_asset_ratio,
+                "debt_to_asset_ratio_calculation_reason": debt_to_asset_ratio_calculation_reason,
+                "insurance_liabilities_to_assets_ratio": insurance_liabilities_to_assets_ratio,
+                "insurance_liabilities_to_assets_ratio_calculation_reason": insurance_liabilities_to_assets_ratio_calculation_reason,
+                "insurance_liabilities_change_rate": insurance_liabilities_change_rate,
+                "insurance_liabilities_change_rate_calculation_reason": insurance_liabilities_change_rate_calculation_reason,
+                "net_worth_ratio": net_worth_ratio,
+                "net_worth_ratio_calculation_reason": net_worth_ratio_calculation_reason,
+                "roa": roa,
+                "roa_calculation_reason": roa_calculation_reason,
+                "roe": roe,
+                "roe_calculation_reason": roe_calculation_reason,
+                "net_profit_margin": net_profit_margin,
+                "net_profit_margin_calculation_reason": net_profit_margin_calculation_reason,
+                "operating_profit_margin": operating_profit_margin,
+                "operating_profit_margin_calculation_reason": operating_profit_margin_calculation_reason,
+                "pre_tax_profit_margin": pre_tax_profit_margin,
+                "pre_tax_profit_margin_calculation_reason": pre_tax_profit_margin_calculation_reason,
+                "net_profit_growth_rate": net_profit_growth_rate,
+                "net_profit_growth_rate_calculation_reason": net_profit_growth_rate_calculation_reason,
+                "equity_growth_rate": equity_growth_rate,
+                "equity_growth_rate_calculation_reason": equity_growth_rate_calculation_reason,
+                "eps": eps,
+                "eps_calculation_reason": eps_calculation_reason,
+                # 保留相容欄位，供既有 Dashboard、AI 與還款能力章節讀取；
+                # 不適用於保險業者明確標示原因，不在 INS 財稅比率表中顯示。
+                "current_ratio": None,
+                "current_ratio_calculation_reason": "不適用於保險業財務報表分類。",
+                "quick_ratio": None,
+                "quick_ratio_calculation_reason": "不適用於保險業財務報表分類。",
+                "interest_coverage_ratio": None,
+                "interest_coverage_ratio_calculation_reason": "不列入保險業財稅比率分析。",
+                "cash_flow_ratio": None,
+                "cash_flow_ratio_calculation_reason": "不列入保險業財稅比率分析。",
+                "accounts_receivable_turnover": None,
+                "accounts_receivable_turnover_calculation_reason": "不適用於保險業財務報表分類。",
+                "inventory_turnover": None,
+                "inventory_turnover_calculation_reason": "不適用於保險業財務報表分類。",
+                "total_asset_turnover": None,
+                "total_asset_turnover_calculation_reason": "不列入保險業財稅比率分析。",
+            }
+        ]
+
     def _query_financial_ratios(self, sql: str) -> list[dict[str, Any]]:
         year = self._extract_year(sql)
         if year is None:
             return []
+
+        report_context = self._report_context(year)
+        industry_type = str(
+            report_context["industry_type"] or ""
+        ).strip().upper() if report_context else ""
+        if industry_type == "INS":
+            return self._query_insurance_financial_ratios(year)
 
         revenue = self._year_metric_value("comprehensive_income_statement", year, INCOME_FIELD_MAP["revenue"])
         pre_tax_profit = self._year_metric_value("comprehensive_income_statement", year, INCOME_FIELD_MAP["pre_tax_profit"])
@@ -1298,6 +1683,7 @@ class FinancialStatementsDocxAdapter:
             {
                 "year": year,
                 "gui_no": self.company_code,
+                "industry_type": industry_type,
                 "revenue": revenue,
                 "net_profit": net_profit,
                 "gross_margin": gross_margin,

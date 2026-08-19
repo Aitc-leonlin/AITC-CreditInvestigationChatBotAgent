@@ -80,7 +80,7 @@ FINANCIAL_RATIOS_MAP = {
     "roe": "權益報酬率(%)",
     "average_days_sales_outstanding": "平均銷貨日數",
     "net_profit_margin": "純益率(%)",
-    "debt_to_asset_ratio": "負債佔資產比率(%)",
+    "debt_to_asset_ratio": "負債占資產比率(%)",
     "pre_tax_profit_to_capital_ratio": "稅前純益佔實收資本比率(%)",
     "long_term_capital_to_fixed_assets_ratio": "長期資金佔不動產、廠房及設備比率(%)",
     "current_ratio": "流動比率(%)",
@@ -94,6 +94,13 @@ FINANCIAL_RATIOS_MAP = {
     "inventory_turnover": "存貨週轉率(次)",
     "cash_flow_ratio": "現金流量比率(%)",
     "eps": "每股盈餘(元)",
+    "insurance_liabilities_to_assets_ratio": "保險負債占資產比率(%)",
+    "insurance_liabilities_change_rate": "保險負債變動率(%)",
+    "net_worth_ratio": "淨值比率(%)",
+    "operating_profit_margin": "營業利益率(%)",
+    "pre_tax_profit_margin": "稅前純益率(%)",
+    "net_profit_growth_rate": "淨利成長率(%)",
+    "equity_growth_rate": "權益成長率(%)",
 }
 
 
