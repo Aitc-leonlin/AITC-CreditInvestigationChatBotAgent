@@ -294,7 +294,7 @@ def missing_formula_reason(
         if first_number(item) is None
     ]
     if missing_labels:
-        return f"無法完整計算：{formula}，缺少{', '.join(missing_labels)}。"
+        return f"缺乏{'、'.join(missing_labels)}資料（計算公式：{formula}）。"
 
     zero_denominator_labels = [
         label
@@ -302,9 +302,9 @@ def missing_formula_reason(
         if first_number(item) == 0
     ]
     if zero_denominator_labels:
-        return f"無法完整計算：{formula}，{', '.join(zero_denominator_labels)}為 0。"
+        return f"{'、'.join(zero_denominator_labels)}為 0，無法計算（計算公式：{formula}）。"
 
-    return f"無法完整計算：{formula}。"
+    return f"缺乏計算所需資料（計算公式：{formula}）。"
 
 
 def dashboard_metric(
@@ -1077,31 +1077,41 @@ class FinancialStatementsDocxAdapter:
             CASH_FLOW_FIELD_MAP["cash_from_operations"],
         )
 
-        average_accounts_receivable = self._average_year_metric_value(
+        previous_accounts_receivable = self._year_metric_value(
             "balance_sheet",
-            year,
+            year - 1,
             BALANCE_SHEET_FIELD_CODE_MAP["accounts_receivable"],
         )
-        average_total_assets = self._average_year_metric_value(
+        average_accounts_receivable = safe_average(
+            previous_accounts_receivable,
+            accounts_receivable,
+        )
+        previous_total_assets = self._year_metric_value(
             "balance_sheet",
-            year,
+            year - 1,
             BALANCE_SHEET_FIELD_CODE_MAP["total_assets"],
         )
+        average_total_assets = safe_average(previous_total_assets, total_assets)
         previous_total_equity = self._year_metric_value(
             "balance_sheet",
             year - 1,
             BALANCE_SHEET_FIELD_CODE_MAP["total_equity"],
         )
         average_total_equity = safe_average(previous_total_equity, total_equity)
-        average_inventory = self._average_year_metric_value(
+        previous_inventory = self._year_metric_value(
             "balance_sheet",
-            year,
+            year - 1,
             BALANCE_SHEET_FIELD_CODE_MAP["inventory"],
         )
-        average_net_fixed_assets = self._average_year_metric_value(
+        average_inventory = safe_average(previous_inventory, inventory)
+        previous_net_fixed_assets = self._year_metric_value(
             "balance_sheet",
-            year,
+            year - 1,
             RATIO_FIELD_MAP["net_fixed_assets"],
+        )
+        average_net_fixed_assets = safe_average(
+            previous_net_fixed_assets,
+            net_fixed_assets,
         )
         quick_assets = safe_subtract(current_assets, inventory, prepayments)
         non_current_liabilities = self._year_metric_value(
@@ -1132,6 +1142,26 @@ class FinancialStatementsDocxAdapter:
         if gross_profit is None:
             gross_profit = safe_subtract(revenue, cost_of_goods_sold)
         gross_margin = safe_divide(gross_profit, revenue, 100)
+        average_collection_period_calculation_reason = missing_formula_reason(
+            value=average_collection_period,
+            formula="平均應收帳款 / 營業收入 * 365",
+            required_values={
+                f"{year - 1} 年應收帳款": previous_accounts_receivable,
+                f"{year} 年應收帳款": accounts_receivable,
+                "營業收入": revenue,
+            },
+            denominator_values={"營業收入": revenue},
+        )
+        total_asset_turnover_calculation_reason = missing_formula_reason(
+            value=total_asset_turnover,
+            formula="營業收入 / 平均資產總額",
+            required_values={
+                "營業收入": revenue,
+                f"{year - 1} 年資產總額": previous_total_assets,
+                f"{year} 年資產總額": total_assets,
+            },
+            denominator_values={"平均資產總額": average_total_assets},
+        )
         roe_calculation_reason = missing_formula_reason(
             value=roe,
             formula="稅後淨利 / 平均權益總額 * 100；平均權益總額 = (前一年權益總額 + 當年度權益總額) / 2",
@@ -1141,6 +1171,16 @@ class FinancialStatementsDocxAdapter:
                 f"{year} 年權益總額": total_equity,
             },
             denominator_values={"平均權益總額": average_total_equity},
+        )
+        average_days_sales_outstanding_calculation_reason = missing_formula_reason(
+            value=average_days_sales_outstanding,
+            formula="平均應收帳款 / 營業收入 * 365",
+            required_values={
+                f"{year - 1} 年應收帳款": previous_accounts_receivable,
+                f"{year} 年應收帳款": accounts_receivable,
+                "營業收入": revenue,
+            },
+            denominator_values={"營業收入": revenue},
         )
         current_ratio_calculation_reason = missing_formula_reason(
             value=current_ratio,
@@ -1166,6 +1206,88 @@ class FinancialStatementsDocxAdapter:
             required_values={"稅後淨利": net_profit, "營業收入": revenue},
             denominator_values={"營業收入": revenue},
         )
+        pre_tax_profit_to_capital_ratio_calculation_reason = missing_formula_reason(
+            value=pre_tax_profit_to_capital_ratio,
+            formula="稅前淨利 / 實收資本額 * 100",
+            required_values={"稅前淨利": pre_tax_profit, "實收資本額": paid_in_capital},
+            denominator_values={"實收資本額": paid_in_capital},
+        )
+        long_term_capital_to_fixed_assets_ratio_calculation_reason = missing_formula_reason(
+            value=long_term_capital_to_fixed_assets_ratio,
+            formula="(權益總額 + 非流動負債) / 固定資產淨額 * 100",
+            required_values={
+                "權益總額": total_equity,
+                "非流動負債": non_current_liabilities,
+                "固定資產淨額": net_fixed_assets,
+            },
+            denominator_values={"固定資產淨額": net_fixed_assets},
+        )
+        roa_calculation_reason = missing_formula_reason(
+            value=roa,
+            formula="稅後淨利 / 平均資產總額 * 100",
+            required_values={
+                "稅後淨利": net_profit,
+                f"{year - 1} 年資產總額": previous_total_assets,
+                f"{year} 年資產總額": total_assets,
+            },
+            denominator_values={"平均資產總額": average_total_assets},
+        )
+        cash_reinvestment_ratio_calculation_reason = (
+            "缺乏現金股利、固定資產毛額、長期投資及其他資產資料。"
+        )
+        cash_adequacy_ratio_calculation_reason = (
+            "缺乏近五年營業活動現金流量、資本支出、存貨增加額及現金股利資料。"
+        )
+        quick_ratio_calculation_reason = missing_formula_reason(
+            value=quick_ratio,
+            formula="(流動資產 - 存貨 - 預付款項) / 流動負債 * 100",
+            required_values={
+                "流動資產": current_assets,
+                "存貨": inventory,
+                "預付款項": prepayments,
+                "流動負債": current_liabilities,
+            },
+            denominator_values={"流動負債": current_liabilities},
+        )
+        accounts_receivable_turnover_calculation_reason = missing_formula_reason(
+            value=accounts_receivable_turnover,
+            formula="營業收入 / 平均應收帳款",
+            required_values={
+                "營業收入": revenue,
+                f"{year - 1} 年應收帳款": previous_accounts_receivable,
+                f"{year} 年應收帳款": accounts_receivable,
+            },
+            denominator_values={"平均應收帳款": average_accounts_receivable},
+        )
+        fixed_assets_turnover_calculation_reason = missing_formula_reason(
+            value=fixed_assets_turnover,
+            formula="營業收入 / 平均固定資產淨額",
+            required_values={
+                "營業收入": revenue,
+                f"{year - 1} 年固定資產淨額": previous_net_fixed_assets,
+                f"{year} 年固定資產淨額": net_fixed_assets,
+            },
+            denominator_values={"平均固定資產淨額": average_net_fixed_assets},
+        )
+        inventory_turnover_calculation_reason = missing_formula_reason(
+            value=inventory_turnover,
+            formula="銷貨成本 / 平均存貨",
+            required_values={
+                "銷貨成本": cost_of_goods_sold,
+                f"{year - 1} 年存貨": previous_inventory,
+                f"{year} 年存貨": inventory,
+            },
+            denominator_values={"平均存貨": average_inventory},
+        )
+        cash_flow_ratio_calculation_reason = missing_formula_reason(
+            value=cash_flow_ratio,
+            formula="營業活動現金流量 / 流動負債 * 100",
+            required_values={
+                "營業活動現金流量": cash_from_operations,
+                "流動負債": current_liabilities,
+            },
+            denominator_values={"流動負債": current_liabilities},
+        )
         eps_calculation_reason = missing_formula_reason(
             value=eps,
             formula="XBRL 每股盈餘欄位",
@@ -1181,13 +1303,16 @@ class FinancialStatementsDocxAdapter:
                 "gross_margin": gross_margin,
                 # 平均收現期間 = 平均應收帳款 / 營業收入 * 365。
                 "average_collection_period": average_collection_period,
+                "average_collection_period_calculation_reason": average_collection_period_calculation_reason,
                 # 總資產週轉率 = 營業收入 / 平均資產總額。
                 "total_asset_turnover": total_asset_turnover,
+                "total_asset_turnover_calculation_reason": total_asset_turnover_calculation_reason,
                 # 股東權益報酬率 = 稅後淨利 / 平均權益總額 * 100。
                 "roe": roe,
                 "roe_calculation_reason": roe_calculation_reason,
                 # 應收帳款收現天數 = 平均應收帳款 / 營業收入 * 365。
                 "average_days_sales_outstanding": average_days_sales_outstanding,
+                "average_days_sales_outstanding_calculation_reason": average_days_sales_outstanding_calculation_reason,
                 # 純益率 = 稅後淨利 / 營業收入 * 100。
                 "net_profit_margin": net_profit_margin,
                 "net_profit_margin_calculation_reason": net_profit_margin_calculation_reason,
@@ -1196,8 +1321,10 @@ class FinancialStatementsDocxAdapter:
                 "debt_to_asset_ratio_calculation_reason": debt_to_asset_ratio_calculation_reason,
                 # 稅前純益佔實收資本比率 = 稅前淨利 / 實收資本額 * 100。
                 "pre_tax_profit_to_capital_ratio": pre_tax_profit_to_capital_ratio,
+                "pre_tax_profit_to_capital_ratio_calculation_reason": pre_tax_profit_to_capital_ratio_calculation_reason,
                 # 長期資金佔固定資產比率 = (權益總額 + 非流動負債) / 固定資產淨額 * 100。
                 "long_term_capital_to_fixed_assets_ratio": long_term_capital_to_fixed_assets_ratio,
+                "long_term_capital_to_fixed_assets_ratio_calculation_reason": long_term_capital_to_fixed_assets_ratio_calculation_reason,
                 # 流動比率 = 流動資產 / 流動負債 * 100。
                 "current_ratio": current_ratio,
                 "current_ratio_calculation_reason": current_ratio_calculation_reason,
@@ -1206,20 +1333,28 @@ class FinancialStatementsDocxAdapter:
                 "interest_coverage_ratio_calculation_reason": interest_coverage_ratio_calculation_reason,
                 # 資產報酬率 = 稅後淨利 / 平均資產總額 * 100。
                 "roa": roa,
+                "roa_calculation_reason": roa_calculation_reason,
                 # XXX現金再投資比率目前無法組成：缺少可穩定對應的現金股利、固定資產毛額、長期投資與其他資產等組成欄位。
                 "cash_reinvestment_ratio": cash_reinvestment_ratio,
+                "cash_reinvestment_ratio_calculation_reason": cash_reinvestment_ratio_calculation_reason,
                 # XXX現金流量允當比率目前無法組成：需要近五年營業活動現金流量、資本支出、存貨增加額與現金股利等期間資料。
                 "cash_adequacy_ratio": cash_adequacy_ratio,
+                "cash_adequacy_ratio_calculation_reason": cash_adequacy_ratio_calculation_reason,
                 # 速動比率 = (流動資產 - 存貨 - 預付款項) / 流動負債 * 100。
                 "quick_ratio": quick_ratio,
+                "quick_ratio_calculation_reason": quick_ratio_calculation_reason,
                 # 應收帳款週轉率 = 營業收入 / 平均應收帳款。
                 "accounts_receivable_turnover": accounts_receivable_turnover,
+                "accounts_receivable_turnover_calculation_reason": accounts_receivable_turnover_calculation_reason,
                 # 固定資產週轉率 = 營業收入 / 平均固定資產淨額。
                 "fixed_assets_turnover": fixed_assets_turnover,
+                "fixed_assets_turnover_calculation_reason": fixed_assets_turnover_calculation_reason,
                 # 存貨週轉率 = 銷貨成本 / 平均存貨。
                 "inventory_turnover": inventory_turnover,
+                "inventory_turnover_calculation_reason": inventory_turnover_calculation_reason,
                 # 現金流量比率 = 營業活動現金流量 / 流動負債 * 100。
                 "cash_flow_ratio": cash_flow_ratio,
+                "cash_flow_ratio_calculation_reason": cash_flow_ratio_calculation_reason,
                 # 每股盈餘直接取 XBRL 中可對應的 EPS 欄位。
                 "eps": eps,
                 "eps_calculation_reason": eps_calculation_reason,

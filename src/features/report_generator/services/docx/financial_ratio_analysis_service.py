@@ -29,6 +29,16 @@ FINANCIAL_RATIO_DISPLAY_KEYS = tuple(
 )
 
 
+def ratio_display_value(ratio_row: dict[str, Any], key: str) -> str:
+    value = ratio_row.get(key)
+    if value is not None and value != "":
+        return format_value(value)
+    return str(
+        ratio_row.get(f"{key}_calculation_reason")
+        or "缺乏計算所需資料。"
+    )
+
+
 def establish_financial_ratios(
     year: int,
     gui_no: str,
@@ -48,7 +58,7 @@ def establish_financial_ratios(
     add_metric_table(
         document,
         [
-            (label(FINANCIAL_RATIOS_MAP, key), format_value(ratio_row.get(key)))
+            (label(FINANCIAL_RATIOS_MAP, key), ratio_display_value(ratio_row, key))
             for key in FINANCIAL_RATIO_DISPLAY_KEYS
         ],
         value_header=f"{year}年",
