@@ -3,7 +3,6 @@ from time import perf_counter
 from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from src.features.membership.core.auth_middleware import require_any_permission, require_permission
@@ -12,7 +11,6 @@ from src.features.report_generator.services.report_generator_service import (
     ReportGenerationError,
     generate_and_store_credit_report,
     get_report_dashboard,
-    get_report_download_path,
     list_report_history,
 )
 
@@ -133,18 +131,20 @@ async def get_report_dashboard_item(history_id: int):
     return {"dashboard": dashboard}
 
 
-@report_generator_router.get(
-    "/api/report-generator/history/{public_id}/download",
-    dependencies=[Depends(require_permission("report-generator.history"))],
-)
-async def download_report(public_id: str):
-    try:
-        file_path, filename = get_report_download_path(public_id)
-    except FileNotFoundError as error:
-        raise HTTPException(status_code=404, detail=str(error)) from error
-
-    return FileResponse(
-        path=file_path,
-        media_type=DOCX_MIME_TYPE,
-        headers={"Content-Disposition": content_disposition(filename)},
-    )
+# TODO: 歷史報告下載功能尚未完成。
+# 雲端部署目前不保存 DOCX 實體檔案，因此先停用下載 API；待串接物件儲存後再恢復。
+# @report_generator_router.get(
+#     "/api/report-generator/history/{public_id}/download",
+#     dependencies=[Depends(require_permission("report-generator.history"))],
+# )
+# async def download_report(public_id: str):
+#     try:
+#         file_path, filename = get_report_download_path(public_id)
+#     except FileNotFoundError as error:
+#         raise HTTPException(status_code=404, detail=str(error)) from error
+#
+#     return FileResponse(
+#         path=file_path,
+#         media_type=DOCX_MIME_TYPE,
+#         headers={"Content-Disposition": content_disposition(filename)},
+#     )

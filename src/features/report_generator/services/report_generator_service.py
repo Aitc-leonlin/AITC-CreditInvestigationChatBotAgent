@@ -1267,9 +1267,11 @@ def insert_report_history(
     year: int,
     generated_at: datetime,
     generated_by: str,
-    file_path: Path,
+    file_name: str,
+    file_size_bytes: int,
+    file_path: str = "",
 ) -> dict[str, Any]:
-    file_size = format_file_size(file_path.stat().st_size)
+    file_size = format_file_size(file_size_bytes)
     generated_at_iso = generated_at.isoformat(timespec="seconds")
     generated_at_display = generated_at.strftime("%Y/%m/%d %H:%M")
 
@@ -1277,8 +1279,8 @@ def insert_report_history(
         "history.insert.start",
         company_code=company_code,
         year=year,
-        file_name=file_path.name,
-        file_path=str(file_path),
+        file_name=file_name,
+        file_path=file_path,
         file_size=file_size,
     )
     with connect_report_history_db() as connection:
@@ -1320,8 +1322,8 @@ def insert_report_history(
                 generated_by,
                 REPORT_STATUS_DONE,
                 file_size,
-                file_path.name,
-                str(file_path),
+                file_name,
+                file_path,
                 DOCX_MIME_TYPE,
                 generated_at_iso,
             ),
@@ -1540,23 +1542,25 @@ def list_report_history(
     }
 
 
-def get_report_download_path(public_id: str) -> tuple[Path, str]:
-    with connect_report_history_db() as connection:
-        row = connection.execute(
-            f"SELECT file_name, file_path FROM {REPORT_HISTORY_TABLE} WHERE public_id = ?",
-            (public_id,),
-        ).fetchone()
-
-    if not row:
-        raise FileNotFoundError("歷史報告不存在")
-
-    configured_path = Path(row["file_path"])
-    candidates = [configured_path, generated_reports_dir() / row["file_name"]]
-    for candidate in candidates:
-        if candidate.exists() and candidate.is_file():
-            return candidate, row["file_name"]
-
-    raise FileNotFoundError(f"找不到歷史報告檔案：{row['file_name']}")
+# TODO: 歷史報告下載功能尚未完成。
+# 雲端部署不再依賴 Server 本機檔案，待串接物件儲存後再恢復下載路徑查找。
+# def get_report_download_path(public_id: str) -> tuple[Path, str]:
+#     with connect_report_history_db() as connection:
+#         row = connection.execute(
+#             f"SELECT file_name, file_path FROM {REPORT_HISTORY_TABLE} WHERE public_id = ?",
+#             (public_id,),
+#         ).fetchone()
+#
+#     if not row:
+#         raise FileNotFoundError("歷史報告不存在")
+#
+#     configured_path = Path(row["file_path"])
+#     candidates = [configured_path, generated_reports_dir() / row["file_name"]]
+#     for candidate in candidates:
+#         if candidate.exists() and candidate.is_file():
+#             return candidate, row["file_name"]
+#
+#     raise FileNotFoundError(f"找不到歷史報告檔案：{row['file_name']}")
 
 
 def generate_and_store_credit_report(
@@ -1584,27 +1588,17 @@ def generate_and_store_credit_report(
     timestamp = generated_at.strftime("%Y%m%d_%H%M%S")
     file_stem = sanitize_filename(f"{company_name}{year}徵審報告_{timestamp}_{report_generated_by}")
     file_name = f"{file_stem}.docx"
-    file_path = generated_reports_dir() / file_name
+
+    # TODO: 雲端報告儲存尚未完成。
+    # Local 開發原本會把 DOCX 寫入 REPORT_GENERATOR_OUTPUT_DIR；雲端環境沒有固定目錄，
+    # 因此先停用實體檔案寫入，只保留本次 API 回傳的 report_bytes。
+    # file_path = generated_reports_dir() / file_name
+    # file_path.write_bytes(report_bytes)
     report_generator_log(
-        "report_file.write.start",
-        file_path=str(file_path),
+        "report_file.write.skipped",
+        reason="cloud_storage_not_implemented",
+        file_name=file_name,
         byte_size=len(report_bytes),
-    )
-    try:
-        written_size = file_path.write_bytes(report_bytes)
-    except Exception as error:
-        report_generator_log(
-            "report_file.write.error",
-            file_path=str(file_path),
-            error_type=type(error).__name__,
-            error=str(error),
-        )
-        raise
-    report_generator_log(
-        "report_file.write.done",
-        file_path=str(file_path),
-        written_size=written_size,
-        exists=file_path.exists(),
     )
 
     try:
@@ -1616,12 +1610,14 @@ def generate_and_store_credit_report(
             year=year,
             generated_at=generated_at,
             generated_by=report_generated_by,
-            file_path=file_path,
+            file_name=file_name,
+            file_size_bytes=len(report_bytes),
+            file_path="",
         )
     except Exception as error:
         report_generator_log(
             "history.insert.error",
-            file_path=str(file_path),
+            file_name=file_name,
             error_type=type(error).__name__,
             error=str(error),
         )

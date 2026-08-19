@@ -36,7 +36,8 @@ AUDIT_ROUTES = [
     route("(?:PUT|PATCH)", r"^/api/warehouse-data/(?P<id>[^/]+)$", "warehouse_data.update", "warehouse_data", "資料倉儲", "編輯"),
     route("DELETE", r"^/api/warehouse-data/(?P<id>[^/]+)$", "warehouse_data.delete", "warehouse_data", "資料倉儲", "刪除"),
     route("POST", r"^/api/report-generator/generate$", "report.generate.completed", "credit_report", "報告產生器", "完成/失敗", start="report.generate.started"),
-    route("GET", r"^/api/report-generator/history/(?P<id>[^/]+)/download$", "report.history.download", "credit_report", "歷史報告", "下載報告"),
+    # TODO: 歷史報告下載功能尚未完成，待雲端物件儲存串接後恢復稽核路由。
+    # route("GET", r"^/api/report-generator/history/(?P<id>[^/]+)/download$", "report.history.download", "credit_report", "歷史報告", "下載報告"),
     route("POST", r"^/api/membership/users$", "membership.user.create", "membership_user", "會員管理", "使用者新增"),
     route("PUT", r"^/api/membership/users/(?P<id>[^/]+)$", "membership.user.update", "membership_user", "會員管理", "使用者編輯"),
     route("DELETE", r"^/api/membership/users/(?P<id>[^/]+)$", "membership.user.delete", "membership_user", "會員管理", "使用者刪除"),
