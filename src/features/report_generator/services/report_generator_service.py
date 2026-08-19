@@ -83,6 +83,15 @@ class ReportGenerationError(RuntimeError):
     pass
 
 
+def report_generator_log(event: str, **details: Any) -> None:
+    timestamp = datetime.now().isoformat(timespec="seconds")
+    detail_text = " ".join(
+        f"{key}={value!r}" for key, value in details.items()
+    )
+    suffix = f" {detail_text}" if detail_text else ""
+    print(f"[report-generator][{timestamp}] {event}{suffix}", flush=True)
+
+
 def sanitize_filename(value: str) -> str:
     sanitized = re.sub(r"[^0-9A-Za-z\u4e00-\u9fff._-]+", "_", value.strip())
     return sanitized.strip("_") or "credit_report"
@@ -409,8 +418,29 @@ def generated_reports_dir() -> Path:
     directory = Path(configured_path) if configured_path else PROJECT_ROOT / "generated-reports" / "credit-reports"
     if not directory.is_absolute():
         directory = PROJECT_ROOT / directory
-    directory.mkdir(parents=True, exist_ok=True)
-    return directory.resolve()
+    report_generator_log(
+        "output_directory.create.start",
+        configured=bool(configured_path),
+        path=str(directory),
+    )
+    try:
+        directory.mkdir(parents=True, exist_ok=True)
+        resolved_directory = directory.resolve()
+    except Exception as error:
+        report_generator_log(
+            "output_directory.create.error",
+            path=str(directory),
+            error_type=type(error).__name__,
+            error=str(error),
+        )
+        raise
+    report_generator_log(
+        "output_directory.create.done",
+        path=str(resolved_directory),
+        exists=resolved_directory.exists(),
+        writable=os.access(resolved_directory, os.W_OK),
+    )
+    return resolved_directory
 
 
 def report_history_db_path() -> Path | None:
@@ -421,12 +451,37 @@ def report_history_db_path() -> Path | None:
 
 def connect_report_history_db() -> Any:
     db_path = report_history_db_path()
+    report_generator_log(
+        "history_db.connect.start",
+        engine="postgresql" if is_postgresql() else "sqlite",
+        path=str(db_path) if db_path is not None else "",
+    )
     if db_path is not None:
-        db_path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            db_path.parent.mkdir(parents=True, exist_ok=True)
+        except Exception as error:
+            report_generator_log(
+                "history_db.directory.error",
+                path=str(db_path.parent),
+                error_type=type(error).__name__,
+                error=str(error),
+            )
+            raise
     else:
         apply_xbrl_migration()
-    connection = open_database_connection()
-    ensure_report_history_table(connection)
+    try:
+        connection = open_database_connection()
+        ensure_report_history_table(connection)
+    except Exception as error:
+        report_generator_log(
+            "history_db.connect.error",
+            engine="postgresql" if is_postgresql() else "sqlite",
+            path=str(db_path) if db_path is not None else "",
+            error_type=type(error).__name__,
+            error=str(error),
+        )
+        raise
+    report_generator_log("history_db.connect.done")
     return connection
 
 
@@ -1123,40 +1178,78 @@ def generate_credit_report_docx(
     year: int,
 ) -> dict[str, Any]:
     db_path = get_financial_statements_db_path()
+    report_generator_log(
+        "docx.generate.start",
+        company_code=company_code,
+        year=year,
+        database_engine="postgresql" if is_postgresql() else "sqlite",
+        database_path=str(db_path) if db_path is not None else "",
+    )
     if db_path is not None and not db_path.exists():
+        report_generator_log("docx.source_database.missing", path=str(db_path))
         raise FileNotFoundError(f"SQLite database not found: {db_path}")
 
+    report_generator_log("docx.adapter.create.start")
     adapter = FinancialStatementsDocxAdapter(
         db_path=db_path,
         company_code=company_code,
         company_label=company_label,
     )
+    report_generator_log("docx.adapter.create.done")
     try:
         if not adapter.has_source_data(year):
+            report_generator_log(
+                "docx.source_data.missing",
+                company_code=company_code,
+                year=year,
+            )
             raise ReportGenerationError(
                 f"FinancialStatementXBRL.db 查無公司代號 {company_code} 的 {year} 年財報資料"
             )
+        report_generator_log("docx.source_data.found")
         ratio_rows = adapter._query_financial_ratios(
             f"SELECT * FROM financial_ratios WHERE year = {year};"
         )
         financial_trend_rows = adapter._query_financial_trends(year)
+        report_generator_log(
+            "docx.financial_data.loaded",
+            ratio_count=len(ratio_rows),
+            trend_count=len(financial_trend_rows),
+        )
+        report_generator_log("docx.ai_conclusion.start")
         ai_summary_text = generate_report_llm_conclusion(
             ratio_rows[0] if ratio_rows else {}
         )
+        report_generator_log(
+            "docx.ai_conclusion.done",
+            summary_length=len(ai_summary_text),
+        )
+        report_generator_log("docx.chapters.merge.start")
         report_bytes = merge_all_chapters(
             year,
             company_code,
             ai_summary_text,
             adapter,
         )
+        report_generator_log(
+            "docx.chapters.merge.done",
+            result_type=type(report_bytes).__name__,
+            byte_size=len(report_bytes) if isinstance(report_bytes, bytes) else 0,
+        )
     finally:
         adapter.close()
+        report_generator_log("docx.adapter.closed")
 
     if isinstance(report_bytes, dict):
+        report_generator_log(
+            "docx.generate.error",
+            error=report_bytes.get("error") or "Backend docx service returned an error",
+        )
         raise ReportGenerationError(
             report_bytes.get("error") or "Backend docx service returned an error"
         )
 
+    report_generator_log("docx.generate.done", byte_size=len(report_bytes))
     return {
         "report_bytes": report_bytes,
         "ai_summary_text": ai_summary_text,
@@ -1180,6 +1273,14 @@ def insert_report_history(
     generated_at_iso = generated_at.isoformat(timespec="seconds")
     generated_at_display = generated_at.strftime("%Y/%m/%d %H:%M")
 
+    report_generator_log(
+        "history.insert.start",
+        company_code=company_code,
+        year=year,
+        file_name=file_path.name,
+        file_path=str(file_path),
+        file_size=file_size,
+    )
     with connect_report_history_db() as connection:
         returning_sql = " RETURNING id" if is_postgresql() else ""
         cursor = connection.execute(
@@ -1233,6 +1334,7 @@ def insert_report_history(
             else int(cursor.lastrowid)
         )
 
+    report_generator_log("history.insert.done", history_id=report_id)
     return get_report_history_item(report_id) or {}
 
 
@@ -1263,6 +1365,12 @@ def upsert_report_dashboard(
     ratio_row: dict[str, Any],
     financial_trend_rows: list[dict[str, Any]],
 ) -> dict[str, Any]:
+    report_generator_log(
+        "dashboard.upsert.start",
+        history_id=history_id,
+        company_name=company_name,
+        year=year,
+    )
     now_iso = generated_at.isoformat(timespec="seconds")
     dashboard_payload = {
         "summary_items_json": database_json_dumps(
@@ -1322,7 +1430,13 @@ def upsert_report_dashboard(
         )
         connection.commit()
 
-    return get_report_dashboard(history_id) or {}
+    dashboard_item = get_report_dashboard(history_id) or {}
+    report_generator_log(
+        "dashboard.upsert.done",
+        history_id=history_id,
+        dashboard_id=dashboard_item.get("id", ""),
+    )
+    return dashboard_item
 
 
 def get_report_dashboard(history_id: int) -> dict[str, Any] | None:
@@ -1452,6 +1566,11 @@ def generate_and_store_credit_report(
     year: int,
     generated_by: str = "",
 ) -> tuple[bytes, str, dict[str, Any], dict[str, Any]]:
+    report_generator_log(
+        "generate_and_store.start",
+        company_code=company_code,
+        year=year,
+    )
     report_result = generate_credit_report_docx(
         company_code=company_code,
         company_label=company_label,
@@ -1466,25 +1585,69 @@ def generate_and_store_credit_report(
     file_stem = sanitize_filename(f"{company_name}{year}徵審報告_{timestamp}_{report_generated_by}")
     file_name = f"{file_stem}.docx"
     file_path = generated_reports_dir() / file_name
-    file_path.write_bytes(report_bytes)
-
-    history_item = insert_report_history(
-        title=title,
-        company=f"{company_name}（{company_code}）",
-        company_code=company_code,
-        company_label=company_label,
-        year=year,
-        generated_at=generated_at,
-        generated_by=report_generated_by,
-        file_path=file_path,
+    report_generator_log(
+        "report_file.write.start",
+        file_path=str(file_path),
+        byte_size=len(report_bytes),
     )
-    dashboard_item = upsert_report_dashboard(
-        history_id=int(history_item["id"]),
-        company_name=company_name,
-        year=year,
-        generated_at=generated_at,
-        ai_summary_text=report_result["ai_summary_text"],
-        ratio_row=report_result["ratio_row"],
-        financial_trend_rows=report_result["financial_trend_rows"],
+    try:
+        written_size = file_path.write_bytes(report_bytes)
+    except Exception as error:
+        report_generator_log(
+            "report_file.write.error",
+            file_path=str(file_path),
+            error_type=type(error).__name__,
+            error=str(error),
+        )
+        raise
+    report_generator_log(
+        "report_file.write.done",
+        file_path=str(file_path),
+        written_size=written_size,
+        exists=file_path.exists(),
+    )
+
+    try:
+        history_item = insert_report_history(
+            title=title,
+            company=f"{company_name}（{company_code}）",
+            company_code=company_code,
+            company_label=company_label,
+            year=year,
+            generated_at=generated_at,
+            generated_by=report_generated_by,
+            file_path=file_path,
+        )
+    except Exception as error:
+        report_generator_log(
+            "history.insert.error",
+            file_path=str(file_path),
+            error_type=type(error).__name__,
+            error=str(error),
+        )
+        raise
+    try:
+        dashboard_item = upsert_report_dashboard(
+            history_id=int(history_item["id"]),
+            company_name=company_name,
+            year=year,
+            generated_at=generated_at,
+            ai_summary_text=report_result["ai_summary_text"],
+            ratio_row=report_result["ratio_row"],
+            financial_trend_rows=report_result["financial_trend_rows"],
+        )
+    except Exception as error:
+        report_generator_log(
+            "dashboard.upsert.error",
+            history_id=history_item.get("id", ""),
+            error_type=type(error).__name__,
+            error=str(error),
+        )
+        raise
+    report_generator_log(
+        "generate_and_store.done",
+        history_id=history_item.get("id", ""),
+        dashboard_id=dashboard_item.get("id", ""),
+        file_name=file_name,
     )
     return report_bytes, file_name, history_item, dashboard_item

@@ -1,3 +1,4 @@
+import traceback
 from typing import Any
 
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -49,8 +50,18 @@ def generate_report_section_analysis(
     context: dict[str, Any],
 ) -> str:
     if not has_context_data(context):
+        print(
+            "[report-generator] ai.section.skipped "
+            f"section_title={section_title!r} reason='no_context_data'",
+            flush=True,
+        )
         return NO_ANALYSIS_DATA_MESSAGE
 
+    print(
+        "[report-generator] ai.section.invoke.start "
+        f"section_title={section_title!r}",
+        flush=True,
+    )
     try:
         response = chat_model.invoke(
             [
@@ -70,6 +81,19 @@ def generate_report_section_analysis(
                 ),
             ]
         )
-    except Exception:
+    except Exception as error:
+        print(
+            "[report-generator] ai.section.invoke.error "
+            f"section_title={section_title!r} "
+            f"error_type={type(error).__name__!r} error={str(error)!r}",
+            flush=True,
+        )
+        traceback.print_exc()
         return "AI 分析暫時無法產生，請確認模型服務設定後重試。"
-    return get_message_text(response)
+    result = get_message_text(response)
+    print(
+        "[report-generator] ai.section.invoke.done "
+        f"section_title={section_title!r} result_length={len(result)}",
+        flush=True,
+    )
+    return result

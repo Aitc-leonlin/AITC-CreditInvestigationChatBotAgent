@@ -1,3 +1,4 @@
+import traceback
 from time import perf_counter
 from urllib.parse import quote
 
@@ -39,6 +40,11 @@ def content_disposition(filename: str) -> str:
 )
 async def generate_report(request: ReportGeneratorRequest):
     started_at = perf_counter()
+    print(
+        "[report-generator] api.generate.start "
+        f"company_code={request.companyCode.strip()!r} year={request.year!r}",
+        flush=True,
+    )
     try:
         report_bytes, filename, history_item, dashboard_item = generate_and_store_credit_report(
             company_code=request.companyCode.strip(),
@@ -47,15 +53,36 @@ async def generate_report(request: ReportGeneratorRequest):
             generated_by=request.generatedBy.strip(),
         )
     except ReportGenerationError as error:
+        print(
+            "[report-generator] api.generate.report_generation_error "
+            f"error={str(error)!r}",
+            flush=True,
+        )
+        traceback.print_exc()
         raise HTTPException(status_code=400, detail=str(error)) from error
     except FileNotFoundError as error:
+        print(
+            "[report-generator] api.generate.file_not_found "
+            f"error={str(error)!r}",
+            flush=True,
+        )
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(error)) from error
     except Exception as error:
+        print(
+            "[report-generator] api.generate.unexpected_error "
+            f"error_type={type(error).__name__!r} error={str(error)!r}",
+            flush=True,
+        )
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(error)) from error
 
     print(
-        f"[timing] report_generator.generate.total took "
-        f"{perf_counter() - started_at:.3f}s"
+        f"[report-generator] api.generate.done "
+        f"history_id={history_item.get('id', '')!r} "
+        f"dashboard_id={dashboard_item.get('id', '')!r} "
+        f"duration_seconds={perf_counter() - started_at:.3f}",
+        flush=True,
     )
     return Response(
         content=report_bytes,
