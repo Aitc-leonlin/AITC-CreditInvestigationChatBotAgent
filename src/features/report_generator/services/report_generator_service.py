@@ -1401,21 +1401,21 @@ class FinancialStatementsDocxAdapter:
                 "eps": eps,
                 "eps_calculation_reason": eps_calculation_reason,
                 # 保留相容欄位，供既有 Dashboard、AI 與還款能力章節讀取；
-                # 不適用於保險業者明確標示原因，不在 INS 財稅比率表中顯示。
+                # 不適用於保險業者明確標示原因，不在 INS 財務比率表中顯示。
                 "current_ratio": None,
                 "current_ratio_calculation_reason": "不適用於保險業財務報表分類。",
                 "quick_ratio": None,
                 "quick_ratio_calculation_reason": "不適用於保險業財務報表分類。",
                 "interest_coverage_ratio": None,
-                "interest_coverage_ratio_calculation_reason": "不列入保險業財稅比率分析。",
+                "interest_coverage_ratio_calculation_reason": "不列入保險業財務比率分析。",
                 "cash_flow_ratio": None,
-                "cash_flow_ratio_calculation_reason": "不列入保險業財稅比率分析。",
+                "cash_flow_ratio_calculation_reason": "不列入保險業財務比率分析。",
                 "accounts_receivable_turnover": None,
                 "accounts_receivable_turnover_calculation_reason": "不適用於保險業財務報表分類。",
                 "inventory_turnover": None,
                 "inventory_turnover_calculation_reason": "不適用於保險業財務報表分類。",
                 "total_asset_turnover": None,
-                "total_asset_turnover_calculation_reason": "不列入保險業財稅比率分析。",
+                "total_asset_turnover_calculation_reason": "不列入保險業財務比率分析。",
             }
         ]
 

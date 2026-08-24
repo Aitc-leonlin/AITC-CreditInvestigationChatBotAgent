@@ -73,7 +73,7 @@ def establish_financial_ratios(
         else GENERAL_FINANCIAL_RATIO_DISPLAY_KEYS
     )
 
-    add_heading(document, "財稅比率分析", size=18)
+    add_heading(document, "財務比率分析", size=18)
     add_metric_table(
         document,
         [
