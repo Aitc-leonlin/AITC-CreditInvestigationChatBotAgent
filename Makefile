@@ -3,7 +3,7 @@ VENV := venv
 VENV_PYTHON := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 
-.PHONY: setup run start
+.PHONY: setup run start test-regression
 
 $(VENV_PYTHON):
 	$(PYTHON) -m venv $(VENV)
@@ -16,3 +16,6 @@ run: $(VENV_PYTHON)
 
 start: setup
 	$(VENV_PYTHON) app.py
+
+test-regression: $(VENV_PYTHON)
+	$(VENV_PYTHON) scripts/run_regression_tests.py

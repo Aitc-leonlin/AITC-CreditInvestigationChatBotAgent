@@ -213,17 +213,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Build field mapping JSON from parsed XBRL dictionary labels.")
     parser.add_argument(
         "--dictionary-json",
-        default="src/services/xbrl_data_dictionary_all.json",
+        default="src/features/chatbot/services/xbrl_data_dictionary_all.json",
         help="Parsed dictionary JSON containing labels and presentation metadata.",
     )
     parser.add_argument(
         "--output",
-        default="src/services/xbrl_mapping/concept_mapping.json",
+        default="src/features/chatbot/services/xbrl_mapping/concept_mapping.json",
         help="Output mapping JSON path.",
     )
     parser.add_argument(
         "--summary-output",
-        default="src/services/xbrl_mapping/summary.json",
+        default="src/features/chatbot/services/xbrl_mapping/summary.json",
         help="Output summary JSON path.",
     )
     parser.add_argument(

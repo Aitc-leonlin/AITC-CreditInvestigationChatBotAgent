@@ -1,6 +1,5 @@
 import argparse
 import json
-import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
@@ -9,7 +8,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.services.db_path import resolve_sqlite_db_path
+from src.features.membership.services.bootstrap_service import apply_xbrl_migration
+from src.shared.database.config import DatabaseSettings, get_database_settings
+from src.shared.database.connection import open_database_connection
 
 
 JSON_TO_COLUMNS = {
@@ -73,9 +74,9 @@ def load_rows(json_path: Path) -> list[dict[str, str]]:
     return rows
 
 
-def import_rows(connection: sqlite3.Connection, rows: list[dict[str, str]]) -> int:
+def import_rows(connection: Any, rows: list[dict[str, str]]) -> int:
     columns = [*JSON_TO_COLUMNS.values(), "source_json"]
-    placeholders = ", ".join(f":{column}" for column in columns)
+    placeholders = ", ".join("?" for _ in columns)
     assignments = ", ".join(
         f"{column} = excluded.{column}"
         for column in columns
@@ -88,21 +89,38 @@ def import_rows(connection: sqlite3.Connection, rows: list[dict[str, str]]) -> i
             {assignments},
             updated_at = CURRENT_TIMESTAMP
     """
-    connection.executemany(sql, rows)
-    connection.commit()
+    connection.executemany(
+        sql,
+        [[row[column] for column in columns] for row in rows],
+    )
     return len(rows)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("json_path", type=Path)
-    parser.add_argument("--db", type=Path, default=resolve_sqlite_db_path())
+    parser.add_argument(
+        "--db",
+        type=Path,
+        help="SQLite path override; omit to use DATABASE_MODE and database ENV settings.",
+    )
     args = parser.parse_args()
 
     rows = load_rows(args.json_path)
-    with sqlite3.connect(args.db) as connection:
+    settings = get_database_settings()
+    if args.db is not None:
+        if settings.mode != "sqlite":
+            parser.error("--db can only be used when DATABASE_MODE=sqlite")
+        settings = DatabaseSettings(mode="sqlite", sqlite_path=args.db.resolve())
+    else:
+        apply_xbrl_migration()
+
+    with open_database_connection(settings) as connection:
         count = import_rows(connection, rows)
-    print(f"Imported {count} listed company profiles into {args.db}")
+    destination = settings.sqlite_path if settings.mode == "sqlite" else (
+        f"postgresql://{settings.host}:{settings.port}/{settings.database}"
+    )
+    print(f"Imported {count} listed company profiles into {destination}")
 
 
 if __name__ == "__main__":

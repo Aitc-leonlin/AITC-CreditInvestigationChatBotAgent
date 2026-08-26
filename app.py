@@ -1,6 +1,7 @@
 import os
 import sys
 import asyncio
+from contextlib import suppress
 import json
 import logging
 from time import perf_counter
@@ -9,13 +10,13 @@ from typing import List
 # import chromadb
 import uvicorn
 
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# from src.services.save_document_into_vectordb_service import establish_vector_data
-from src.mappings.company_stock_code_array import CompanyStockCodeArray
+# from src.features.chatbot.services.save_document_into_vectordb_service import establish_vector_data
+from src.features.chatbot.core.mappings.company_stock_code_array import CompanyStockCodeArray
 from fastapi.middleware.cors import CORSMiddleware
 
 # import LangChain lib
@@ -24,22 +25,40 @@ from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 
 # import type
-from src.types.langgraph_state_types import OverallState
+from src.features.chatbot.models.langgraph_state_types import OverallState
 
 # import graph
-from src.agent.graph import graph
-from src.services.db_path import build_sqlite_db_diagnostics
+from src.features.chatbot.core.agent.graph import graph
+from src.shared.database.db_path import build_database_diagnostics
 
 # import api routers
-from src.api.chatbot import chatbot_router
-from src.api.chatbot_with_external import chatbot_with_external_router
-from src.api.report_generator import report_generator_router
-from src.api.warehouse_data import warehouse_data_router
-from src.api.expert_knowledge import (
+from src.features.chatbot.api.chatbot import chatbot_router
+from src.features.chatbot.api.chatbot_with_external import chatbot_with_external_router
+from src.features.chatbot.api.conversation_history import conversation_history_router
+from src.features.report_generator.api.report_generator import report_generator_router
+from src.features.chatbot.api.warehouse_data import warehouse_data_router
+from src.features.chatbot.api.expert_knowledge import (
     expert_knowledge_analysis_router,
     expert_knowledge_anchor_router,
     expert_knowledge_entries_router,
 )
+from src.features.membership.api.system_controller import membership_system_router
+from src.features.membership.api.auth_controller import membership_auth_router
+from src.features.membership.api.menu_controller import menu_router
+from src.features.membership.api.rbac_controller import rbac_router
+from src.features.membership.api.user_controller import membership_user_router
+from src.features.membership.api.organization_controller import organization_router
+from src.features.membership.api.notification_controller import membership_admin_router
+from src.features.membership.api.group_controller import group_router
+from src.features.membership.core.exceptions import (
+    MembershipError,
+    http_error_handler,
+    membership_error_handler,
+    unhandled_error_handler,
+)
+from src.features.membership.core.audit_middleware import audit_http_middleware
+from src.features.membership.services.audit_retention_service import run_audit_retention_scheduler
+from src.features.membership.services.bootstrap_service import ensure_membership_infrastructure
 
 
 from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
@@ -53,16 +72,51 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 
 app = FastAPI()
+app.middleware("http")(audit_http_middleware)
 api_router = APIRouter()
 api_router.include_router(chatbot_router)
 api_router.include_router(chatbot_with_external_router)
+api_router.include_router(conversation_history_router)
 api_router.include_router(report_generator_router)
 api_router.include_router(warehouse_data_router)
 api_router.include_router(expert_knowledge_entries_router)
 api_router.include_router(expert_knowledge_anchor_router)
 api_router.include_router(expert_knowledge_analysis_router)
+api_router.include_router(membership_system_router)
+api_router.include_router(membership_auth_router)
+api_router.include_router(rbac_router)
+api_router.include_router(menu_router)
+api_router.include_router(membership_user_router)
+api_router.include_router(organization_router)
+api_router.include_router(membership_admin_router)
+api_router.include_router(group_router)
 app.include_router(api_router)
+app.add_exception_handler(MembershipError, membership_error_handler)
+app.add_exception_handler(HTTPException, http_error_handler)
+app.add_exception_handler(Exception, unhandled_error_handler)
 logger = logging.getLogger(__name__)
+audit_retention_scheduler_task: asyncio.Task | None = None
+
+
+@app.on_event("startup")
+async def start_audit_retention_scheduler() -> None:
+    global audit_retention_scheduler_task
+    ensure_membership_infrastructure()
+    audit_retention_scheduler_task = asyncio.create_task(
+        run_audit_retention_scheduler(),
+        name="audit-log-retention-scheduler",
+    )
+
+
+@app.on_event("shutdown")
+async def stop_audit_retention_scheduler() -> None:
+    global audit_retention_scheduler_task
+    if audit_retention_scheduler_task is None:
+        return
+    audit_retention_scheduler_task.cancel()
+    with suppress(asyncio.CancelledError):
+        await audit_retention_scheduler_task
+    audit_retention_scheduler_task = None
 
 
 def env_flag_enabled(name: str, default: bool = False) -> bool:
@@ -72,17 +126,21 @@ def env_flag_enabled(name: str, default: bool = False) -> bool:
     return value.strip().upper() == "TRUE"
 
 
+DEFAULT_CORS_ALLOW_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3001",
+    "https://aitc-credit-investigation-chat-bot.vercel.app",
+    "https://aitc-credit-investigation-chat-bot-web-ashqnxvdk.vercel.app",
+    "https://aitc-creditinvestigationchatbotwebui.onrender.com",
+]
+
+
 def parse_cors_allow_origins() -> List[str]:
     configured = os.getenv("CORS_ALLOW_ORIGINS", "")
-    origins = [origin.strip() for origin in configured.split(",") if origin.strip()]
-    if origins:
-        return origins
-    return [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://aitc-credit-investigation-chat-bot.vercel.app",
-        "https://aitc-credit-investigation-chat-bot-web-ashqnxvdk.vercel.app"
-    ]
+    configured_origins = [origin.strip() for origin in configured.split(",") if origin.strip()]
+    return list(dict.fromkeys([*DEFAULT_CORS_ALLOW_ORIGINS, *configured_origins]))
 
 
 allow_origins = parse_cors_allow_origins()
@@ -91,8 +149,8 @@ allow_origin_regex = (
     r"https://.*\.onrender\.com" if is_render_deploy and not os.getenv("CORS_ALLOW_ORIGINS") else None
 )
 
-app.add_middleware(
-    CORSMiddleware,
+app = CORSMiddleware(
+    app=app,
     allow_origins=allow_origins,
     allow_origin_regex=allow_origin_regex,
     allow_credentials=True,
@@ -103,16 +161,17 @@ app.add_middleware(
         "X-Report-History-Id",
         "X-Report-Dashboard-Id",
         "X-Report-Dashboard-Path",
+        "X-Request-ID",
     ],
 )
 
 
-def log_sqlite_db_diagnostics() -> None:
-    diagnostics = build_sqlite_db_diagnostics()
-    logger.warning("SQLite DB diagnostics:\n%s", json.dumps(diagnostics, ensure_ascii=False, indent=2))
+def log_database_diagnostics() -> None:
+    diagnostics = build_database_diagnostics()
+    logger.warning("Database diagnostics:\n%s", json.dumps(diagnostics, ensure_ascii=False, indent=2))
 
 
-log_sqlite_db_diagnostics()
+log_database_diagnostics()
 
 
 # 建立 VectorStore

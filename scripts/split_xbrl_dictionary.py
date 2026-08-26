@@ -73,17 +73,17 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Split xbrl_data_dictionary_all.json into statement/family subsets.")
     parser.add_argument(
         "--input",
-        default="src/services/xbrl_data_dictionary_all.json",
+        default="src/features/chatbot/services/xbrl_data_dictionary_all.json",
         help="Path to the full XBRL dictionary JSON.",
     )
     parser.add_argument(
         "--output-dir",
-        default="src/services/xbrl_dictionary_splits",
+        default="src/features/chatbot/services/xbrl_dictionary_splits",
         help="Directory to write split dictionaries.",
     )
     parser.add_argument(
         "--summary-output",
-        default="src/services/xbrl_dictionary_splits/summary.json",
+        default="src/features/chatbot/services/xbrl_dictionary_splits/summary.json",
         help="Summary JSON path.",
     )
     args = parser.parse_args()
