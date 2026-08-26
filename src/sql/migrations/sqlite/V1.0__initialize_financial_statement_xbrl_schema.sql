@@ -89,7 +89,6 @@ CREATE TABLE IF NOT EXISTS taxonomy_concept (
 );
 
 CREATE TABLE IF NOT EXISTS taxonomy_presentation (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
     taxonomy_id TEXT,
 
     role_uri TEXT,
@@ -101,14 +100,14 @@ CREATE TABLE IF NOT EXISTS taxonomy_presentation (
 
     preferred_label TEXT,
 
-    depth INTEGER
+    depth INTEGER,
+    PRIMARY KEY (taxonomy_id, parent_concept_id, child_concept_id)
 );
 
 
 
 
 CREATE TABLE IF NOT EXISTS taxonomy_calculation (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
     taxonomy_id TEXT,
 
     role_uri TEXT,
@@ -117,7 +116,8 @@ CREATE TABLE IF NOT EXISTS taxonomy_calculation (
     child_concept_id TEXT,
 
     weight REAL,
-    order_no REAL
+    order_no REAL,
+    PRIMARY KEY (taxonomy_id, parent_concept_id, child_concept_id)
 );
 CREATE TABLE IF NOT EXISTS xbrl_fact (
     fact_id TEXT PRIMARY KEY,
