@@ -2,6 +2,7 @@ fastapi
 uvicorn 
 openai
 langchain
+langsmith
 langchain_community
 langchain_openai
 langchain-ollama

@@ -14,13 +14,12 @@ def default_seed_data() -> dict[str, list[dict[str, object]]]:
         "membership_organization_unit": [
             {
                 "id": ROOT_ORG_ID,
-                "code": "ROOT",
+                "code": "HQ",
                 "name": "企業總部",
                 "parent_id": None,
-                "path": "/ROOT",
+                "path": "/HQ",
                 "level": 0,
                 "status": "ACTIVE",
-                "sort_order": 0,
                 "created_at": now,
                 "updated_at": now,
                 "deleted_at": None,

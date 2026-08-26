@@ -579,6 +579,12 @@ def build_used_warehouse_data(graph_answer: dict[str, Any]) -> list[dict[str, st
 
 
 def build_applied_external_data(graph_answer: dict[str, Any]) -> list[dict[str, str]]:
+    if not bool(graph_answer.get("use_external_data", True)):
+        return []
+    external_data_result = graph_answer.get("external_data_result") or {}
+    if str(external_data_result.get("decision") or "").strip().lower() != "adopted":
+        return []
+
     response_text = str(graph_answer.get("external_data_response") or "").strip()
     if not response_text:
         return []
@@ -622,6 +628,27 @@ def build_graph_input(
             graph_input["external_data_query_text"] = external_data_query_text
 
     return graph_input
+
+
+def build_graph_config(
+    request: ChatbotRequest | ChatbotWithExternalRequest,
+    *,
+    request_source: str,
+) -> dict[str, Any]:
+    """Build LangGraph runtime config, including LangSmith trace attributes."""
+    config: dict[str, Any] = {
+        "run_name": f"aitc-{request_source}",
+        "tags": ["aitc-credit-investigation", request_source],
+        "metadata": {
+            "request_source": request_source,
+            "use_expert_knowledge": request.referenceSettings.useExpertKnowledge,
+            "use_warehouse_data": request.referenceSettings.useWarehouseData,
+            "use_external_data": request.referenceSettings.useExternalData,
+        },
+    }
+    if request.conversationId:
+        config["configurable"] = {"thread_id": request.conversationId}
+    return config
 
 
 def build_chatbot_response(

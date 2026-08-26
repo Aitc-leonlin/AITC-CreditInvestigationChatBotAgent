@@ -15,7 +15,7 @@ from src.shared.database.connection import table_exists
 from src.shared.database.db_path import PROJECT_ROOT
 
 
-MIGRATION_VERSION = "V1.7"
+MIGRATION_VERSION = "V1.11"
 MEMBERSHIP_MIGRATION_NAMES = [
     "V1.1__initialize_membership_authorization_schema.sql",
     "V1.2__add_audit_log_retention.sql",
@@ -24,6 +24,10 @@ MEMBERSHIP_MIGRATION_NAMES = [
     "V1.5__add_membership_groups.sql",
     "V1.6__remove_data_scope_and_masking.sql",
     "V1.7__repair_discontinued_data_scope_tables.sql",
+    "V1.8__consolidate_user_organization.sql",
+    "V1.9__remove_organization_position_legacy_fields.sql",
+    "V1.10__allow_reuse_of_deleted_organization_codes.sql",
+    "V1.11__add_user_position.sql",
 ]
 XBRL_MIGRATION_NAMES = [
     "V1.0__initialize_financial_statement_xbrl_schema.sql",

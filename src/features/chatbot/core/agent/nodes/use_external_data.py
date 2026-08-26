@@ -132,6 +132,9 @@ def use_external_data(state: OverallState) -> OverallState:
             **state,
             "needs_external_data": False,
             "awaiting_external_data_confirmation": False,
+            "external_data_query_text": "",
+            "external_data_response": "",
+            "external_data_response_prompt": "",
             "external_data_result": result,
         }
 
@@ -187,6 +190,9 @@ def use_external_data(state: OverallState) -> OverallState:
             **state,
             "needs_external_data": False,
             "awaiting_external_data_confirmation": False,
+            "external_data_query_text": "",
+            "external_data_response": "",
+            "external_data_response_prompt": "",
             "external_data_result": result,
         }
 
@@ -203,6 +209,9 @@ def use_external_data(state: OverallState) -> OverallState:
             **state,
             "needs_external_data": False,
             "awaiting_external_data_confirmation": False,
+            "external_data_query_text": "",
+            "external_data_response": "",
+            "external_data_response_prompt": "",
             "external_data_result": result,
         }
 

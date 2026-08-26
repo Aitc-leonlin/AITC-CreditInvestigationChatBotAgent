@@ -10,7 +10,7 @@ from typing import List
 # import chromadb
 import uvicorn
 
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -50,7 +50,12 @@ from src.features.membership.api.user_controller import membership_user_router
 from src.features.membership.api.organization_controller import organization_router
 from src.features.membership.api.notification_controller import membership_admin_router
 from src.features.membership.api.group_controller import group_router
-from src.features.membership.core.exceptions import MembershipError, membership_error_handler
+from src.features.membership.core.exceptions import (
+    MembershipError,
+    http_error_handler,
+    membership_error_handler,
+    unhandled_error_handler,
+)
 from src.features.membership.core.audit_middleware import audit_http_middleware
 from src.features.membership.services.audit_retention_service import run_audit_retention_scheduler
 from src.features.membership.services.bootstrap_service import ensure_membership_infrastructure
@@ -87,6 +92,8 @@ api_router.include_router(membership_admin_router)
 api_router.include_router(group_router)
 app.include_router(api_router)
 app.add_exception_handler(MembershipError, membership_error_handler)
+app.add_exception_handler(HTTPException, http_error_handler)
+app.add_exception_handler(Exception, unhandled_error_handler)
 logger = logging.getLogger(__name__)
 audit_retention_scheduler_task: asyncio.Task | None = None
 
@@ -142,8 +149,8 @@ allow_origin_regex = (
     r"https://.*\.onrender\.com" if is_render_deploy and not os.getenv("CORS_ALLOW_ORIGINS") else None
 )
 
-app.add_middleware(
-    CORSMiddleware,
+app = CORSMiddleware(
+    app=app,
     allow_origins=allow_origins,
     allow_origin_regex=allow_origin_regex,
     allow_credentials=True,
@@ -154,6 +161,7 @@ app.add_middleware(
         "X-Report-History-Id",
         "X-Report-Dashboard-Id",
         "X-Report-Dashboard-Path",
+        "X-Request-ID",
     ],
 )
 

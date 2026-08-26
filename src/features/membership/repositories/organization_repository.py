@@ -18,7 +18,7 @@ class OrganizationRepository:
                     ON manager.id = o.manager_user_id AND manager.deleted_at IS NULL
                 WHERE o.deleted_at IS NULL
                 {where_sql}
-                ORDER BY o.path ASC, o.sort_order ASC, o.code ASC
+                ORDER BY o.path ASC, o.code ASC
                 """,
                 params,
             ).fetchall()
@@ -44,6 +44,7 @@ class OrganizationRepository:
         parent = self.get_unit(values.get("parentId") or "") if values.get("parentId") else None
         code = values["code"]
         path = f"{parent['path'] if parent else ''}/{code}".replace("//", "/")
+        unit_type = values.get("unitType", "DEPARTMENT")
         payload = {
             "id": unit_id,
             "code": code,
@@ -52,17 +53,14 @@ class OrganizationRepository:
             "path": path,
             "level": (parent["level"] + 1) if parent else 0,
             "status": values.get("status", "ACTIVE"),
-            "sort_order": values.get("sortOrder", 0),
-            "unit_type": values.get("unitType", "DEPARTMENT"),
-            "company_id": values.get("companyId"),
+            "unit_type": unit_type,
+            "company_id": self._resolve_company_id(unit_id, unit_type, parent),
             "manager_user_id": values.get("managerUserId"),
             "description": values.get("description", ""),
             "created_at": now,
             "updated_at": now,
             "deleted_at": None,
         }
-        if not payload["company_id"] and payload["unit_type"] == "COMPANY":
-            payload["company_id"] = unit_id
         with membership_transaction() as connection:
             self._insert(connection, "membership_organization_unit", payload)
         return self.get_unit(unit_id) or payload
@@ -74,56 +72,198 @@ class OrganizationRepository:
         parent = self.get_unit(values.get("parentId") or "") if values.get("parentId") else None
         code = values["code"]
         path = f"{parent['path'] if parent else ''}/{code}".replace("//", "/")
+        level = (parent["level"] + 1) if parent else 0
+        unit_type = values.get("unitType", "DEPARTMENT")
+        company_id = self._resolve_company_id(unit_id, unit_type, parent)
+        now = utc_now_iso()
         payload = {
             "code": code,
             "name": values["name"],
             "parent_id": values.get("parentId"),
             "path": path,
-            "level": (parent["level"] + 1) if parent else 0,
+            "level": level,
             "status": values.get("status", "ACTIVE"),
-            "sort_order": values.get("sortOrder", 0),
-            "unit_type": values.get("unitType", "DEPARTMENT"),
-            "company_id": values.get("companyId") or (unit_id if values.get("unitType") == "COMPANY" else None),
+            "unit_type": unit_type,
+            "company_id": company_id,
             "manager_user_id": values.get("managerUserId"),
             "description": values.get("description", ""),
-            "updated_at": utc_now_iso(),
+            "updated_at": now,
         }
         assignments = ", ".join(f"{column} = ?" for column in payload)
         with membership_transaction() as connection:
+            subtree_rows = connection.execute(
+                """
+                WITH RECURSIVE organization_tree AS (
+                    SELECT id, code, parent_id, path, level, unit_type
+                    FROM membership_organization_unit
+                    WHERE id = ? AND deleted_at IS NULL
+
+                    UNION ALL
+
+                    SELECT child.id, child.code, child.parent_id, child.path, child.level, child.unit_type
+                    FROM membership_organization_unit child
+                    JOIN organization_tree parent ON child.parent_id = parent.id
+                    WHERE child.deleted_at IS NULL
+                )
+                SELECT id, code, parent_id, path, level, unit_type
+                FROM organization_tree
+                ORDER BY level ASC, id ASC
+                """,
+                [unit_id],
+            ).fetchall()
             cursor = connection.execute(
                 f"UPDATE membership_organization_unit SET {assignments} WHERE id = ? AND deleted_at IS NULL",
                 [*payload.values(), unit_id],
             )
             if cursor.rowcount == 0:
                 return None
+            subtree_paths = {unit_id: path}
+            subtree_levels = {unit_id: level}
+            subtree_company_ids: dict[str, str | None] = {unit_id: company_id}
+            descendant_updates: list[list[Any]] = []
+            for row in subtree_rows:
+                descendant_id = row["id"]
+                if descendant_id == unit_id:
+                    continue
+                descendant_parent_id = row["parent_id"]
+                parent_path = subtree_paths[descendant_parent_id]
+                descendant_path = f"{parent_path}/{row['code']}"
+                descendant_level = subtree_levels[descendant_parent_id] + 1
+                descendant_company_id = (
+                    descendant_id
+                    if row["unit_type"] == "COMPANY"
+                    else subtree_company_ids[descendant_parent_id]
+                )
+                subtree_paths[descendant_id] = descendant_path
+                subtree_levels[descendant_id] = descendant_level
+                subtree_company_ids[descendant_id] = descendant_company_id
+                descendant_updates.append(
+                    [descendant_path, descendant_level, descendant_company_id, now, descendant_id]
+                )
+            if descendant_updates:
+                connection.executemany(
+                    """
+                    UPDATE membership_organization_unit
+                    SET path = ?, level = ?, company_id = ?, updated_at = ?
+                    WHERE id = ? AND deleted_at IS NULL
+                    """,
+                    descendant_updates,
+                )
         return self.get_unit(unit_id)
 
-    def delete_unit(self, unit_id: str) -> bool:
+    @staticmethod
+    def _resolve_company_id(
+        unit_id: str,
+        unit_type: str,
+        parent: dict[str, Any] | None,
+    ) -> str | None:
+        if unit_type == "COMPANY":
+            return unit_id
+        if parent is None:
+            return None
+        if parent["unitType"] == "COMPANY":
+            return parent["id"]
+        return parent["companyId"]
+
+    def delete_unit_tree(self, unit_id: str) -> dict[str, int]:
         now = utc_now_iso()
         with membership_transaction() as connection:
-            cursor = connection.execute(
+            rows = connection.execute(
                 """
+                WITH RECURSIVE organization_tree(id) AS (
+                    SELECT id
+                    FROM membership_organization_unit
+                    WHERE id = ? AND deleted_at IS NULL
+
+                    UNION ALL
+
+                    SELECT child.id
+                    FROM membership_organization_unit child
+                    JOIN organization_tree parent ON child.parent_id = parent.id
+                    WHERE child.deleted_at IS NULL
+                )
+                SELECT id FROM organization_tree
+                """,
+                [unit_id],
+            ).fetchall()
+            unit_ids = [row["id"] for row in rows]
+            if not unit_ids:
+                return {"deletedCount": 0, "detachedUserCount": 0}
+
+            placeholders = ", ".join("?" for _ in unit_ids)
+            detached_users = connection.execute(
+                f"""
+                UPDATE membership_user
+                SET organization_id = NULL, updated_at = ?
+                WHERE organization_id IN ({placeholders}) AND deleted_at IS NULL
+                """,
+                [now, *unit_ids],
+            ).rowcount
+            connection.execute(
+                f"""
+                UPDATE membership_user_role
+                SET deleted_at = ?, updated_at = ?
+                WHERE organization_id IN ({placeholders}) AND deleted_at IS NULL
+                """,
+                [now, now, *unit_ids],
+            )
+            connection.execute(
+                f"""
+                UPDATE membership_user_department_mapping
+                SET deleted_at = ?, updated_at = ?
+                WHERE organization_id IN ({placeholders}) AND deleted_at IS NULL
+                """,
+                [now, now, *unit_ids],
+            )
+            connection.execute(
+                f"""
+                UPDATE membership_user_manager_relation
+                SET deleted_at = ?, updated_at = ?
+                WHERE organization_id IN ({placeholders}) AND deleted_at IS NULL
+                """,
+                [now, now, *unit_ids],
+            )
+            connection.execute(
+                f"""
+                UPDATE membership_data_scope
+                SET deleted_at = ?, updated_at = ?
+                WHERE organization_id IN ({placeholders}) AND deleted_at IS NULL
+                """,
+                [now, now, *unit_ids],
+            )
+            connection.execute(
+                f"""
+                UPDATE membership_organization_unit
+                SET company_id = NULL, updated_at = ?
+                WHERE company_id IN ({placeholders})
+                  AND id NOT IN ({placeholders})
+                  AND deleted_at IS NULL
+                """,
+                [now, *unit_ids, *unit_ids],
+            )
+            deleted_count = connection.execute(
+                f"""
                 UPDATE membership_organization_unit
                 SET deleted_at = ?, updated_at = ?
-                WHERE id = ? AND deleted_at IS NULL
+                WHERE id IN ({placeholders}) AND deleted_at IS NULL
                 """,
-                [now, now, unit_id],
-            )
-            return cursor.rowcount > 0
+                [now, now, *unit_ids],
+            ).rowcount
+            return {
+                "deletedCount": deleted_count,
+                "detachedUserCount": detached_users,
+            }
 
     def list_positions(self, *, keyword: str = "", status_filter: str = "") -> list[dict[str, Any]]:
         where_sql, params = self._position_filter(keyword, status_filter)
         with get_membership_connection() as connection:
             rows = connection.execute(
                 f"""
-                SELECT p.*, COUNT(m.id) AS user_count
+                SELECT p.*
                 FROM membership_position p
-                LEFT JOIN membership_user_department_mapping m
-                    ON m.position_id = p.id AND m.deleted_at IS NULL
                 WHERE p.deleted_at IS NULL
                 {where_sql}
-                GROUP BY p.id
-                ORDER BY p.level DESC, p.sort_order ASC, p.code ASC
+                ORDER BY p.level DESC, p.name ASC
                 """,
                 params,
             ).fetchall()
@@ -133,12 +273,9 @@ class OrganizationRepository:
         with get_membership_connection() as connection:
             row = connection.execute(
                 """
-                SELECT p.*, COUNT(m.id) AS user_count
+                SELECT p.*
                 FROM membership_position p
-                LEFT JOIN membership_user_department_mapping m
-                    ON m.position_id = p.id AND m.deleted_at IS NULL
                 WHERE p.id = ? AND p.deleted_at IS NULL
-                GROUP BY p.id
                 """,
                 [position_id],
             ).fetchone()
@@ -149,11 +286,9 @@ class OrganizationRepository:
         now = utc_now_iso()
         payload = {
             "id": position_id,
-            "code": values["code"],
             "name": values["name"],
             "description": values.get("description", ""),
             "level": values.get("level", 0),
-            "sort_order": values.get("sortOrder", 0),
             "status": values.get("status", "ACTIVE"),
             "created_at": now,
             "updated_at": now,
@@ -165,11 +300,9 @@ class OrganizationRepository:
 
     def update_position(self, position_id: str, values: dict[str, Any]) -> dict[str, Any] | None:
         payload = {
-            "code": values["code"],
             "name": values["name"],
             "description": values.get("description", ""),
             "level": values.get("level", 0),
-            "sort_order": values.get("sortOrder", 0),
             "status": values.get("status", "ACTIVE"),
             "updated_at": utc_now_iso(),
         }
@@ -186,6 +319,14 @@ class OrganizationRepository:
     def delete_position(self, position_id: str) -> bool:
         now = utc_now_iso()
         with membership_transaction() as connection:
+            connection.execute(
+                """
+                UPDATE membership_user
+                SET position_id = NULL, updated_at = ?
+                WHERE position_id = ? AND deleted_at IS NULL
+                """,
+                [now, position_id],
+            )
             cursor = connection.execute(
                 """
                 UPDATE membership_position
@@ -195,125 +336,6 @@ class OrganizationRepository:
                 [now, now, position_id],
             )
             return cursor.rowcount > 0
-
-    def list_user_department_mappings(self, *, user_id: str = "", organization_id: str = "") -> list[dict[str, Any]]:
-        clauses: list[str] = []
-        params: list[Any] = []
-        if user_id:
-            clauses.append("m.user_id = ?")
-            params.append(user_id)
-        if organization_id:
-            clauses.append("m.organization_id = ?")
-            params.append(organization_id)
-        where_sql = "AND " + " AND ".join(clauses) if clauses else ""
-        with get_membership_connection() as connection:
-            rows = connection.execute(
-                f"""
-                SELECT m.*,
-                       u.username,
-                       u.display_name,
-                       o.name AS organization_name,
-                       p.name AS position_name
-                FROM membership_user_department_mapping m
-                LEFT JOIN membership_user u ON u.id = m.user_id AND u.deleted_at IS NULL
-                LEFT JOIN membership_organization_unit o ON o.id = m.organization_id AND o.deleted_at IS NULL
-                LEFT JOIN membership_position p ON p.id = m.position_id AND p.deleted_at IS NULL
-                WHERE m.deleted_at IS NULL
-                {where_sql}
-                ORDER BY m.is_primary DESC, o.path ASC, u.display_name ASC
-                """,
-                params,
-            ).fetchall()
-        return [self.mapping_row(row) for row in rows]
-
-    def upsert_user_department_mapping(self, values: dict[str, Any]) -> dict[str, Any]:
-        mapping_id = str(uuid.uuid4())
-        now = utc_now_iso()
-        payload = {
-            "id": mapping_id,
-            "user_id": values["userId"],
-            "organization_id": values["organizationId"],
-            "position_id": values.get("positionId"),
-            "is_primary": 1 if values.get("isPrimary") else 0,
-            "effective_from": values.get("effectiveFrom"),
-            "effective_to": values.get("effectiveTo"),
-            "created_at": now,
-            "updated_at": now,
-            "deleted_at": None,
-        }
-        with membership_transaction() as connection:
-            if payload["is_primary"]:
-                connection.execute(
-                    """
-                    UPDATE membership_user_department_mapping
-                    SET is_primary = 0, updated_at = ?
-                    WHERE user_id = ? AND deleted_at IS NULL
-                    """,
-                    [now, payload["user_id"]],
-                )
-            self._insert(connection, "membership_user_department_mapping", payload)
-            connection.execute(
-                """
-                UPDATE membership_user
-                SET organization_id = ?, updated_at = ?
-                WHERE id = ? AND deleted_at IS NULL
-                """,
-                [payload["organization_id"], now, payload["user_id"]],
-            )
-        return self.list_user_department_mappings(user_id=payload["user_id"], organization_id=payload["organization_id"])[0]
-
-    def delete_user_department_mapping(self, mapping_id: str) -> bool:
-        return self._soft_delete("membership_user_department_mapping", mapping_id)
-
-    def list_manager_relations(self, *, manager_user_id: str = "", employee_user_id: str = "") -> list[dict[str, Any]]:
-        clauses: list[str] = []
-        params: list[Any] = []
-        if manager_user_id:
-            clauses.append("r.manager_user_id = ?")
-            params.append(manager_user_id)
-        if employee_user_id:
-            clauses.append("r.employee_user_id = ?")
-            params.append(employee_user_id)
-        where_sql = "AND " + " AND ".join(clauses) if clauses else ""
-        with get_membership_connection() as connection:
-            rows = connection.execute(
-                f"""
-                SELECT r.*,
-                       manager.display_name AS manager_display_name,
-                       employee.display_name AS employee_display_name,
-                       o.name AS organization_name
-                FROM membership_user_manager_relation r
-                LEFT JOIN membership_user manager ON manager.id = r.manager_user_id AND manager.deleted_at IS NULL
-                LEFT JOIN membership_user employee ON employee.id = r.employee_user_id AND employee.deleted_at IS NULL
-                LEFT JOIN membership_organization_unit o ON o.id = r.organization_id AND o.deleted_at IS NULL
-                WHERE r.deleted_at IS NULL
-                {where_sql}
-                ORDER BY manager.display_name ASC, employee.display_name ASC
-                """,
-                params,
-            ).fetchall()
-        return [self.manager_relation_row(row) for row in rows]
-
-    def create_manager_relation(self, values: dict[str, Any]) -> dict[str, Any]:
-        relation_id = str(uuid.uuid4())
-        now = utc_now_iso()
-        payload = {
-            "id": relation_id,
-            "manager_user_id": values["managerUserId"],
-            "employee_user_id": values["employeeUserId"],
-            "organization_id": values.get("organizationId"),
-            "relation_type": values.get("relationType", "DIRECT"),
-            "status": values.get("status", "ACTIVE"),
-            "created_at": now,
-            "updated_at": now,
-            "deleted_at": None,
-        }
-        with membership_transaction() as connection:
-            self._insert(connection, "membership_user_manager_relation", payload)
-        return self.list_manager_relations(employee_user_id=payload["employee_user_id"])[0]
-
-    def delete_manager_relation(self, relation_id: str) -> bool:
-        return self._soft_delete("membership_user_manager_relation", relation_id)
 
     def code_exists(self, table_name: str, code: str, exclude_id: str | None = None) -> bool:
         params: list[Any] = [code]
@@ -351,7 +373,6 @@ class OrganizationRepository:
             "description": row["description"],
             "path": row["path"],
             "level": row["level"],
-            "sortOrder": row["sort_order"],
             "status": row["status"],
             "children": [],
             "createdAt": row["created_at"],
@@ -361,44 +382,9 @@ class OrganizationRepository:
     def position_row(self, row: sqlite3.Row) -> dict[str, Any]:
         return {
             "id": row["id"],
-            "code": row["code"],
             "name": row["name"],
             "description": row["description"],
             "level": row["level"],
-            "sortOrder": row["sort_order"],
-            "status": row["status"],
-            "userCount": row["user_count"],
-            "createdAt": row["created_at"],
-            "updatedAt": row["updated_at"],
-        }
-
-    def mapping_row(self, row: sqlite3.Row) -> dict[str, Any]:
-        return {
-            "id": row["id"],
-            "userId": row["user_id"],
-            "username": row["username"],
-            "displayName": row["display_name"],
-            "organizationId": row["organization_id"],
-            "organizationName": row["organization_name"],
-            "positionId": row["position_id"],
-            "positionName": row["position_name"],
-            "isPrimary": bool(row["is_primary"]),
-            "effectiveFrom": row["effective_from"],
-            "effectiveTo": row["effective_to"],
-            "createdAt": row["created_at"],
-            "updatedAt": row["updated_at"],
-        }
-
-    def manager_relation_row(self, row: sqlite3.Row) -> dict[str, Any]:
-        return {
-            "id": row["id"],
-            "managerUserId": row["manager_user_id"],
-            "managerDisplayName": row["manager_display_name"],
-            "employeeUserId": row["employee_user_id"],
-            "employeeDisplayName": row["employee_display_name"],
-            "organizationId": row["organization_id"],
-            "organizationName": row["organization_name"],
-            "relationType": row["relation_type"],
             "status": row["status"],
             "createdAt": row["created_at"],
             "updatedAt": row["updated_at"],
@@ -433,8 +419,8 @@ class OrganizationRepository:
         params: list[Any] = []
         if keyword.strip():
             like_keyword = f"%{' '.join(keyword.split())}%"
-            clauses.append("(p.code LIKE ? OR p.name LIKE ? OR p.description LIKE ?)")
-            params.extend([like_keyword] * 3)
+            clauses.append("(p.name LIKE ? OR p.description LIKE ?)")
+            params.extend([like_keyword] * 2)
         if status_filter.strip():
             clauses.append("p.status = ?")
             params.append(status_filter.strip().upper())

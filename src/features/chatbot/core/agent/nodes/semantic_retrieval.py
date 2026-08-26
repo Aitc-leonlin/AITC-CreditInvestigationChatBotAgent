@@ -1390,7 +1390,10 @@ def semantic_retrieval(state: OverallState) -> OverallState:
 
     print("fulfilled_items =", fulfilled_items)
     print("planned_items =", planned_items)
-    has_external_data_response = bool(str(state.get("external_data_response") or "").strip())
+    has_external_data_response = bool(
+        state.get("use_external_data", True)
+        and str(state.get("external_data_response") or "").strip()
+    )
     enough_information = bool(llm_evidence_json.get("facts")) or has_external_data_response
     # enough_information = fulfilled_items > 0 and fulfilled_items == planned_items
 

@@ -46,7 +46,10 @@ class OrganizationService:
             raise ValidationFailureError("Organization unit cannot be its own parent.")
         self._validate_unit_references(payload)
         parent = self.repository.get_unit(payload["parentId"]) if payload.get("parentId") else None
-        if parent and current["path"] and parent["path"].startswith(current["path"]):
+        if parent and current["path"] and (
+            parent["path"] == current["path"]
+            or parent["path"].startswith(f"{current['path']}/")
+        ):
             raise ValidationFailureError("Organization unit cannot be moved under its child.")
         self._ensure_unique_code("membership_organization_unit", payload["code"], exclude_id=unit_id)
         updated = self.repository.update_unit(unit_id, payload)
@@ -54,25 +57,25 @@ class OrganizationService:
             raise ResourceNotFoundError("Organization unit not found.", {"id": unit_id})
         return updated
 
-    def delete_unit(self, unit_id: str) -> None:
+    def delete_unit(self, unit_id: str) -> dict[str, int]:
         self.get_unit(unit_id)
-        if not self.repository.delete_unit(unit_id):
+        result = self.repository.delete_unit_tree(unit_id)
+        if result["deletedCount"] == 0:
             raise ResourceNotFoundError("Organization unit not found.", {"id": unit_id})
+        return result
 
     def list_positions(self, *, keyword: str = "", status_filter: str = "") -> list[dict[str, Any]]:
         return self.repository.list_positions(keyword=keyword, status_filter=status_filter)
 
     def create_position(self, payload: dict[str, Any]) -> dict[str, Any]:
-        self._ensure_unique_code("membership_position", payload["code"])
         try:
             return self.repository.create_position(payload)
         except sqlite3.IntegrityError as exc:
-            raise ConflictError("Position code already exists.") from exc
+            raise ConflictError("Unable to create position.") from exc
 
     def update_position(self, position_id: str, payload: dict[str, Any]) -> dict[str, Any]:
         if self.repository.get_position(position_id) is None:
             raise ResourceNotFoundError("Position not found.", {"id": position_id})
-        self._ensure_unique_code("membership_position", payload["code"], exclude_id=position_id)
         updated = self.repository.update_position(position_id, payload)
         if updated is None:
             raise ResourceNotFoundError("Position not found.", {"id": position_id})
@@ -82,43 +85,8 @@ class OrganizationService:
         if not self.repository.delete_position(position_id):
             raise ResourceNotFoundError("Position not found.", {"id": position_id})
 
-    def list_user_department_mappings(self, *, user_id: str = "", organization_id: str = "") -> list[dict[str, Any]]:
-        return self.repository.list_user_department_mappings(user_id=user_id, organization_id=organization_id)
-
-    def create_user_department_mapping(self, payload: dict[str, Any]) -> dict[str, Any]:
-        self._validate_user(payload["userId"])
-        self._validate_organization(payload["organizationId"])
-        self._validate_position(payload.get("positionId"))
-        try:
-            return self.repository.upsert_user_department_mapping(payload)
-        except sqlite3.IntegrityError as exc:
-            raise ConflictError("User department mapping already exists.") from exc
-
-    def delete_user_department_mapping(self, mapping_id: str) -> None:
-        if not self.repository.delete_user_department_mapping(mapping_id):
-            raise ResourceNotFoundError("User department mapping not found.", {"id": mapping_id})
-
-    def list_manager_relations(self, *, manager_user_id: str = "", employee_user_id: str = "") -> list[dict[str, Any]]:
-        return self.repository.list_manager_relations(manager_user_id=manager_user_id, employee_user_id=employee_user_id)
-
-    def create_manager_relation(self, payload: dict[str, Any]) -> dict[str, Any]:
-        if payload["managerUserId"] == payload["employeeUserId"]:
-            raise ValidationFailureError("Manager and employee cannot be the same user.")
-        self._validate_user(payload["managerUserId"])
-        self._validate_user(payload["employeeUserId"])
-        self._validate_organization(payload.get("organizationId"))
-        try:
-            return self.repository.create_manager_relation(payload)
-        except sqlite3.IntegrityError as exc:
-            raise ConflictError("Manager relation already exists.") from exc
-
-    def delete_manager_relation(self, relation_id: str) -> None:
-        if not self.repository.delete_manager_relation(relation_id):
-            raise ResourceNotFoundError("Manager relation not found.", {"id": relation_id})
-
     def _validate_unit_references(self, payload: dict[str, Any]) -> None:
         self._validate_organization(payload.get("parentId"))
-        self._validate_organization(payload.get("companyId"))
         self._validate_user(payload.get("managerUserId"))
 
     def _validate_user(self, user_id: str | None) -> None:
@@ -128,10 +96,6 @@ class OrganizationService:
     def _validate_organization(self, organization_id: str | None) -> None:
         if not self.repository.entity_exists("membership_organization_unit", organization_id):
             raise ValidationFailureError("Organization unit does not exist.", {"organizationId": organization_id})
-
-    def _validate_position(self, position_id: str | None) -> None:
-        if not self.repository.entity_exists("membership_position", position_id):
-            raise ValidationFailureError("Position does not exist.", {"positionId": position_id})
 
     def _ensure_unique_code(self, table_name: str, code: str, exclude_id: str | None = None) -> None:
         if self.repository.code_exists(table_name, code, exclude_id=exclude_id):

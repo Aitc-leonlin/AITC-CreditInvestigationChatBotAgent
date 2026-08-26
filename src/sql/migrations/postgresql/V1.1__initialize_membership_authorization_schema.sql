@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS membership_schema_migrations (
 
 CREATE TABLE IF NOT EXISTS membership_organization_unit (
     id TEXT PRIMARY KEY,
-    code TEXT NOT NULL UNIQUE,
+    code TEXT NOT NULL,
     name TEXT NOT NULL,
     parent_id TEXT REFERENCES membership_organization_unit(id),
     path TEXT NOT NULL,
@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS membership_organization_unit (
     manager_user_id TEXT,
     description TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'ACTIVE',
-    sort_order INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP::TEXT),
     updated_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP::TEXT),
     deleted_at TEXT
@@ -216,12 +215,10 @@ CREATE TABLE IF NOT EXISTS membership_notification_outbox (
 
 CREATE TABLE IF NOT EXISTS membership_position (
     id TEXT PRIMARY KEY,
-    code TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',
     level INTEGER NOT NULL DEFAULT 0,
     status TEXT NOT NULL DEFAULT 'ACTIVE',
-    sort_order INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP::TEXT),
     updated_at TEXT NOT NULL DEFAULT (CURRENT_TIMESTAMP::TEXT),
     deleted_at TEXT
@@ -313,7 +310,8 @@ CREATE TABLE IF NOT EXISTS membership_sensitive_data_masking_rule (
 );
 
 CREATE INDEX IF NOT EXISTS idx_membership_user_organization ON membership_user(organization_id) WHERE deleted_at IS NULL;
-CREATE INDEX IF NOT EXISTS idx_membership_org_parent ON membership_organization_unit(parent_id, sort_order) WHERE deleted_at IS NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS uq_membership_org_active_code ON membership_organization_unit(code) WHERE deleted_at IS NULL;
+CREATE INDEX IF NOT EXISTS idx_membership_org_parent ON membership_organization_unit(parent_id) WHERE deleted_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_membership_user_role_user ON membership_user_role(user_id) WHERE deleted_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_membership_user_role_role ON membership_user_role(role_id) WHERE deleted_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_membership_role_permission_role ON membership_role_permission(role_id) WHERE deleted_at IS NULL;

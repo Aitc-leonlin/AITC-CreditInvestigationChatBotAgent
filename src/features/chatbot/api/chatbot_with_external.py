@@ -7,6 +7,7 @@ from src.features.chatbot.schemas.chatbot_base import (
     ChatbotWithExternalRequest,
     ChatbotWithExternalResponse,
     build_chatbot_response,
+    build_graph_config,
     build_graph_input,
     compact_text,
     dump_log_payload,
@@ -44,21 +45,16 @@ async def get_chatbot_answer_with_external(
         )
 
     graph_input = build_graph_input(request, request_source="chatbot-with-external")
-    graph_config = (
-        {"configurable": {"thread_id": request.conversationId}}
-        if request.conversationId
-        else None
+    graph_config = build_graph_config(
+        request,
+        request_source="chatbot-with-external",
     )
     print(
         "[chatbotwithexternal] request payload:\n"
         + dump_log_payload(request.model_dump())
     )
     print("[chatbotwithexternal] graph input:\n" + dump_log_payload(graph_input))
-    graph_answer = (
-        graph.invoke(graph_input, config=graph_config)
-        if graph_config
-        else graph.invoke(graph_input)
-    )
+    graph_answer = graph.invoke(graph_input, config=graph_config)
     print(
         "[timing] chatbotwithexternal.total_graph_to_final_answer took "
         f"{perf_counter() - started_at:.3f}s"

@@ -27,7 +27,7 @@ class UserCreateCommand(BaseModel):
     employeeNo: str = Field(default="", max_length=50)
     organizationId: str | None = None
     departmentId: str | None = None
-    managerUserId: str | None = None
+    positionId: str | None = None
     status: UserStatus = "ACTIVE"
     locale: str = Field(default="zh-TW", max_length=20)
     timezone: str = Field(default="Asia/Taipei", max_length=60)
@@ -58,7 +58,7 @@ class UserUpdateCommand(BaseModel):
     employeeNo: str = Field(default="", max_length=50)
     organizationId: str | None = None
     departmentId: str | None = None
-    managerUserId: str | None = None
+    positionId: str | None = None
     status: UserStatus = "ACTIVE"
     locale: str = Field(default="zh-TW", max_length=20)
     timezone: str = Field(default="Asia/Taipei", max_length=60)
@@ -128,6 +128,8 @@ class UserResponse(BaseModel):
     organizationName: str | None
     departmentId: str | None = None
     departmentName: str | None = None
+    positionId: str | None = None
+    positionName: str | None = None
     managerUserId: str | None = None
     managerDisplayName: str | None = None
     status: str

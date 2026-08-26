@@ -1,9 +1,14 @@
 from dataclasses import dataclass, field
+import logging
 from typing import Any
+import uuid
 
 from fastapi import HTTPException, Request, status
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -93,6 +98,31 @@ async def http_error_handler(_: Request, exc: HTTPException) -> JSONResponse:
             },
             "meta": {},
         },
+    )
+
+
+async def unhandled_error_handler(request: Request, exc: Exception) -> JSONResponse:
+    request_id = str(uuid.uuid4())
+    logger.exception(
+        "Unhandled API error request_id=%s method=%s path=%s",
+        request_id,
+        request.method,
+        request.url.path,
+        exc_info=exc,
+    )
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={
+            "success": False,
+            "data": None,
+            "error": {
+                "code": "INTERNAL_SERVER_ERROR",
+                "message": "系統處理請求時發生錯誤。",
+                "details": {"requestId": request_id},
+            },
+            "meta": {},
+        },
+        headers={"X-Request-ID": request_id},
     )
 
 

@@ -6,6 +6,9 @@ from src.features.membership.services.bootstrap_service import apply_xbrl_migrat
 from src.shared.database.connection import get_table_columns, is_postgresql, open_database_connection
 
 
+ALL_COMPANY_VALUE = "All"
+
+
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -132,7 +135,7 @@ def normalize_entry_payload(payload: dict[str, Any]) -> dict[str, str]:
         "category": compact_text(payload.get("category")),
         "title": compact_text(payload.get("title")),
         "industry": compact_text(payload.get("industry")),
-        "companyLabel": compact_text(payload.get("companyLabel")),
+        "companyLabel": compact_text(payload.get("companyLabel")) or ALL_COMPANY_VALUE,
         "companyPromptValue": compact_text(payload.get("companyPromptValue")),
         "summary": preserve_text(payload.get("summary")),
         "source": compact_text(payload.get("source")),
@@ -282,7 +285,8 @@ def list_applied_warehouse_data_entries(
     return [
         entry
         for entry in entries
-        if entry["companyLabel"] == normalized_company_label
+        if entry["companyLabel"] == ALL_COMPANY_VALUE
+        or entry["companyLabel"] == normalized_company_label
         or entry["companyPromptValue"] == normalized_company_prompt_value
     ]
 

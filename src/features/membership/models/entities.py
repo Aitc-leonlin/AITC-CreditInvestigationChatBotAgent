@@ -29,7 +29,6 @@ class OrganizationUnit(MembershipModel):
     path: str = ""
     level: int = 0
     status: str = "ACTIVE"
-    sort_order: int = 0
 
 
 @dataclass(slots=True)
@@ -39,6 +38,7 @@ class User(MembershipModel):
     display_name: str = ""
     employee_no: str = ""
     organization_id: str | None = None
+    position_id: str | None = None
     status: str = "ACTIVE"
     locale: str = "zh-TW"
     timezone: str = "Asia/Taipei"

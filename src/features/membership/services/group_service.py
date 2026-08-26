@@ -38,22 +38,28 @@ class GroupService:
 
     def create_group(self, payload: dict[str, Any], actor_user_id: str) -> dict[str, Any]:
         self._require_admin(actor_user_id)
+        self._ensure_unique_code(payload["code"])
         self._validate_users([payload.get("masterUserId")] if payload.get("masterUserId") else [])
         try:
             group = self.repository.create_group(payload, actor_user_id)
         except sqlite3.IntegrityError as exc:
-            raise ConflictError("Group code already exists.", {"code": payload.get("code")}) from exc
+            if self.repository.group_code_exists(payload["code"]):
+                self._raise_code_conflict(payload["code"], exc)
+            raise
         self._record(actor_user_id, "membership.group.create", group["id"], {"code": group["code"]})
         return self._with_access(group, actor_user_id, True, include_members=True)
 
     def update_group(self, group_id: str, payload: dict[str, Any], actor_user_id: str) -> dict[str, Any]:
         self._require_admin(actor_user_id)
         self._require_group(group_id)
+        self._ensure_unique_code(payload["code"], exclude_id=group_id)
         self._validate_users([payload.get("masterUserId")] if payload.get("masterUserId") else [])
         try:
             group = self.repository.update_group(group_id, payload, actor_user_id)
         except sqlite3.IntegrityError as exc:
-            raise ConflictError("Group code already exists.", {"code": payload.get("code")}) from exc
+            if self.repository.group_code_exists(payload["code"], exclude_id=group_id):
+                self._raise_code_conflict(payload["code"], exc)
+            raise
         if group is None:
             raise ResourceNotFoundError("Group not found.", {"id": group_id})
         self._record(
@@ -124,9 +130,12 @@ class GroupService:
         *,
         include_members: bool,
     ) -> dict[str, Any]:
+        members = group.get("members")
+        if include_members and members is None:
+            members = self.repository.list_members(group["id"])
         return {
             **group,
-            "members": self.repository.list_members(group["id"]) if include_members else [],
+            "members": members if include_members else [],
             "canEditGroup": is_admin,
             "canManageMembers": is_admin or group["masterUserId"] == actor_user_id,
         }
@@ -152,6 +161,20 @@ class GroupService:
     def _validate_users(self, user_ids: list[str]) -> None:
         if not self.repository.users_exist(user_ids):
             raise ValidationFailureError("One or more users do not exist.", {"userIds": user_ids})
+
+    def _ensure_unique_code(self, code: str, *, exclude_id: str | None = None) -> None:
+        if self.repository.group_code_exists(code, exclude_id=exclude_id):
+            self._raise_code_conflict(code)
+
+    @staticmethod
+    def _raise_code_conflict(code: str, cause: Exception | None = None) -> None:
+        error = ConflictError(
+            "群組代碼已存在，請使用其他代碼。",
+            {"field": "code", "code": code},
+        )
+        if cause is not None:
+            raise error from cause
+        raise error
 
     def _record(self, actor_user_id: str, action: str, group_id: str, metadata: dict[str, Any]) -> None:
         self.audit.record(

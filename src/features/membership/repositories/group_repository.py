@@ -11,7 +11,10 @@ class GroupRepository:
         clauses = ["g.deleted_at IS NULL"]
         params: list[Any] = []
         if keyword:
-            clauses.append("(g.code LIKE ? OR g.name LIKE ? OR g.category LIKE ? OR g.description LIKE ?)")
+            clauses.append(
+                "(LOWER(g.code) LIKE LOWER(?) OR LOWER(g.name) LIKE LOWER(?) "
+                "OR LOWER(g.category) LIKE LOWER(?) OR LOWER(g.description) LIKE LOWER(?))"
+            )
             pattern = f"%{keyword}%"
             params.extend([pattern, pattern, pattern, pattern])
         if status_filter:
@@ -29,7 +32,7 @@ class GroupRepository:
                 LEFT JOIN membership_group_member member
                     ON member.group_id = g.id AND member.deleted_at IS NULL
                 WHERE {' AND '.join(clauses)}
-                GROUP BY g.id
+                GROUP BY g.id, master.username, master.display_name
                 ORDER BY g.status ASC, g.name ASC, g.code ASC
                 """,
                 params,
@@ -38,53 +41,25 @@ class GroupRepository:
 
     def get_group(self, group_id: str) -> dict[str, Any] | None:
         with get_membership_connection() as connection:
-            row = connection.execute(
-                """
-                SELECT g.*, master.username AS master_username,
-                       master.display_name AS master_display_name,
-                       COUNT(member.id) AS member_count
-                FROM membership_group g
-                LEFT JOIN membership_user master
-                    ON master.id = g.master_user_id AND master.deleted_at IS NULL
-                LEFT JOIN membership_group_member member
-                    ON member.group_id = g.id AND member.deleted_at IS NULL
-                WHERE g.id = ? AND g.deleted_at IS NULL
-                GROUP BY g.id
-                """,
-                [group_id],
-            ).fetchone()
+            row = self._fetch_group(connection, group_id)
             return self._group_row(row) if row else None
+
+    def group_code_exists(self, code: str, *, exclude_id: str | None = None) -> bool:
+        clauses = ["LOWER(code) = LOWER(?)", "deleted_at IS NULL"]
+        params: list[Any] = [code]
+        if exclude_id:
+            clauses.append("id != ?")
+            params.append(exclude_id)
+        with get_membership_connection() as connection:
+            row = connection.execute(
+                f"SELECT 1 FROM membership_group WHERE {' AND '.join(clauses)} LIMIT 1",
+                params,
+            ).fetchone()
+        return row is not None
 
     def list_members(self, group_id: str) -> list[dict[str, Any]]:
         with get_membership_connection() as connection:
-            rows = connection.execute(
-                """
-                SELECT member.id, member.user_id, member.created_at,
-                       user.username, user.display_name, user.email, user.status,
-                       CASE WHEN group_row.master_user_id = member.user_id THEN 1 ELSE 0 END AS is_master
-                FROM membership_group_member member
-                JOIN membership_group group_row
-                    ON group_row.id = member.group_id AND group_row.deleted_at IS NULL
-                JOIN membership_user user
-                    ON user.id = member.user_id AND user.deleted_at IS NULL
-                WHERE member.group_id = ? AND member.deleted_at IS NULL
-                ORDER BY is_master DESC, user.display_name ASC, user.username ASC
-                """,
-                [group_id],
-            ).fetchall()
-            return [
-                {
-                    "id": row["id"],
-                    "userId": row["user_id"],
-                    "username": row["username"],
-                    "displayName": row["display_name"],
-                    "email": row["email"],
-                    "status": row["status"],
-                    "isMaster": bool(row["is_master"]),
-                    "createdAt": row["created_at"],
-                }
-                for row in rows
-            ]
+            return self._list_members(connection, group_id)
 
     def list_available_users(self) -> list[dict[str, str]]:
         with get_membership_connection() as connection:
@@ -134,7 +109,11 @@ class GroupRepository:
             )
             if master_user_id:
                 self._insert_member(connection, group_id, master_user_id, actor_user_id, now)
-        return self.get_group(group_id) or {}
+            row = self._fetch_group(connection, group_id)
+            group = self._group_row(row) if row else {}
+            if group:
+                group["members"] = self._list_members(connection, group_id)
+        return group
 
     def update_group(self, group_id: str, values: dict[str, Any], actor_user_id: str) -> dict[str, Any] | None:
         now = utc_now_iso()
@@ -170,7 +149,11 @@ class GroupRepository:
                 ).fetchone()
                 if active_member is None:
                     self._insert_member(connection, group_id, master_user_id, actor_user_id, now)
-        return self.get_group(group_id)
+            row = self._fetch_group(connection, group_id)
+            group = self._group_row(row) if row else None
+            if group is not None:
+                group["members"] = self._list_members(connection, group_id)
+        return group
 
     def delete_group(self, group_id: str) -> bool:
         now = utc_now_iso()
@@ -223,6 +206,8 @@ class GroupRepository:
 
     def remove_members(self, group_id: str, user_ids: list[str]) -> bool:
         unique_user_ids = list(dict.fromkeys(user_ids))
+        if not unique_user_ids:
+            return True
         placeholders = ", ".join("?" for _ in unique_user_ids)
         now = utc_now_iso()
         with membership_transaction() as connection:
@@ -305,6 +290,54 @@ class GroupRepository:
             [str(uuid.uuid4()), group_id, user_id, actor_user_id, now, now],
         )
 
+    def _fetch_group(self, connection: sqlite3.Connection, group_id: str) -> sqlite3.Row | None:
+        return connection.execute(
+            """
+            SELECT g.*, master.username AS master_username,
+                   master.display_name AS master_display_name,
+                   COUNT(member.id) AS member_count
+            FROM membership_group g
+            LEFT JOIN membership_user master
+                ON master.id = g.master_user_id AND master.deleted_at IS NULL
+            LEFT JOIN membership_group_member member
+                ON member.group_id = g.id AND member.deleted_at IS NULL
+            WHERE g.id = ? AND g.deleted_at IS NULL
+            GROUP BY g.id, master.username, master.display_name
+            """,
+            [group_id],
+        ).fetchone()
+
+    def _list_members(self, connection: sqlite3.Connection, group_id: str) -> list[dict[str, Any]]:
+        rows = connection.execute(
+            """
+            SELECT member.id, member.user_id, member.created_at,
+                   member_user.username, member_user.display_name,
+                   member_user.email, member_user.status,
+                   CASE WHEN group_row.master_user_id = member.user_id THEN 1 ELSE 0 END AS is_master
+            FROM membership_group_member member
+            JOIN membership_group group_row
+                ON group_row.id = member.group_id AND group_row.deleted_at IS NULL
+            JOIN membership_user member_user
+                ON member_user.id = member.user_id AND member_user.deleted_at IS NULL
+            WHERE member.group_id = ? AND member.deleted_at IS NULL
+            ORDER BY is_master DESC, member_user.display_name ASC, member_user.username ASC
+            """,
+            [group_id],
+        ).fetchall()
+        return [
+            {
+                "id": row["id"],
+                "userId": row["user_id"],
+                "username": row["username"],
+                "displayName": row["display_name"],
+                "email": row["email"],
+                "status": row["status"],
+                "isMaster": bool(row["is_master"]),
+                "createdAt": row["created_at"],
+            }
+            for row in rows
+        ]
+
     def _group_row(self, row: sqlite3.Row) -> dict[str, Any]:
         return {
             "id": row["id"],
@@ -317,7 +350,6 @@ class GroupRepository:
             "masterDisplayName": row["master_display_name"],
             "status": row["status"],
             "memberCount": row["member_count"],
-            "members": [],
             "createdAt": row["created_at"],
             "updatedAt": row["updated_at"],
         }
