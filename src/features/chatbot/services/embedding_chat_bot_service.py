@@ -11,7 +11,7 @@ class EmbeddingChatBotService:
     def __init__(self):
         # Placeholder: Load environment variables and initialize models
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
-        self.sqlite_db = os.getenv("SQLITE_DB", "FinancialStatements.db")
+        self.database_mode = os.getenv("DATABASE_MODE", "sqlite").strip().lower()
         # TODO: Initialize chat model, database, vector store, etc.
         # self.chat_model = ChatOpenAI(...)
         # self.db = ...

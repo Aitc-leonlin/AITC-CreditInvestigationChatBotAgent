@@ -1,7 +1,7 @@
 """Daily audit-log archive job.
 
 Rows older than the configured retention period are written to a UTF-8 TXT
-archive before they are permanently removed from SQLite.
+archive before they are permanently removed from the configured database.
 """
 
 import asyncio
@@ -14,11 +14,12 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from sqlalchemy import bindparam, delete, select
+
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.time import utc_now_iso
-from src.features.membership.services.bootstrap_service import apply_membership_migration
 from src.shared.database.db_path import PROJECT_ROOT
-from src.shared.database.connection import is_postgresql
+from src.shared.database.expressions import normalized_timestamp
 
 
 logger = logging.getLogger(__name__)
@@ -41,14 +42,19 @@ def resolve_audit_archive_directory() -> Path:
 class AuditRetentionService:
     def run_daily_archive(self) -> dict[str, object]:
         """Run at most once per Taipei calendar day across app workers."""
-        apply_membership_migration()
         local_date = datetime.now(SCHEDULE_TIME_ZONE).date().isoformat()
         connection = get_membership_connection()
         archive_path: Path | None = None
         try:
-            connection.execute("BEGIN IMMEDIATE")
+            connection.begin_write_transaction()
+            setting_table = connection.get_table(
+                "membership_audit_retention_setting"
+            )
+            audit_table = connection.get_table("membership_audit_log")
             setting = connection.execute(
-                "SELECT * FROM membership_audit_retention_setting WHERE id = 1"
+                select(setting_table)
+                .where(setting_table.c.id == 1)
+                .with_for_update()
             ).fetchone()
             if setting is None:
                 raise RuntimeError("Audit retention setting is not initialized.")
@@ -59,28 +65,25 @@ class AuditRetentionService:
             now = datetime.now(timezone.utc)
             cutoff = now - timedelta(days=int(setting["retention_days"]))
             cutoff_iso = cutoff.isoformat()
-            cutoff_expression = (
-                "created_at::timestamptz < ?::timestamptz"
-                if is_postgresql()
-                else "datetime(created_at) < datetime(?)"
-            )
+            cutoff_parameter = bindparam("cutoff")
+            cutoff_condition = normalized_timestamp(
+                audit_table.c.created_at
+            ) < normalized_timestamp(cutoff_parameter)
             rows = connection.execute(
-                f"""
-                SELECT *
-                FROM membership_audit_log
-                WHERE {cutoff_expression}
-                ORDER BY created_at ASC, id ASC
-                """,
-                [cutoff_iso],
-            ).fetchall()
+                select(audit_table)
+                .where(cutoff_condition)
+                .order_by(audit_table.c.created_at.asc(), audit_table.c.id.asc()),
+                {"cutoff": cutoff_iso},
+            )
+            rows = rows.fetchall()
 
             filename = ""
             if rows:
                 archive_path = self._write_archive(rows, cutoff=cutoff, archived_at=now)
                 filename = archive_path.name
                 connection.execute(
-                    f"DELETE FROM membership_audit_log WHERE {cutoff_expression}",
-                    [cutoff_iso],
+                    delete(audit_table).where(cutoff_condition),
+                    {"cutoff": cutoff_iso},
                 )
 
             run_at = utc_now_iso()

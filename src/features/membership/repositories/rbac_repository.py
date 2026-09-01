@@ -1,5 +1,4 @@
 import json
-import sqlite3
 import uuid
 from typing import Any
 
@@ -12,7 +11,11 @@ from src.features.membership.core.permission_registry import (
     permission_rows,
 )
 from src.features.membership.core.time import utc_now_iso
-from src.shared.database.connection import get_table_columns, is_postgresql
+from src.shared.database.connection import (
+    DatabaseRow,
+    SQLAlchemyConnectionAdapter,
+    get_table_columns,
+)
 
 
 class RbacRepository:
@@ -339,7 +342,7 @@ class RbacRepository:
             ).fetchone()
         return row is not None
 
-    def role_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def role_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "id": row["id"],
             "code": row["code"],
@@ -354,7 +357,7 @@ class RbacRepository:
             "updatedAt": row["updated_at"],
         }
 
-    def permission_group_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def permission_group_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "id": row["id"],
             "code": row["code"],
@@ -367,7 +370,7 @@ class RbacRepository:
             "updatedAt": row["updated_at"],
         }
 
-    def permission_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def permission_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "id": row["id"],
             "code": row["code"],
@@ -416,7 +419,7 @@ class RbacRepository:
             params.append(status_filter.strip().upper())
         return ("AND " + " AND ".join(clauses), params) if clauses else ("", [])
 
-    def _insert(self, connection: sqlite3.Connection, table_name: str, payload: dict[str, Any]) -> None:
+    def _insert(self, connection: SQLAlchemyConnectionAdapter, table_name: str, payload: dict[str, Any]) -> None:
         columns = list(payload.keys())
         placeholders = ", ".join("?" for _ in columns)
         connection.execute(
@@ -424,26 +427,14 @@ class RbacRepository:
             [payload[column] for column in columns],
         )
 
-    def _insert_or_replace(self, connection: sqlite3.Connection, table_name: str, payload: dict[str, Any]) -> None:
-        columns = list(payload.keys())
-        placeholders = ", ".join("?" for _ in columns)
-        if is_postgresql():
-            update_columns = [column for column in columns if column != "id"]
-            assignments = ", ".join(
-                f"{column} = EXCLUDED.{column}" for column in update_columns
-            )
-            connection.execute(
-                f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders}) "
-                f"ON CONFLICT (id) DO UPDATE SET {assignments}",
-                [payload[column] for column in columns],
-            )
-            return
-        connection.execute(
-            f"INSERT OR REPLACE INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})",
-            [payload[column] for column in columns],
+    def _insert_or_replace(self, connection: SQLAlchemyConnectionAdapter, table_name: str, payload: dict[str, Any]) -> None:
+        connection.upsert(
+            table_name,
+            payload,
+            conflict_columns=["id"],
         )
 
-    def _table_columns(self, connection: sqlite3.Connection, table_name: str) -> set[str]:
+    def _table_columns(self, connection: SQLAlchemyConnectionAdapter, table_name: str) -> set[str]:
         return get_table_columns(connection, table_name)
 
     def _build_role_code(self, role_id: str, name: str) -> str:
@@ -452,7 +443,7 @@ class RbacRepository:
 
     def _insert_notification(
         self,
-        connection: sqlite3.Connection,
+        connection: SQLAlchemyConnectionAdapter,
         *,
         recipient_user_id: str | None,
         payload: dict[str, Any],

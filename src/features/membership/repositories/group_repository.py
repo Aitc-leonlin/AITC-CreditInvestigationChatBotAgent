@@ -1,9 +1,9 @@
-import sqlite3
 import uuid
 from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.time import utc_now_iso
+from src.shared.database.connection import DatabaseRow, SQLAlchemyConnectionAdapter
 
 
 class GroupRepository:
@@ -274,7 +274,7 @@ class GroupRepository:
 
     def _insert_member(
         self,
-        connection: sqlite3.Connection,
+        connection: SQLAlchemyConnectionAdapter,
         group_id: str,
         user_id: str,
         actor_user_id: str,
@@ -290,7 +290,7 @@ class GroupRepository:
             [str(uuid.uuid4()), group_id, user_id, actor_user_id, now, now],
         )
 
-    def _fetch_group(self, connection: sqlite3.Connection, group_id: str) -> sqlite3.Row | None:
+    def _fetch_group(self, connection: SQLAlchemyConnectionAdapter, group_id: str) -> DatabaseRow | None:
         return connection.execute(
             """
             SELECT g.*, master.username AS master_username,
@@ -307,7 +307,7 @@ class GroupRepository:
             [group_id],
         ).fetchone()
 
-    def _list_members(self, connection: sqlite3.Connection, group_id: str) -> list[dict[str, Any]]:
+    def _list_members(self, connection: SQLAlchemyConnectionAdapter, group_id: str) -> list[dict[str, Any]]:
         rows = connection.execute(
             """
             SELECT member.id, member.user_id, member.created_at,
@@ -338,7 +338,7 @@ class GroupRepository:
             for row in rows
         ]
 
-    def _group_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def _group_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "id": row["id"],
             "code": row["code"],

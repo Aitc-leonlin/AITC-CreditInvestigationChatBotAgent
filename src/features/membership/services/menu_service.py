@@ -1,13 +1,11 @@
 from typing import Any
 
 from src.features.membership.core.menu_registry import all_menu_rows, current_menu_rows
-from src.features.membership.services.bootstrap_service import apply_membership_migration
 from src.features.membership.services.rbac_service import RbacService
 
 
 class MenuService:
     def __init__(self, rbac_service: RbacService | None = None):
-        apply_membership_migration()
         self.rbac_service = rbac_service or RbacService()
 
     def list_menus(self, *, status_filter: str = "") -> list[dict[str, Any]]:

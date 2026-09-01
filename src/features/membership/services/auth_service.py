@@ -9,7 +9,6 @@ from src.features.membership.core.password import PASSWORD_ALGORITHM, hash_passw
 from src.features.membership.core.tokens import generate_opaque_token, hash_token
 from src.features.membership.core.time import utc_now_iso
 from src.features.membership.repositories.auth_repository import AuthRepository
-from src.features.membership.services.bootstrap_service import apply_membership_migration
 from src.features.membership.services.audit_service import AuditService
 
 
@@ -26,7 +25,6 @@ LOCK_MINUTES = int(os.getenv("MEMBERSHIP_LOGIN_LOCK_MINUTES", "15"))
 
 class AuthService:
     def __init__(self, repository: AuthRepository | None = None):
-        apply_membership_migration()
         self.repository = repository or AuthRepository()
         self.audit = AuditService()
 

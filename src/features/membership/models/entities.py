@@ -1,5 +1,5 @@
 from dataclasses import asdict, dataclass
-from sqlite3 import Row
+from collections.abc import Mapping
 from typing import Any, TypeVar
 
 
@@ -14,7 +14,7 @@ class MembershipModel:
     deleted_at: str | None = None
 
     @classmethod
-    def from_row(cls: type[ModelT], row: Row | dict[str, Any]) -> ModelT:
+    def from_row(cls: type[ModelT], row: Mapping[str, Any]) -> ModelT:
         return cls(**dict(row))
 
     def to_dict(self) -> dict[str, Any]:

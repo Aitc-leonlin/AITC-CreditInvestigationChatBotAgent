@@ -1,4 +1,3 @@
-import sqlite3
 from typing import Any
 
 from src.features.membership.core.exceptions import ConflictError, ResourceNotFoundError, ValidationFailureError
@@ -9,12 +8,11 @@ from src.features.membership.core.permission_registry import (
     permission_rows,
 )
 from src.features.membership.repositories.rbac_repository import RbacRepository
-from src.features.membership.services.bootstrap_service import apply_membership_migration
+from src.shared.database.connection import DatabaseIntegrityError
 
 
 class RbacService:
     def __init__(self, repository: RbacRepository | None = None):
-        apply_membership_migration()
         self.repository = repository or RbacRepository()
 
     def list_roles(self, *, keyword: str = "", status_filter: str = "") -> list[dict[str, Any]]:
@@ -29,7 +27,7 @@ class RbacService:
     def create_role(self, payload: dict[str, Any]) -> dict[str, Any]:
         try:
             return self.repository.create_role(payload)
-        except sqlite3.IntegrityError as exc:
+        except DatabaseIntegrityError as exc:
             raise ConflictError("Role code already exists.") from exc
 
     def update_role(self, role_id: str, payload: dict[str, Any]) -> dict[str, Any]:

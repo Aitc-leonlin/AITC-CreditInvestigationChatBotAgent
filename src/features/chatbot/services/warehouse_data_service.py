@@ -2,8 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from src.features.membership.services.bootstrap_service import apply_xbrl_migration
-from src.shared.database.connection import get_table_columns, is_postgresql, open_database_connection
+from src.shared.database.connection import get_table_columns, open_database_connection
 
 
 ALL_COMPANY_VALUE = "All"
@@ -26,9 +25,6 @@ def get_connection() -> Any:
 
 
 def ensure_warehouse_data_schema() -> None:
-    if is_postgresql():
-        apply_xbrl_migration()
-        return
     now = utc_now_iso()
     with get_connection() as connection:
         connection.execute(
@@ -198,7 +194,6 @@ def list_warehouse_data_entries(
     keyword: str,
     category: str,
 ) -> dict[str, Any]:
-    ensure_warehouse_data_schema()
     normalized_page_size = max(1, min(page_size, 100))
     normalized_page = max(1, page)
     normalized_offset = max(
@@ -245,7 +240,6 @@ def list_applied_warehouse_data_entries(
     industry: str,
     category: str,
 ) -> list[dict[str, str]]:
-    ensure_warehouse_data_schema()
     filters = []
     params: list[str] = []
 
@@ -292,7 +286,6 @@ def list_applied_warehouse_data_entries(
 
 
 def get_warehouse_data_entry(entry_id: str) -> dict[str, str] | None:
-    ensure_warehouse_data_schema()
     with get_connection() as connection:
         row = connection.execute(
             """
@@ -306,7 +299,6 @@ def get_warehouse_data_entry(entry_id: str) -> dict[str, str] | None:
 
 
 def create_warehouse_data_entry(payload: dict[str, Any]) -> dict[str, str]:
-    ensure_warehouse_data_schema()
     entry = normalize_entry_payload(payload)
     validate_entry_payload(entry)
     entry_id = compact_text(payload.get("id")) or str(uuid.uuid4())
@@ -354,7 +346,6 @@ def create_warehouse_data_entry(payload: dict[str, Any]) -> dict[str, str]:
 
 
 def update_warehouse_data_entry(entry_id: str, payload: dict[str, Any]) -> dict[str, str] | None:
-    ensure_warehouse_data_schema()
     if get_warehouse_data_entry(entry_id) is None:
         return None
 
@@ -397,7 +388,6 @@ def update_warehouse_data_entry(entry_id: str, payload: dict[str, Any]) -> dict[
 
 
 def delete_warehouse_data_entry(entry_id: str) -> bool:
-    ensure_warehouse_data_schema()
     now = utc_now_iso()
     with get_connection() as connection:
         cursor = connection.execute(

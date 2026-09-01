@@ -19,12 +19,6 @@ class StandardResponse(BaseModel, Generic[DataT]):
     meta: dict[str, Any] = Field(default_factory=dict)
 
 
-class InfrastructureStatus(BaseModel):
-    migrationVersion: str
-    migrationFile: str
-    seedCounts: dict[str, int]
-
-
 class ModuleMetadata(BaseModel):
     module: str
     phase: str

@@ -1,11 +1,11 @@
 import json
-import sqlite3
 import uuid
 from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.permission_registry import all_permission_codes
 from src.features.membership.core.time import utc_now_iso
+from src.shared.database.connection import DatabaseRow, SQLAlchemyConnectionAdapter
 
 
 class NotificationRepository:
@@ -226,9 +226,9 @@ class NotificationRepository:
             user_stats = dict(connection.execute(
                 """
                 SELECT
-                    COUNT(*) AS totalUsers,
-                    SUM(CASE WHEN status = 'ACTIVE' THEN 1 ELSE 0 END) AS activeUsers,
-                    SUM(CASE WHEN status = 'INACTIVE' THEN 1 ELSE 0 END) AS inactiveUsers
+                    COUNT(*) AS "totalUsers",
+                    SUM(CASE WHEN status = 'ACTIVE' THEN 1 ELSE 0 END) AS "activeUsers",
+                    SUM(CASE WHEN status = 'INACTIVE' THEN 1 ELSE 0 END) AS "inactiveUsers"
                 FROM membership_user
                 WHERE deleted_at IS NULL
                 """
@@ -244,28 +244,29 @@ class NotificationRepository:
                 """
                 SELECT
                     (SELECT COUNT(*) FROM membership_role WHERE deleted_at IS NULL) AS roles,
-                    (SELECT COUNT(*) FROM membership_role_permission WHERE deleted_at IS NULL) AS rolePermissions,
-                    (SELECT COUNT(*) FROM membership_user_role WHERE deleted_at IS NULL) AS userRoles
+                    (SELECT COUNT(*) FROM membership_role_permission WHERE deleted_at IS NULL) AS "rolePermissions",
+                    (SELECT COUNT(*) FROM membership_user_role WHERE deleted_at IS NULL) AS "userRoles"
                 """
             ).fetchone())
             permission_overview["permissions"] = len(all_permission_codes())
             login_stats = dict(connection.execute(
                 """
                 SELECT
-                    SUM(CASE WHEN action = 'auth.login.success' THEN 1 ELSE 0 END) AS successfulLogins,
-                    SUM(CASE WHEN action = 'auth.login.failed' THEN 1 ELSE 0 END) AS failedLogins,
-                    COUNT(*) AS totalLoginEvents
+                    SUM(CASE WHEN action = 'auth.login.success' THEN 1 ELSE 0 END) AS "successfulLogins",
+                    SUM(CASE WHEN action = 'auth.login.failed' THEN 1 ELSE 0 END) AS "failedLogins",
+                    COUNT(*) AS "totalLoginEvents"
                 FROM membership_audit_log
-                WHERE deleted_at IS NULL AND action LIKE 'auth.login.%'
-                """
+                WHERE deleted_at IS NULL AND action LIKE ?
+                """,
+                ["auth.login.%"],
             ).fetchone())
             notification_stats = dict(connection.execute(
                 """
                 SELECT
-                    COUNT(*) AS totalNotifications,
-                    SUM(CASE WHEN status = 'PENDING' THEN 1 ELSE 0 END) AS pendingNotifications,
-                    SUM(CASE WHEN status = 'SENT' THEN 1 ELSE 0 END) AS sentNotifications,
-                    SUM(CASE WHEN status = 'FAILED' THEN 1 ELSE 0 END) AS failedNotifications
+                    COUNT(*) AS "totalNotifications",
+                    SUM(CASE WHEN status = 'PENDING' THEN 1 ELSE 0 END) AS "pendingNotifications",
+                    SUM(CASE WHEN status = 'SENT' THEN 1 ELSE 0 END) AS "sentNotifications",
+                    SUM(CASE WHEN status = 'FAILED' THEN 1 ELSE 0 END) AS "failedNotifications"
                 FROM membership_notification_outbox
                 WHERE deleted_at IS NULL
                 """
@@ -280,7 +281,7 @@ class NotificationRepository:
             "recentAuditLogs": audit["logs"],
         }
 
-    def template_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def template_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "id": row["id"],
             "code": row["code"],
@@ -292,7 +293,7 @@ class NotificationRepository:
             "updatedAt": row["updated_at"],
         }
 
-    def outbox_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def outbox_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "id": row["id"],
             "templateCode": row["template_code"],
@@ -309,7 +310,7 @@ class NotificationRepository:
             "updatedAt": row["updated_at"],
         }
 
-    def audit_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def audit_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "id": row["id"],
             "actorUserId": row["actor_user_id"],
@@ -325,7 +326,7 @@ class NotificationRepository:
             "createdAt": row["created_at"],
         }
 
-    def audit_retention_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def audit_retention_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "retentionDays": row["retention_days"],
             "scheduleTimeZone": "Asia/Taipei",
@@ -357,7 +358,7 @@ class NotificationRepository:
     def _zero_none(self, values: dict[str, Any]) -> dict[str, Any]:
         return {key: (0 if value is None else value) for key, value in values.items()}
 
-    def _insert(self, connection: sqlite3.Connection, table_name: str, payload: dict[str, Any]) -> None:
+    def _insert(self, connection: SQLAlchemyConnectionAdapter, table_name: str, payload: dict[str, Any]) -> None:
         columns = list(payload.keys())
         placeholders = ", ".join("?" for _ in columns)
         connection.execute(

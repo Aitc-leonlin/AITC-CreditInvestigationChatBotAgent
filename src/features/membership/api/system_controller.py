@@ -1,13 +1,12 @@
 """Membership 系統管理 API。
 
-提供會員模組 metadata 查詢與 bootstrap 初始化入口，用來套用 membership
-migration，並建立預設組織、角色、權限、選單與通知模板資料。
+提供會員模組 metadata 查詢。Migration 與預設資料初始化統一由應用程式啟動流程執行，
+不再由 API request 觸發。
 """
 
 from src.features.membership.api.base import create_membership_router
 from src.features.membership.core.responses import ok
-from src.features.membership.schemas.common import InfrastructureStatus, ModuleMetadata, StandardResponse
-from src.features.membership.services.bootstrap_service import ensure_membership_infrastructure
+from src.features.membership.schemas.common import ModuleMetadata, StandardResponse
 
 
 membership_system_router = create_membership_router(
@@ -54,11 +53,3 @@ async def get_membership_module_metadata():
             ],
         }
     )
-
-
-@membership_system_router.post(
-    "/bootstrap",
-    response_model=StandardResponse[InfrastructureStatus],
-)
-async def bootstrap_membership_module():
-    return ok(ensure_membership_infrastructure())

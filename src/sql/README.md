@@ -1,6 +1,7 @@
 # Database Migrations
 
-This folder documents SQL migrations for project-maintained SQLite schemas.
+This folder contains dialect-specific SQL migrations for the SQLite and
+PostgreSQL schemas. Runtime database access is handled through SQLAlchemy 2.x.
 
 ## Naming
 
@@ -81,7 +82,7 @@ migrations/
 
 `DATABASE_MODE=sqlite` selects `migrations/sqlite`; `DATABASE_MODE=postgresql`
 selects `migrations/postgresql`. Backend startup automatically applies the
-XBRL/report migrations V1.0 and V2.0 followed by membership migrations V1.1 through V1.7,
+XBRL/report migrations V1.0 and V2.0 followed by membership migrations V1.1 through V1.11,
 then inserts missing default membership seed records.
 
 The shared XBRL builder entry point also follows `DATABASE_MODE`:
