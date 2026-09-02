@@ -71,7 +71,18 @@ Render or another provider may supply one `DATABASE_URL` instead of
 
 Database passwords are read only from the environment and are excluded from startup diagnostics. Copy `.env.example` to `.env` for local development; never commit `.env`.
 
-The shared connection layer and runtime repositories support both connection modes. Migration files are separated under `src/sql/migrations/sqlite` and `src/sql/migrations/postgresql`; XBRL migrations V1.0 and V2.0 plus membership migrations V1.1 through V1.7 are selected automatically from `DATABASE_MODE` and applied when the backend starts. Startup initialization also inserts missing default membership seed records without replacing existing records.
+The shared connection layer uses SQLAlchemy 2.x for both connection modes
+(`sqlite+pysqlite` and `postgresql+psycopg`). Runtime parameters, result rows,
+transactions, schema inspection, inserts, and upserts are normalized through
+that layer. Business services do not branch on SQLite versus PostgreSQL;
+dialect-specific timestamp compilation, locking, table clearing, and metadata
+inspection are centralized in the shared database layer. Migration files remain
+separated under `src/sql/migrations/sqlite`
+and `src/sql/migrations/postgresql` because DDL differs by dialect; XBRL
+migrations V1.0 and V2.0 plus membership migrations V1.1 through V1.11 are
+selected automatically from `DATABASE_MODE` and applied when the backend
+starts. Startup initialization also inserts missing default membership seed
+records without replacing existing records.
 
 ## Regression Tests
 

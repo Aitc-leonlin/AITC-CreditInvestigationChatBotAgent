@@ -1,4 +1,3 @@
-import sqlite3
 from typing import Any
 
 from src.features.membership.core.exceptions import (
@@ -9,8 +8,8 @@ from src.features.membership.core.exceptions import (
 )
 from src.features.membership.repositories.group_repository import GroupRepository
 from src.features.membership.services.audit_service import AuditService
-from src.features.membership.services.bootstrap_service import apply_membership_migration
 from src.features.membership.services.rbac_service import RbacService
+from src.shared.database.connection import DatabaseIntegrityError
 
 
 class GroupService:
@@ -19,7 +18,6 @@ class GroupService:
         repository: GroupRepository | None = None,
         rbac_service: RbacService | None = None,
     ):
-        apply_membership_migration()
         self.repository = repository or GroupRepository()
         self.rbac_service = rbac_service or RbacService()
         self.audit = AuditService()
@@ -42,7 +40,7 @@ class GroupService:
         self._validate_users([payload.get("masterUserId")] if payload.get("masterUserId") else [])
         try:
             group = self.repository.create_group(payload, actor_user_id)
-        except sqlite3.IntegrityError as exc:
+        except DatabaseIntegrityError as exc:
             if self.repository.group_code_exists(payload["code"]):
                 self._raise_code_conflict(payload["code"], exc)
             raise
@@ -56,7 +54,7 @@ class GroupService:
         self._validate_users([payload.get("masterUserId")] if payload.get("masterUserId") else [])
         try:
             group = self.repository.update_group(group_id, payload, actor_user_id)
-        except sqlite3.IntegrityError as exc:
+        except DatabaseIntegrityError as exc:
             if self.repository.group_code_exists(payload["code"], exclude_id=group_id):
                 self._raise_code_conflict(payload["code"], exc)
             raise

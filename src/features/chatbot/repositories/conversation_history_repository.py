@@ -1,9 +1,9 @@
 import json
-import sqlite3
 from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.time import utc_now_iso
+from src.shared.database.connection import DatabaseRow, SQLAlchemyConnectionAdapter
 from src.shared.database.serialization import database_json_dumps
 
 
@@ -132,8 +132,8 @@ class ConversationHistoryRepository:
 
     def _conversation_row(
         self,
-        connection: sqlite3.Connection,
-        row: sqlite3.Row,
+        connection: SQLAlchemyConnectionAdapter,
+        row: DatabaseRow,
     ) -> dict[str, Any]:
         message_rows = connection.execute(
             """
@@ -218,7 +218,7 @@ class ConversationHistoryRepository:
 
     def _insert_expert_knowledge(
         self,
-        connection: sqlite3.Connection,
+        connection: SQLAlchemyConnectionAdapter,
         conversation_id: str,
         message_id: str,
         entries: list[Any],
@@ -250,7 +250,7 @@ class ConversationHistoryRepository:
 
     def _insert_external_data(
         self,
-        connection: sqlite3.Connection,
+        connection: SQLAlchemyConnectionAdapter,
         conversation_id: str,
         message_id: str,
         entries: list[Any],

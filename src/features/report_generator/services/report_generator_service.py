@@ -3,21 +3,20 @@ import math
 import os
 import re
 import secrets
-import sqlite3
 from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from src.shared.database.db_path import PROJECT_ROOT, resolve_sqlite_db_path
 from src.shared.database.connection import (
+    DatabaseRow,
     get_table_columns,
-    is_postgresql,
     open_database_connection,
     table_exists,
 )
+from src.shared.database.config import get_database_settings
+from src.shared.database.db_path import PROJECT_ROOT
 from src.shared.database.serialization import database_json_dumps
-from src.features.membership.services.bootstrap_service import apply_xbrl_migration
 from src.features.report_generator.services.docx.document_merge_service import merge_all_chapters
 from src.features.report_generator.services.report_llm_conclusion_service import generate_report_llm_conclusion
 
@@ -494,7 +493,7 @@ def build_dashboard_financial_trends(
     ]
 
 
-def row_to_dashboard_item(row: sqlite3.Row) -> dict[str, Any]:
+def row_to_dashboard_item(row: DatabaseRow) -> dict[str, Any]:
     return {
         "id": str(row["id"]),
         "historyId": str(row["history_id"]),
@@ -551,16 +550,15 @@ def generated_reports_dir() -> Path:
 
 
 def report_history_db_path() -> Path | None:
-    if is_postgresql():
-        return None
-    return resolve_sqlite_db_path()
+    return get_database_settings().sqlite_path
 
 
 def connect_report_history_db() -> Any:
+    settings = get_database_settings()
     db_path = report_history_db_path()
     report_generator_log(
         "history_db.connect.start",
-        engine="postgresql" if is_postgresql() else "sqlite",
+        engine=settings.mode,
         path=str(db_path) if db_path is not None else "",
     )
     if db_path is not None:
@@ -574,15 +572,12 @@ def connect_report_history_db() -> Any:
                 error=str(error),
             )
             raise
-    else:
-        apply_xbrl_migration()
     try:
         connection = open_database_connection()
-        ensure_report_history_table(connection)
     except Exception as error:
         report_generator_log(
             "history_db.connect.error",
-            engine="postgresql" if is_postgresql() else "sqlite",
+            engine=settings.mode,
             path=str(db_path) if db_path is not None else "",
             error_type=type(error).__name__,
             error=str(error),
@@ -592,9 +587,14 @@ def connect_report_history_db() -> Any:
     return connection
 
 
-def ensure_report_history_table(connection: Any) -> None:
-    if is_postgresql():
+def ensure_report_history_schema() -> None:
+    if report_history_db_path() is None:
         return
+    with connect_report_history_db() as connection:
+        ensure_report_history_table(connection)
+
+
+def ensure_report_history_table(connection: Any) -> None:
     connection.execute(
         f"""
         CREATE TABLE IF NOT EXISTS {REPORT_HISTORY_TABLE} (
@@ -672,7 +672,7 @@ class FinancialStatementsDocxAdapter:
         self.company_code = company_code
         self.company_label = company_label
         self.connection = open_database_connection()
-        self._report_context_cache: dict[tuple[int, str | None], sqlite3.Row | None] = {}
+        self._report_context_cache: dict[tuple[int, str | None], DatabaseRow | None] = {}
 
     def close(self) -> None:
         self.connection.close()
@@ -734,7 +734,7 @@ class FinancialStatementsDocxAdapter:
         ).fetchone()
         return str(row["company_name"]) if row and row["company_name"] else self.company_label
 
-    def _listed_company_profile_row(self) -> sqlite3.Row | None:
+    def _listed_company_profile_row(self) -> DatabaseRow | None:
         if not table_exists(self.connection, "company_profile"):
             return None
         return self.connection.execute(
@@ -816,7 +816,7 @@ class FinancialStatementsDocxAdapter:
         text = str(quarter).strip().upper()
         return text if text.startswith("Q") else f"Q{text}"
 
-    def _report_context(self, year: int, quarter: int | str | None = None) -> sqlite3.Row | None:
+    def _report_context(self, year: int, quarter: int | str | None = None) -> DatabaseRow | None:
         quarter_label = self._quarter_label(quarter) if quarter is not None else None
         cache_key = (year, quarter_label)
         if cache_key in self._report_context_cache:
@@ -1749,12 +1749,13 @@ class FinancialStatementsDocxAdapter:
 
 
 def get_financial_statements_db_path() -> Path | None:
-    if is_postgresql():
+    settings = get_database_settings()
+    if settings.sqlite_path is None:
         return None
     configured_path = os.getenv("REPORT_GENERATOR_DB_PATH")
     if configured_path:
         return Path(configured_path).resolve()
-    return resolve_sqlite_db_path()
+    return settings.sqlite_path
 
 
 def generate_credit_report_docx(
@@ -1764,11 +1765,12 @@ def generate_credit_report_docx(
     year: int,
 ) -> dict[str, Any]:
     db_path = get_financial_statements_db_path()
+    database_mode = get_database_settings().mode
     report_generator_log(
         "docx.generate.start",
         company_code=company_code,
         year=year,
-        database_engine="postgresql" if is_postgresql() else "sqlite",
+        database_engine=database_mode,
         database_path=str(db_path) if db_path is not None else "",
     )
     if db_path is not None and not db_path.exists():
@@ -1870,63 +1872,36 @@ def insert_report_history(
         file_size=file_size,
     )
     with connect_report_history_db() as connection:
-        returning_sql = " RETURNING id" if is_postgresql() else ""
-        cursor = connection.execute(
-            f"""
-            INSERT INTO {REPORT_HISTORY_TABLE} (
-                public_id,
-                title,
-                company,
-                company_code,
-                company_label,
-                year,
-                period,
-                report_type,
-                generated_at,
-                generated_at_display,
-                generated_by,
-                status,
-                file_size,
-                file_name,
-                file_path,
-                mime_type,
-                created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            {returning_sql}
-            """,
-            (
-                generate_report_public_id(),
-                title,
-                company,
-                company_code,
-                company_label,
-                str(year),
-                REPORT_PERIOD,
-                REPORT_TYPE,
-                generated_at_iso,
-                generated_at_display,
-                generated_by,
-                REPORT_STATUS_DONE,
-                file_size,
-                file_name,
-                file_path,
-                DOCX_MIME_TYPE,
-                generated_at_iso,
-            ),
+        cursor = connection.insert(
+            REPORT_HISTORY_TABLE,
+            {
+                "public_id": generate_report_public_id(),
+                "title": title,
+                "company": company,
+                "company_code": company_code,
+                "company_label": company_label,
+                "year": str(year),
+                "period": REPORT_PERIOD,
+                "report_type": REPORT_TYPE,
+                "generated_at": generated_at_iso,
+                "generated_at_display": generated_at_display,
+                "generated_by": generated_by,
+                "status": REPORT_STATUS_DONE,
+                "file_size": file_size,
+                "file_name": file_name,
+                "file_path": file_path,
+                "mime_type": DOCX_MIME_TYPE,
+                "created_at": generated_at_iso,
+            },
         )
-        returned_row = cursor.fetchone() if is_postgresql() else None
         connection.commit()
-        report_id = (
-            int(returned_row["id"])
-            if is_postgresql()
-            else int(cursor.lastrowid)
-        )
+        report_id = int(cursor.inserted_primary_key[0])
 
     report_generator_log("history.insert.done", history_id=report_id)
     return get_report_history_item(report_id) or {}
 
 
-def row_to_history_item(row: sqlite3.Row) -> dict[str, Any]:
+def row_to_history_item(row: DatabaseRow) -> dict[str, Any]:
     return {
         "id": str(row["id"]),
         "publicId": row["public_id"],
@@ -1982,39 +1957,29 @@ def upsert_report_dashboard(
     }
 
     with connect_report_history_db() as connection:
-        connection.execute(
-            f"""
-            INSERT INTO {REPORT_DASHBOARD_TABLE} (
-                history_id,
-                summary_items_json,
-                progress_items_json,
-                progress_percent,
-                metrics_title,
-                metrics_json,
-                financial_trends_json,
-                created_at,
-                updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT(history_id) DO UPDATE SET
-                summary_items_json = excluded.summary_items_json,
-                progress_items_json = excluded.progress_items_json,
-                progress_percent = excluded.progress_percent,
-                metrics_title = excluded.metrics_title,
-                metrics_json = excluded.metrics_json,
-                financial_trends_json = excluded.financial_trends_json,
-                updated_at = excluded.updated_at
-            """,
-            (
-                history_id,
-                dashboard_payload["summary_items_json"],
-                dashboard_payload["progress_items_json"],
-                dashboard_payload["progress_percent"],
-                dashboard_payload["metrics_title"],
-                dashboard_payload["metrics_json"],
-                dashboard_payload["financial_trends_json"],
-                now_iso,
-                now_iso,
-            ),
+        connection.upsert(
+            REPORT_DASHBOARD_TABLE,
+            {
+                "history_id": history_id,
+                "summary_items_json": dashboard_payload["summary_items_json"],
+                "progress_items_json": dashboard_payload["progress_items_json"],
+                "progress_percent": dashboard_payload["progress_percent"],
+                "metrics_title": dashboard_payload["metrics_title"],
+                "metrics_json": dashboard_payload["metrics_json"],
+                "financial_trends_json": dashboard_payload["financial_trends_json"],
+                "created_at": now_iso,
+                "updated_at": now_iso,
+            },
+            conflict_columns=["history_id"],
+            update_columns=[
+                "summary_items_json",
+                "progress_items_json",
+                "progress_percent",
+                "metrics_title",
+                "metrics_json",
+                "financial_trends_json",
+                "updated_at",
+            ],
         )
         connection.commit()
 

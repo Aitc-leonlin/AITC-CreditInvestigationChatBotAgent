@@ -1,9 +1,9 @@
-import sqlite3
 import uuid
 from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.time import utc_now_iso
+from src.shared.database.connection import DatabaseRow, SQLAlchemyConnectionAdapter
 
 
 class OrganizationRepository:
@@ -360,7 +360,7 @@ class OrganizationRepository:
             ).fetchone()
         return row is not None
 
-    def unit_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def unit_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "id": row["id"],
             "code": row["code"],
@@ -379,7 +379,7 @@ class OrganizationRepository:
             "updatedAt": row["updated_at"],
         }
 
-    def position_row(self, row: sqlite3.Row) -> dict[str, Any]:
+    def position_row(self, row: DatabaseRow) -> dict[str, Any]:
         return {
             "id": row["id"],
             "name": row["name"],
@@ -427,7 +427,7 @@ class OrganizationRepository:
         return ("AND " + " AND ".join(clauses), params) if clauses else ("", [])
 
 
-    def _insert(self, connection: sqlite3.Connection, table_name: str, payload: dict[str, Any]) -> None:
+    def _insert(self, connection: SQLAlchemyConnectionAdapter, table_name: str, payload: dict[str, Any]) -> None:
         columns = list(payload.keys())
         placeholders = ", ".join("?" for _ in columns)
         connection.execute(

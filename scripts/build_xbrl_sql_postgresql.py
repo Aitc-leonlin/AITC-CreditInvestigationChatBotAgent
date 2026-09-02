@@ -335,7 +335,7 @@ def load_sql_into_postgresql(sql_text: str) -> None:
         )
     connection = open_database_connection(settings)
     try:
-        connection.execute(sql_text, prepare=False)
+        connection.executescript(sql_text)
         connection.commit()
     except Exception:
         connection.rollback()

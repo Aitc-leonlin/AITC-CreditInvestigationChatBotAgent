@@ -2,12 +2,10 @@ from typing import Any
 
 from src.features.chatbot.repositories.conversation_history_repository import ConversationHistoryRepository
 from src.features.membership.core.exceptions import ResourceNotFoundError
-from src.features.membership.services.bootstrap_service import apply_membership_migration
 
 
 class ConversationHistoryService:
     def __init__(self, repository: ConversationHistoryRepository | None = None):
-        apply_membership_migration()
         self.repository = repository or ConversationHistoryRepository()
 
     def list_for_user(self, user_id: str) -> list[dict[str, Any]]:

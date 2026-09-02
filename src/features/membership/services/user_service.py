@@ -1,16 +1,14 @@
-import sqlite3
 from typing import Any
 
 from src.features.membership.core.exceptions import ConflictError, ResourceNotFoundError, ValidationFailureError
 from src.features.membership.core.password import PASSWORD_ALGORITHM, hash_password, verify_password
 from src.features.membership.core.time import utc_now_iso
 from src.features.membership.repositories.user_repository import MembershipUserRepository
-from src.features.membership.services.bootstrap_service import apply_membership_migration
+from src.shared.database.connection import DatabaseIntegrityError
 
 
 class UserManagementService:
     def __init__(self, repository: MembershipUserRepository | None = None):
-        apply_membership_migration()
         self.repository = repository or MembershipUserRepository()
 
     def list_users(
@@ -58,7 +56,7 @@ class UserManagementService:
                 role_ids=role_ids,
             )
             return self.get_user(created["id"])
-        except sqlite3.IntegrityError as exc:
+        except DatabaseIntegrityError as exc:
             raise ConflictError("User identity already exists.") from exc
 
     def update_user(self, user_id: str, payload: dict[str, Any]) -> dict[str, Any]:

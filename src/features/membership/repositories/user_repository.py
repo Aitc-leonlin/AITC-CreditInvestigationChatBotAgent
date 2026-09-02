@@ -1,12 +1,11 @@
 import json
-import sqlite3
 import uuid
 from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.time import utc_now_iso
-from src.shared.database.connection import is_postgresql
 from src.features.membership.repositories.membership_repositories import UserRepository
+from src.shared.database.connection import DatabaseRow, SQLAlchemyConnectionAdapter
 
 
 class MembershipUserRepository(UserRepository):
@@ -116,7 +115,7 @@ class MembershipUserRepository(UserRepository):
 
         return self.row_to_user_summary(row, organization_managers) if row else None
 
-    def get_credential(self, user_id: str) -> sqlite3.Row | None:
+    def get_credential(self, user_id: str) -> DatabaseRow | None:
         connection = get_membership_connection()
         try:
             return connection.execute(
@@ -214,28 +213,20 @@ class MembershipUserRepository(UserRepository):
                 [now, now, user_id],
             )
             for role_id in role_ids:
-                insert_prefix = "INSERT INTO" if is_postgresql() else "INSERT OR REPLACE INTO"
-                conflict_sql = """
-                    ON CONFLICT (id) DO UPDATE SET
-                        user_id = EXCLUDED.user_id,
-                        role_id = EXCLUDED.role_id,
-                        organization_id = EXCLUDED.organization_id,
-                        effective_from = EXCLUDED.effective_from,
-                        effective_to = EXCLUDED.effective_to,
-                        created_at = EXCLUDED.created_at,
-                        updated_at = EXCLUDED.updated_at,
-                        deleted_at = EXCLUDED.deleted_at
-                """ if is_postgresql() else ""
-                connection.execute(
-                    f"""
-                    {insert_prefix} membership_user_role (
-                        id, user_id, role_id, organization_id, effective_from,
-                        effective_to, created_at, updated_at, deleted_at
-                    )
-                    VALUES (?, ?, ?, ?, ?, NULL, ?, ?, NULL)
-                    {conflict_sql}
-                    """,
-                    [f"user-role-{user_id}-{role_id}", user_id, role_id, organization_id, now, now, now],
+                connection.upsert(
+                    "membership_user_role",
+                    {
+                        "id": f"user-role-{user_id}-{role_id}",
+                        "user_id": user_id,
+                        "role_id": role_id,
+                        "organization_id": organization_id,
+                        "effective_from": now,
+                        "effective_to": None,
+                        "created_at": now,
+                        "updated_at": now,
+                        "deleted_at": None,
+                    },
+                    conflict_columns=["id"],
                 )
 
     def update_credential_values(self, user_id: str, values: dict[str, Any]) -> bool:
@@ -493,7 +484,7 @@ class MembershipUserRepository(UserRepository):
 
     def row_to_user_summary(
         self,
-        row: sqlite3.Row,
+        row: DatabaseRow,
         organization_managers: dict[str, dict[str, str | None]],
     ) -> dict[str, Any]:
         manager_user_id, manager_display_name = self._resolve_organization_manager(
@@ -529,7 +520,7 @@ class MembershipUserRepository(UserRepository):
 
     def _insert(
         self,
-        connection: sqlite3.Connection,
+        connection: SQLAlchemyConnectionAdapter,
         table_name: str,
         payload: dict[str, Any],
     ) -> None:

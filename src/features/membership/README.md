@@ -5,8 +5,8 @@ This module provides enterprise membership, authorization, organization data sco
 ## Scope
 
 - Folder structure for api routers, services, repositories, models, schemas, validation, core utilities, and seed data.
-- SQLite migration for users, credentials, organizations, roles, permissions, menus, data scopes, refresh tokens, audit logs, and notification outbox.
-- Lightweight ORM-style dataclass entities with repository row mapping.
+- SQLite and PostgreSQL migrations for users, credentials, organizations, roles, permissions, menus, refresh tokens, audit logs, and notification outbox.
+- SQLAlchemy-backed connections with lightweight dataclass entities and repository row mapping.
 - Base repository and service classes.
 - Standard API response envelope and membership error handling.
 - Pydantic validation structure.
@@ -35,13 +35,8 @@ Notification delivery currently uses the database outbox pattern. The dispatch e
 
 ## Bootstrap
 
-Run the migration and seed data through:
-
-```http
-POST /api/membership/system/bootstrap
-```
-
-The endpoint is idempotent and returns inserted row counts for each seeded table.
+Migration、功能資料表檢查與預設資料建立會在後端啟動時統一執行。一般 API request
+不會再觸發 Migration 或 Schema 檢查；若啟動階段失敗，後端會停止啟動。
 
 ## Metadata
 

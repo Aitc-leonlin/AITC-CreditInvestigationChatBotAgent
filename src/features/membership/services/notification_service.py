@@ -2,12 +2,10 @@ from typing import Any
 
 from src.features.membership.core.exceptions import ResourceNotFoundError
 from src.features.membership.repositories.notification_repository import NotificationRepository
-from src.features.membership.services.bootstrap_service import apply_membership_migration
 
 
 class NotificationAdminService:
     def __init__(self, repository: NotificationRepository | None = None):
-        apply_membership_migration()
         self.repository = repository or NotificationRepository()
 
     def admin_dashboard(self) -> dict[str, Any]:

@@ -3,7 +3,6 @@ import argparse
 import json
 import os
 import re
-import sqlite3
 import sys
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
@@ -12,6 +11,13 @@ from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.shared.database.config import DatabaseSettings
+from src.shared.database.connection import open_database_connection
 
 
 NS = {
@@ -783,7 +789,9 @@ def dedupe_rows(rows: List[Dict], keys: List[str]) -> List[Dict]:
 
 
 def load_sql_into_db(db_path: Path, sql_text: str) -> None:
-    conn = sqlite3.connect(db_path)
+    conn = open_database_connection(
+        DatabaseSettings(mode="sqlite", sqlite_path=db_path.resolve())
+    )
     try:
         conn.executescript(sql_text)
         conn.commit()
@@ -798,8 +806,9 @@ def split_pipe_list(value: Optional[str]) -> set:
 
 
 def load_taxonomy_from_db(db_path: Path) -> TaxonomyParseResult:
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
+    conn = open_database_connection(
+        DatabaseSettings(mode="sqlite", sqlite_path=db_path.resolve())
+    )
     try:
         entry_points = {}
         versions = set()

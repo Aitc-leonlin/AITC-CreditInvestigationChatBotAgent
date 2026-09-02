@@ -1,10 +1,10 @@
-import sqlite3
 import uuid
 from typing import Any, Generic, TypeVar
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.time import utc_now_iso
 from src.features.membership.models.entities import MembershipModel
+from src.shared.database.connection import SQLAlchemyConnectionAdapter
 
 
 ModelT = TypeVar("ModelT", bound=MembershipModel)
@@ -14,10 +14,10 @@ class BaseRepository(Generic[ModelT]):
     table_name: str
     model_class: type[ModelT]
 
-    def __init__(self, connection: sqlite3.Connection | None = None):
+    def __init__(self, connection: SQLAlchemyConnectionAdapter | None = None):
         self.connection = connection
 
-    def _connection(self) -> sqlite3.Connection:
+    def _connection(self) -> SQLAlchemyConnectionAdapter:
         return self.connection or get_membership_connection()
 
     def get_by_id(self, entity_id: str) -> ModelT | None:

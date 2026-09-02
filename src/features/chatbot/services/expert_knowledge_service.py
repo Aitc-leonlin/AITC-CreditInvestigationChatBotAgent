@@ -2,8 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from src.features.membership.services.bootstrap_service import apply_xbrl_migration
-from src.shared.database.connection import get_table_columns, is_postgresql, open_database_connection
+from src.shared.database.connection import get_table_columns, open_database_connection
 
 
 ALL_COMPANY_VALUE = "All"
@@ -40,9 +39,6 @@ def get_connection() -> Any:
 
 
 def ensure_expert_knowledge_schema() -> None:
-    if is_postgresql():
-        apply_xbrl_migration()
-        return
     now = utc_now_iso()
     with get_connection() as connection:
         connection.execute(
@@ -198,7 +194,6 @@ def list_expert_knowledge_entries(
     offset: int | None,
     keyword: str,
 ) -> dict[str, Any]:
-    ensure_expert_knowledge_schema()
     normalized_page_size = max(1, min(page_size, 100))
     normalized_page = max(1, page)
     normalized_offset = max(0, offset if offset is not None else (normalized_page - 1) * normalized_page_size)
@@ -236,7 +231,6 @@ def list_expert_knowledge_entries(
 
 
 def list_all_active_expert_knowledge_entries() -> list[dict[str, str]]:
-    ensure_expert_knowledge_schema()
     with get_connection() as connection:
         rows = connection.execute(
             """
@@ -256,7 +250,6 @@ def list_applied_expert_knowledge_entries(
     industry: str,
     data_source: str,
 ) -> list[dict[str, str]]:
-    ensure_expert_knowledge_schema()
     filters = []
     params: list[str] = []
 
@@ -303,7 +296,6 @@ def list_applied_expert_knowledge_entries(
 
 
 def get_expert_knowledge_entry(entry_id: str) -> dict[str, str] | None:
-    ensure_expert_knowledge_schema()
     with get_connection() as connection:
         row = connection.execute(
             """
@@ -317,7 +309,6 @@ def get_expert_knowledge_entry(entry_id: str) -> dict[str, str] | None:
 
 
 def create_expert_knowledge_entry(payload: dict[str, Any]) -> dict[str, str]:
-    ensure_expert_knowledge_schema()
     entry = normalize_entry_payload(payload)
     validate_entry_payload(entry)
     entry_id = compact_text(payload.get("id")) or str(uuid.uuid4())
@@ -363,7 +354,6 @@ def create_expert_knowledge_entry(payload: dict[str, Any]) -> dict[str, str]:
 
 
 def update_expert_knowledge_entry(entry_id: str, payload: dict[str, Any]) -> dict[str, str] | None:
-    ensure_expert_knowledge_schema()
     if get_expert_knowledge_entry(entry_id) is None:
         return None
 
@@ -404,7 +394,6 @@ def update_expert_knowledge_entry(entry_id: str, payload: dict[str, Any]) -> dic
 
 
 def delete_expert_knowledge_entry(entry_id: str) -> bool:
-    ensure_expert_knowledge_schema()
     now = utc_now_iso()
     with get_connection() as connection:
         cursor = connection.execute(

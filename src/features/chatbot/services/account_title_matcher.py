@@ -5,8 +5,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from src.shared.database.connection import is_postgresql, open_database_connection
-from src.shared.database.db_path import PROJECT_ROOT, resolve_sqlite_db_path
+from src.shared.database.connection import database_storage_exists, open_database_connection
+from src.shared.database.db_path import PROJECT_ROOT
 
 
 XBRL_DATA_DIR = PROJECT_ROOT / "src" / "features" / "chatbot" / "services"
@@ -107,23 +107,13 @@ def family_variants(family: str) -> List[str]:
 def get_company_families(company_code: str) -> tuple[str, ...]:
     if not company_code:
         return ()
-    if not is_postgresql() and not resolve_sqlite_db_path().exists():
+    if not database_storage_exists():
         return ()
-    family_expression = (
-        "CASE WHEN POSITION(':' IN tc.taxonomy_id) > 0 "
-        "THEN SUBSTRING(tc.taxonomy_id FROM POSITION(':' IN tc.taxonomy_id) + 1) "
-        "ELSE tc.taxonomy_id END"
-        if is_postgresql()
-        else "CASE WHEN instr(tc.taxonomy_id, ':') > 0 "
-        "THEN substr(tc.taxonomy_id, instr(tc.taxonomy_id, ':') + 1) "
-        "ELSE tc.taxonomy_id END"
-    )
     connection = open_database_connection()
     try:
         rows = connection.execute(
-            f"""
-            SELECT DISTINCT
-                   {family_expression} AS family
+            """
+            SELECT DISTINCT tc.taxonomy_id
             FROM financial_metric_value AS fmv
             JOIN report_instance AS ri
               ON ri.report_id = fmv.report_id
@@ -132,11 +122,16 @@ def get_company_families(company_code: str) -> tuple[str, ...]:
             WHERE ri.company_code = ?
               AND tc.taxonomy_id IS NOT NULL
               AND tc.taxonomy_id <> ''
-            ORDER BY family
+            ORDER BY tc.taxonomy_id
             """,
             (company_code,),
         ).fetchall()
-        return tuple(row["family"] for row in rows if row and row["family"])
+        families = {
+            taxonomy_id.partition(":")[2] or taxonomy_id
+            for row in rows
+            if row and (taxonomy_id := str(row["taxonomy_id"] or ""))
+        }
+        return tuple(sorted(families))
     finally:
         connection.close()
 
@@ -149,7 +144,7 @@ def get_company_available_concepts(
 ) -> tuple[str, ...]:
     if not company_code:
         return ()
-    if not is_postgresql() and not resolve_sqlite_db_path().exists():
+    if not database_storage_exists():
         return ()
 
     conditions = [

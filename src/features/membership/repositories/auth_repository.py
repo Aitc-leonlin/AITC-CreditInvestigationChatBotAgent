@@ -1,10 +1,10 @@
 import json
-import sqlite3
 import uuid
 from typing import Any
 
 from src.features.membership.core.database import get_membership_connection, membership_transaction
 from src.features.membership.core.time import utc_now_iso
+from src.shared.database.connection import SQLAlchemyConnectionAdapter
 
 
 class AuthRepository:
@@ -463,7 +463,7 @@ class AuthRepository:
 
     def _insert_audit(
         self,
-        connection: sqlite3.Connection,
+        connection: SQLAlchemyConnectionAdapter,
         *,
         actor_user_id: str | None,
         action: str,
@@ -500,7 +500,7 @@ class AuthRepository:
 
     def _insert_notification(
         self,
-        connection: sqlite3.Connection,
+        connection: SQLAlchemyConnectionAdapter,
         *,
         template_code: str,
         recipient_user_id: str,

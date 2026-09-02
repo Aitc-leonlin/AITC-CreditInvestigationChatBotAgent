@@ -1,6 +1,7 @@
 from pathlib import Path
-import sqlite3
 from typing import Any
+
+from sqlalchemy.exc import OperationalError
 
 from src.features.membership.core.database import membership_transaction
 from src.features.membership.core.database import get_membership_connection
@@ -9,9 +10,14 @@ from src.features.membership.core.permission_registry import (
     PERMISSION_CODE_TO_LEGACY_ID,
     all_permission_codes,
 )
+from src.features.membership.core.time import utc_now_iso
 from src.features.membership.seeds.default_seed_data import DEFAULT_USER_ROLE_ID, default_seed_data
 from src.shared.database.config import get_database_settings
-from src.shared.database.connection import table_exists
+from src.shared.database.connection import (
+    get_table_columns,
+    get_table_names,
+    table_exists,
+)
 from src.shared.database.db_path import PROJECT_ROOT
 
 
@@ -58,10 +64,7 @@ def apply_xbrl_migration() -> None:
                 if applied:
                     continue
             migration_sql = migration_file.read_text(encoding="utf-8")
-            if settings.mode == "sqlite":
-                connection.executescript(migration_sql)
-            else:
-                connection.execute(migration_sql, prepare=False)
+            connection.executescript(migration_sql)
             migration_table_ready = True
 
 
@@ -88,15 +91,12 @@ def apply_membership_migration() -> None:
         migration_table_ready = table_exists(connection, "membership_schema_migrations")
         for migration_file in migration_files:
             version = migration_file.name.split("__", 1)[0]
-            if migration_table_ready and _migration_applied(connection, version, settings.mode):
+            if migration_table_ready and _migration_applied(connection, version):
                 continue
             if settings.mode == "sqlite" and version == "V1.1":
                 _prepare_consolidated_baseline(connection)
             migration_sql = Path(migration_file).read_text(encoding="utf-8")
-            if settings.mode == "sqlite":
-                connection.executescript(migration_sql)
-            else:
-                connection.execute(migration_sql, prepare=False)
+            connection.executescript(migration_sql)
             migration_table_ready = True
         if settings.mode == "postgresql":
             return
@@ -105,13 +105,12 @@ def apply_membership_migration() -> None:
         _drop_permission_definition_tables(connection)
 
 
-def _migration_applied(connection: Any, version: str, database_mode: str) -> bool:
-    placeholder = "?" if database_mode == "sqlite" else "%s"
+def _migration_applied(connection: Any, version: str) -> bool:
     row = connection.execute(
         f"""
         SELECT 1
         FROM membership_schema_migrations
-        WHERE version = {placeholder}
+        WHERE version = ?
         LIMIT 1
         """,
         [version],
@@ -120,26 +119,18 @@ def _migration_applied(connection: Any, version: str, database_mode: str) -> boo
 
 
 def _prepare_consolidated_baseline(connection: Any) -> None:
-    tables = {
-        row["name"]
-        for row in connection.execute(
-            "SELECT name FROM sqlite_master WHERE type = 'table'"
-        ).fetchall()
-    }
+    tables = set(get_table_names(connection))
     if "membership_permission" not in tables:
         return
-    permission_columns = {
-        row["name"]
-        for row in connection.execute("PRAGMA table_info(membership_permission)").fetchall()
-    }
-    role_permission_columns = {
-        row["name"]
-        for row in connection.execute("PRAGMA table_info(membership_role_permission)").fetchall()
-    }
-    permission_group_columns = {
-        row["name"]
-        for row in connection.execute("PRAGMA table_info(membership_permission_group)").fetchall()
-    }
+    permission_columns = get_table_columns(connection, "membership_permission")
+    role_permission_columns = get_table_columns(
+        connection,
+        "membership_role_permission",
+    )
+    permission_group_columns = get_table_columns(
+        connection,
+        "membership_permission_group",
+    )
     if "group_id" not in permission_columns:
         connection.execute("ALTER TABLE membership_permission ADD COLUMN group_id TEXT")
     if "permission_code" not in role_permission_columns:
@@ -149,29 +140,15 @@ def _prepare_consolidated_baseline(connection: Any) -> None:
 
 
 def _ensure_membership_schema_latest(connection: Any) -> None:
-    tables = {
-        row["name"]
-        for row in connection.execute(
-            "SELECT name FROM sqlite_master WHERE type = 'table'"
-        ).fetchall()
-    }
-    user_columns = {
-        row["name"]
-        for row in connection.execute("PRAGMA table_info(membership_user)").fetchall()
-    }
-    credential_columns = {
-        row["name"]
-        for row in connection.execute("PRAGMA table_info(membership_user_credential)").fetchall()
-    }
-    refresh_columns = {
-        row["name"]
-        for row in connection.execute("PRAGMA table_info(membership_refresh_token)").fetchall()
-    }
+    tables = set(get_table_names(connection))
+    user_columns = get_table_columns(connection, "membership_user")
+    credential_columns = get_table_columns(connection, "membership_user_credential")
+    refresh_columns = get_table_columns(connection, "membership_refresh_token")
     permission_columns = _table_columns(connection, "membership_permission")
-    organization_columns = {
-        row["name"]
-        for row in connection.execute("PRAGMA table_info(membership_organization_unit)").fetchall()
-    }
+    organization_columns = get_table_columns(
+        connection,
+        "membership_organization_unit",
+    )
 
     if "email_verified_at" not in user_columns:
         connection.execute("ALTER TABLE membership_user ADD COLUMN email_verified_at TEXT")
@@ -247,17 +224,14 @@ def _drop_column_if_exists(
     *,
     drop_indexes: list[str] | None = None,
 ) -> None:
-    columns = {
-        row["name"]
-        for row in connection.execute(f"PRAGMA table_info({table_name})").fetchall()
-    }
+    columns = get_table_columns(connection, table_name)
     if column_name not in columns:
         return
     for index_name in drop_indexes or []:
         connection.execute(f"DROP INDEX IF EXISTS {index_name}")
     try:
         connection.execute(f"ALTER TABLE {table_name} DROP COLUMN {column_name}")
-    except sqlite3.OperationalError as exc:
+    except OperationalError as exc:
         raise RuntimeError(
             f"Unable to consolidate {table_name}.{column_name}; SQLite DROP COLUMN failed."
         ) from exc
@@ -319,16 +293,9 @@ def _drop_permission_definition_tables(connection: Any) -> None:
 
 
 def _table_columns(connection: Any, table_name: str) -> set[str]:
-    row = connection.execute(
-        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
-        [table_name],
-    ).fetchone()
-    if row is None:
+    if not table_exists(connection, table_name):
         return set()
-    return {
-        row["name"]
-        for row in connection.execute(f"PRAGMA table_info({table_name})").fetchall()
-    }
+    return get_table_columns(connection, table_name)
 
 
 def _ensure_permission_code_authorization(connection: Any) -> None:
@@ -497,23 +464,7 @@ def _rebuild_role_permission_code_table(connection: Any) -> None:
 
 
 def _insert_role_permission_code(connection: Any, role_id: str, permission_code: str) -> int:
-    if get_database_settings().mode == "postgresql":
-        cursor = connection.execute(
-            """
-            INSERT INTO membership_role_permission (
-                id, role_id, permission_code, effect, created_at, updated_at, deleted_at
-            )
-            VALUES (%s, %s, %s, 'ALLOW', CURRENT_TIMESTAMP::TEXT, CURRENT_TIMESTAMP::TEXT, NULL)
-            ON CONFLICT (role_id, permission_code) DO UPDATE
-            SET effect = EXCLUDED.effect,
-                updated_at = CURRENT_TIMESTAMP::TEXT,
-                deleted_at = NULL
-            """,
-            [f"role-permission-{role_id}-{permission_code}", role_id, permission_code],
-        )
-        return max(cursor.rowcount, 0)
-
-    now = "CURRENT_TIMESTAMP"
+    now = utc_now_iso()
     columns = _table_columns(connection, "membership_role_permission")
     payload: dict[str, Any] = {
         "id": f"role-permission-{role_id}-{permission_code}",
@@ -529,17 +480,16 @@ def _insert_role_permission_code(connection: Any, role_id: str, permission_code:
     if "updated_at" in columns:
         payload["updated_at"] = now
     column_names = list(payload.keys())
-    values_sql = ", ".join("CURRENT_TIMESTAMP" if payload[column] == now else "?" for column in column_names)
-    values = [payload[column] for column in column_names if payload[column] != now]
-    cursor = connection.execute(
-        f"INSERT OR REPLACE INTO membership_role_permission ({', '.join(column_names)}) VALUES ({values_sql})",
-        values,
+    cursor = connection.upsert(
+        "membership_role_permission",
+        {column: payload[column] for column in column_names},
+        conflict_columns=["role_id", "permission_code"],
+        update_columns=["effect", "updated_at", "deleted_at"],
     )
     return max(cursor.rowcount, 0)
 
 
 def seed_membership_data() -> dict[str, int]:
-    database_mode = get_database_settings().mode
     seed_data = default_seed_data()
     inserted_counts: dict[str, int] = {}
     with membership_transaction() as connection:
@@ -547,14 +497,9 @@ def seed_membership_data() -> dict[str, int]:
             inserted_counts[table_name] = 0
             for row in rows:
                 columns = list(row.keys())
-                placeholder = "?" if database_mode == "sqlite" else "%s"
-                placeholders = ", ".join(placeholder for _ in columns)
-                column_sql = ", ".join(columns)
-                insert_prefix = "INSERT OR IGNORE" if database_mode == "sqlite" else "INSERT"
-                conflict_clause = "" if database_mode == "sqlite" else " ON CONFLICT DO NOTHING"
-                cursor = connection.execute(
-                    f"{insert_prefix} INTO {table_name} ({column_sql}) VALUES ({placeholders}){conflict_clause}",
-                    [row[column] for column in columns],
+                cursor = connection.insert_do_nothing(
+                    table_name,
+                    {column: row[column] for column in columns},
                 )
                 inserted_counts[table_name] += max(cursor.rowcount, 0)
 
@@ -579,62 +524,27 @@ def seed_membership_data() -> dict[str, int]:
 
 
 def reset_membership_seed_data() -> dict[str, Any]:
-    apply_membership_migration()
-    database_mode = get_database_settings().mode
     cleared_tables: list[str] = []
     with get_membership_connection() as connection:
-        if database_mode == "sqlite":
-            table_query = """
-                SELECT name
-                FROM sqlite_master
-                WHERE type = 'table'
-                  AND (
-                      name LIKE 'membership_%'
-                      OR name IN (
-                          'chat_conversation',
-                          'chat_conversation_message',
-                          'chat_message_expert_knowledge',
-                          'chat_message_external_data'
-                      )
-                  )
-                  AND name != 'membership_schema_migrations'
-                ORDER BY name
-                """
-        else:
-            table_query = """
-                SELECT tablename AS name
-                FROM pg_catalog.pg_tables
-                WHERE schemaname = current_schema()
-                  AND (
-                      tablename LIKE 'membership_%'
-                      OR tablename IN (
-                          'chat_conversation',
-                          'chat_conversation_message',
-                          'chat_message_expert_knowledge',
-                          'chat_message_external_data'
-                      )
-                  )
-                  AND tablename != 'membership_schema_migrations'
-                ORDER BY tablename
-                """
-        tables = [row["name"] for row in connection.execute(table_query).fetchall()]
+        chat_tables = {
+            "chat_conversation",
+            "chat_conversation_message",
+            "chat_message_expert_knowledge",
+            "chat_message_external_data",
+        }
+        tables = [
+            name
+            for name in get_table_names(connection)
+            if (name.startswith("membership_") or name in chat_tables)
+            and name != "membership_schema_migrations"
+        ]
         try:
-            if database_mode == "sqlite":
-                connection.execute("PRAGMA foreign_keys = OFF")
-                for table_name in tables:
-                    connection.execute(f"DELETE FROM {table_name}")
-                    cleared_tables.append(table_name)
-            elif tables:
-                quoted_tables = ", ".join(f'"{table_name}"' for table_name in tables)
-                connection.execute(f"TRUNCATE TABLE {quoted_tables} RESTART IDENTITY CASCADE")
-                cleared_tables.extend(tables)
+            connection.clear_tables(tables)
+            cleared_tables.extend(tables)
             connection.commit()
         except Exception:
             connection.rollback()
             raise
-        finally:
-            if database_mode == "sqlite":
-                connection.execute("PRAGMA foreign_keys = ON")
 
     seed_counts = seed_membership_data()
     return {
@@ -644,8 +554,25 @@ def reset_membership_seed_data() -> dict[str, Any]:
     }
 
 
+def ensure_feature_schemas() -> None:
+    from src.features.chatbot.services.expert_knowledge_service import (
+        ensure_expert_knowledge_schema,
+    )
+    from src.features.chatbot.services.warehouse_data_service import (
+        ensure_warehouse_data_schema,
+    )
+    from src.features.report_generator.services.report_generator_service import (
+        ensure_report_history_schema,
+    )
+
+    ensure_expert_knowledge_schema()
+    ensure_warehouse_data_schema()
+    ensure_report_history_schema()
+
+
 def ensure_membership_infrastructure() -> dict[str, Any]:
     apply_membership_migration()
+    ensure_feature_schemas()
     seed_counts = seed_membership_data()
     migration_files = membership_migration_files()
     return {
